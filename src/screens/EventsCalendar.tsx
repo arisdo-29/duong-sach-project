@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { Plus, AlertTriangle, CheckCircle2, Clock, Send, Calendar, X, MapPin, CalendarPlus } from 'lucide-react';
+import { Plus, CheckCircle2, Clock, Calendar, X, MapPin, CalendarPlus, ArrowRight, Settings } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
 import { calendarEvents, type CalendarEvent } from '@/data/mockData';
 
 export function EventsCalendar() {
-  const { t, lang } = useApp();
-  const [showForm, setShowForm] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const { t, lang, navigate } = useApp();
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
 
   const priorityTag = (priority: 'low' | 'medium' | 'high') => {
@@ -18,14 +16,6 @@ export function EventsCalendar() {
     return map[priority];
   };
 
-  // Group events by month
-  const eventsByMonth = calendarEvents.reduce((acc, evt) => {
-    const key = `${evt.month}/${evt.day}`;
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(evt);
-    return acc;
-  }, {} as Record<string, CalendarEvent[]>);
-
   return (
     <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
       {/* Top bar */}
@@ -34,7 +24,7 @@ export function EventsCalendar() {
           <h1 className="section-title">{t('adminCalendar')}</h1>
           <p className="bilingual-en mt-1">{t('priorityLegend')}</p>
         </div>
-        <button onClick={() => setShowForm(!showForm)} className="btn-primary">
+        <button onClick={() => navigate('events-proposal')} className="btn-primary">
           <Plus size={18} strokeWidth={2} />
           {t('proposeEvent')}
         </button>
@@ -91,113 +81,35 @@ export function EventsCalendar() {
         })}
       </div>
 
-      {/* Two panels */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        {/* Proposal Form */}
-        <div className="card p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-forest-50 flex items-center justify-center">
-              <Plus size={16} className="text-forest-600" />
-            </div>
-            <h2 className="section-title">{t('proposalFormTitle')}</h2>
+      {/* Sub-page links */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <button
+          onClick={() => navigate('events-proposal')}
+          className="card-hover p-5 flex items-center gap-4 text-left"
+        >
+          <div className="w-11 h-11 rounded-lg bg-forest-50 flex items-center justify-center shrink-0">
+            <Plus size={20} className="text-forest-600" strokeWidth={1.75} />
           </div>
-
-          {submitted ? (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <CheckCircle2 size={40} className="text-forest-500 mb-3" />
-              <p className="text-sm text-ink-soft font-medium">{t('proposalSubmitted')}</p>
-              <button
-                onClick={() => { setSubmitted(false); setShowForm(false); }}
-                className="btn-outline mt-4 text-sm"
-              >
-                {t('close')}
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} className="space-y-4">
-              <div>
-                <label className="label-text">{t('fieldName')}</label>
-                <input className="input-field" placeholder={t('fieldNamePh')} required />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="label-text">{t('fieldDateTime')}</label>
-                  <input type="datetime-local" className="input-field" required />
-                </div>
-                <div>
-                  <label className="label-text">{t('fieldLocation')}</label>
-                  <select className="input-field" required defaultValue="">
-                    <option value="" disabled>{t('fieldLocationPh')}</option>
-                    <option>Sân khấu chính</option>
-                    <option>Khu triển lãm</option>
-                    <option>Khu vui chơi thiếu nhi</option>
-                    <option>Toàn tuyến đường sách</option>
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label className="label-text">{t('fieldEquipment')}</label>
-                <input className="input-field" placeholder={t('fieldEquipmentPh')} />
-              </div>
-              <div>
-                <label className="label-text">{t('fieldDescription')}</label>
-                <textarea className="input-field min-h-[80px] resize-y" placeholder={t('fieldDescriptionPh')} rows={3} />
-              </div>
-              <button type="submit" className="btn-primary w-full">
-                <Send size={16} strokeWidth={1.75} />
-                {t('submitProposal')}
-              </button>
-            </form>
-          )}
-        </div>
-
-        {/* Management Review */}
-        <div className="card p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-forest-50 flex items-center justify-center">
-              <CheckCircle2 size={16} className="text-forest-600" />
-            </div>
-            <h2 className="section-title">{t('reviewPanelTitle')}</h2>
+          <div className="flex-1">
+            <h3 className="font-serif text-base font-semibold text-ink">{t('proposalFormTitle')}</h3>
+            <p className="text-sm text-ink-muted mt-0.5">{t('eventProposalSubtitle')}</p>
           </div>
-          <p className="bilingual-en mb-4">{t('reviewSubtitle')}</p>
+          <ArrowRight size={18} className="text-forest-500 shrink-0" />
+        </button>
 
-          {/* Pending with conflict */}
-          <div className="rounded-lg border border-priority-medium/40 bg-priority-mediumBg p-4 mb-4">
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <p className="text-sm font-semibold text-ink">{lang === 'vi' ? 'Sự kiện B' : 'Event B'}</p>
-                <p className="text-xs text-ink-muted mt-0.5">{lang === 'vi' ? 'Thứ 5, 14:00 — 16:30' : 'Thu, 2:00 PM — 4:30 PM'}</p>
-              </div>
-              <span className="tag-medium">{t('statusPending')}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-xs text-priority-high bg-white/60 rounded-md px-2 py-1.5 mt-2">
-              <AlertTriangle size={14} />
-              {t('conflictWarning')}
-            </div>
-            <div className="flex gap-2 mt-3">
-              <button className="btn-primary text-sm py-2 px-4">
-                <CheckCircle2 size={15} /> {t('approve')}
-              </button>
-              <button className="btn-outline text-sm py-2 px-4">
-                {t('requestChanges')}
-              </button>
-            </div>
+        <button
+          onClick={() => navigate('events-management')}
+          className="card-hover p-5 flex items-center gap-4 text-left"
+        >
+          <div className="w-11 h-11 rounded-lg bg-forest-50 flex items-center justify-center shrink-0">
+            <Settings size={20} className="text-forest-600" strokeWidth={1.75} />
           </div>
-
-          {/* Approved */}
-          <div className="rounded-lg border border-forest-200 bg-forest-50 p-4">
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <p className="text-sm font-semibold text-ink">{lang === 'vi' ? 'Sự kiện A' : 'Event A'}</p>
-                <p className="text-xs text-ink-muted mt-0.5">{lang === 'vi' ? 'Thứ 3, 09:00 — 11:00' : 'Tue, 9:00 AM — 11:00 AM'}</p>
-              </div>
-              <span className="tag-low flex items-center gap-1">
-                <CheckCircle2 size={12} /> {t('statusApproved')}
-              </span>
-            </div>
-            <p className="text-xs text-ink-muted mt-2 italic">{t('afterApprove')}</p>
+          <div className="flex-1">
+            <h3 className="font-serif text-base font-semibold text-ink">{t('reviewPanelTitle')}</h3>
+            <p className="text-sm text-ink-muted mt-0.5">{t('reviewSubtitle')}</p>
           </div>
-        </div>
+          <ArrowRight size={18} className="text-forest-500 shrink-0" />
+        </button>
       </div>
 
       {/* Event detail modal */}

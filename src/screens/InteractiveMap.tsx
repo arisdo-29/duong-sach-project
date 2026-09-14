@@ -1,20 +1,24 @@
 import { useState } from 'react';
-import { MapPin, Navigation, Store, Wifi, Landmark, Car, Coffee, ArrowRight, MessageSquare, Info } from 'lucide-react';
+import { MapPin, Navigation, Store, Landmark, Car, Coffee, ArrowRight, MessageSquare, Info, Camera, Baby, BookOpen } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
 import { mapPoints, type MapPoint } from '@/data/mockData';
 
 const pointTypeConfig = {
   stall: { icon: Store, color: 'bg-forest-600', ring: 'ring-forest-400', tag: 'tag-low', filterColor: 'forest' },
-  amenity: { icon: Wifi, color: 'bg-purple-500', ring: 'ring-purple-300', tag: 'bg-purple-50 text-purple-700', filterColor: 'purple' },
+  amenity: { icon: Info, color: 'bg-slate-500', ring: 'ring-slate-300', tag: 'bg-slate-50 text-slate-700', filterColor: 'slate' },
   heritage: { icon: Landmark, color: 'bg-amber-500', ring: 'ring-amber-300', tag: 'bg-amber-50 text-amber-700', filterColor: 'amber' },
   parking: { icon: Car, color: 'bg-blue-500', ring: 'ring-blue-300', tag: 'bg-blue-50 text-blue-700', filterColor: 'blue' },
   cafe: { icon: Coffee, color: 'bg-amber-700', ring: 'ring-amber-400', tag: 'bg-amber-50 text-amber-800', filterColor: 'amber-dark' },
+  checkin: { icon: Camera, color: 'bg-pink-500', ring: 'ring-pink-300', tag: 'bg-pink-50 text-pink-700', filterColor: 'pink' },
+  kids: { icon: Baby, color: 'bg-emerald-500', ring: 'ring-emerald-300', tag: 'bg-emerald-50 text-emerald-700', filterColor: 'emerald' },
+  exhibition: { icon: BookOpen, color: 'bg-violet-600', ring: 'ring-violet-300', tag: 'bg-violet-50 text-violet-700', filterColor: 'violet' },
 };
+
+const filterOrder: (keyof typeof pointTypeConfig)[] = ['stall', 'cafe', 'checkin', 'kids', 'exhibition', 'parking'];
 
 export function InteractiveMap() {
   const { t, lang, selectedPoint, setSelectedPoint, navigate } = useApp();
-  const [site, setSite] = useState<'hcmc' | 'thuduc'>('hcmc');
-  const [filters, setFilters] = useState<Set<string>>(new Set(['stall', 'amenity', 'heritage', 'parking', 'cafe']));
+  const [filters, setFilters] = useState<Set<string>>(new Set(['stall', 'cafe', 'checkin', 'kids', 'exhibition', 'parking']));
 
   const toggleFilter = (type: string) => {
     setFilters((prev) => {
@@ -33,35 +37,26 @@ export function InteractiveMap() {
     if (type === 'amenity') return t('pointTypeAmenity');
     if (type === 'heritage') return t('pointTypeHeritage');
     if (type === 'parking') return t('pointTypeParking');
-    return t('pointTypeCafe');
+    if (type === 'cafe') return t('pointTypeCafe');
+    if (type === 'checkin') return t('pointTypeCheckin');
+    if (type === 'kids') return t('pointTypeKids');
+    if (type === 'exhibition') return t('pointTypeExhibition');
+    return t('pointTypeAmenity');
   };
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
-      {/* Filter bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="section-title">{t('mapTitle')}</h1>
-          <p className="bilingual-en mt-1">{t('illustrativeMap')}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-ink-muted font-medium">{t('selectSite')}:</label>
-          <select
-            value={site}
-            onChange={(e) => setSite(e.target.value as 'hcmc' | 'thuduc')}
-            className="px-3 py-2 text-sm bg-white border border-cream-300 rounded-lg focus:outline-none focus:border-forest-500"
-          >
-            <option value="hcmc">TP.HCM — Q.1</option>
-            <option value="thuduc">TP.HCM — Thủ Đức</option>
-          </select>
-        </div>
+      {/* Title + intro */}
+      <div className="mb-4">
+        <h1 className="section-title">{t('mapTitle')}</h1>
+        <p className="text-sm text-ink-soft leading-relaxed mt-2 max-w-2xl">{t('mapIntro')}</p>
       </div>
 
       {/* Filter chips */}
       <div className="flex items-center gap-2 mb-4 flex-wrap">
         <span className="text-sm text-ink-muted font-medium mr-1">{t('filterPointType')}:</span>
-        {(Object.keys(pointTypeConfig) as string[]).map((type) => {
-          const cfg = pointTypeConfig[type as keyof typeof pointTypeConfig];
+        {filterOrder.map((type) => {
+          const cfg = pointTypeConfig[type];
           const Icon = cfg.icon;
           const active = filters.has(type);
           return (
@@ -86,35 +81,45 @@ export function InteractiveMap() {
         {/* Map area */}
         <div className="lg:col-span-2">
           <div className="card p-4 relative">
-            <div className="absolute top-4 left-4 z-10">
-              <span className="tag bg-white/80 text-ink-soft backdrop-blur-sm">
-                <Info size={12} /> {t('illustrativeMap')}
-              </span>
-            </div>
-            <div className="map-grid relative w-full h-[500px] rounded-lg bg-cream-200 overflow-hidden">
-              {/* Walking path — routes past all pin clusters */}
+            <div className="map-grid relative w-full h-[520px] rounded-lg bg-cream-200 overflow-hidden">
+              {/* Straight walking path — horizontal line across the middle */}
               <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
-                <path
-                  d="M 12 18 Q 20 30 28 30 Q 40 42 50 35 Q 58 48 68 38 Q 72 58 80 72 Q 62 70 55 70 Q 45 62 40 42 Q 30 68 15 75 Q 88 50 92 15"
+                <line
+                  x1="8" y1="50" x2="92" y2="50"
                   stroke="#3C6255"
-                  strokeWidth="0.8"
+                  strokeWidth="1.5"
                   strokeDasharray="3 2"
                   fill="none"
-                  opacity="0.4"
+                  opacity="0.5"
                 />
               </svg>
+
+              {/* Path label */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-semibold text-forest-600/30 tracking-widest pointer-events-none">
                 {t('walkingPath')}
               </div>
 
-              {/* Decorative buildings */}
-              <div className="absolute top-[10%] left-[25%] w-16 h-12 rounded-lg bg-forest-100/40 border border-forest-200/30" />
-              <div className="absolute top-[55%] right-[15%] w-14 h-16 rounded-lg bg-forest-100/40 border border-forest-200/30" />
-              <div className="absolute bottom-[12%] left-[20%] w-20 h-10 rounded-lg bg-forest-100/40 border border-forest-200/30" />
+              {/* End labels: Notre-Dame Cathedral (left) and Central Post Office (right) */}
+              <div className="absolute left-[3%] top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                <div className="w-10 h-10 rounded-lg bg-amber-100 border-2 border-amber-300 flex items-center justify-center shadow-soft">
+                  <Landmark size={18} className="text-amber-600" strokeWidth={1.5} />
+                </div>
+                <span className="text-[10px] font-semibold text-amber-700 bg-white/90 rounded px-1.5 py-0.5 shadow-soft whitespace-nowrap">
+                  {lang === 'vi' ? 'Nhà thờ Đức Bà' : 'Notre-Dame Cathedral'}
+                </span>
+              </div>
+              <div className="absolute right-[3%] top-1/2 -translate-y-1/2 translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+                <div className="w-10 h-10 rounded-lg bg-amber-100 border-2 border-amber-300 flex items-center justify-center shadow-soft">
+                  <Landmark size={18} className="text-amber-600" strokeWidth={1.5} />
+                </div>
+                <span className="text-[10px] font-semibold text-amber-700 bg-white/90 rounded px-1.5 py-0.5 shadow-soft whitespace-nowrap">
+                  {lang === 'vi' ? 'Bưu điện Trung tâm' : 'Central Post Office'}
+                </span>
+              </div>
 
               {/* Pins */}
               {visiblePoints.map((point) => {
-                const cfg = pointTypeConfig[point.type];
+                const cfg = pointTypeConfig[point.type as keyof typeof pointTypeConfig] || pointTypeConfig.amenity;
                 const Icon = cfg.icon;
                 const isSelected = selected?.id === point.id;
                 return (
@@ -161,7 +166,7 @@ export function InteractiveMap() {
                     {lang === 'vi' ? selected.nameVi : selected.nameEn}
                   </h3>
                   {(() => {
-                    const cfg = pointTypeConfig[selected.type];
+                    const cfg = pointTypeConfig[selected.type as keyof typeof pointTypeConfig] || pointTypeConfig.amenity;
                     return <span className={cfg.tag}>{typeLabel(selected.type)}</span>;
                   })()}
                 </div>
@@ -192,14 +197,14 @@ export function InteractiveMap() {
                 )}
 
                 <div className="flex flex-col gap-2 pt-2">
-                  {selected.type === 'heritage' && (
-                    <button onClick={() => navigate('heritage')} className="btn-primary w-full text-sm">
-                      <Navigation size={16} strokeWidth={1.75} />
-                      {t('viewDetails')}
+                  {selected.type === 'stall' && (
+                    <button onClick={() => navigate('stalls')} className="btn-primary w-full text-sm">
+                      <Store size={16} strokeWidth={1.75} />
+                      {t('stallViewDetail')}
                       <ArrowRight size={16} strokeWidth={1.75} />
                     </button>
                   )}
-                  <button onClick={() => navigate('feedback')} className={selected.type === 'heritage' ? 'btn-outline w-full text-sm' : 'btn-primary w-full text-sm'}>
+                  <button onClick={() => navigate('feedback')} className={selected.type === 'stall' ? 'btn-outline w-full text-sm' : 'btn-primary w-full text-sm'}>
                     <MessageSquare size={16} strokeWidth={1.75} />
                     {t('sendFeedback')}
                   </button>

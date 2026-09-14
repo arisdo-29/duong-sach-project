@@ -9,12 +9,17 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [heritageOpen, setHeritageOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setHeritageOpen(false);
+      }
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
       }
     };
     document.addEventListener('mousedown', handler);
@@ -32,6 +37,7 @@ export function Header() {
     navigate(id);
     setMobileOpen(false);
     setHeritageOpen(false);
+    setSearchOpen(false);
   };
 
   return (
@@ -50,7 +56,7 @@ export function Header() {
             <nav className="hidden lg:flex items-center gap-0.5">
               {navItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = screen === item.id;
+                const isActive = screen === item.id || (item.id === 'events' && (screen === 'events-proposal' || screen === 'events-management'));
                 return (
                   <button
                     key={item.id}
@@ -112,10 +118,31 @@ export function Header() {
 
             {/* Right side */}
             <div className="flex items-center gap-2 shrink-0">
-              {/* Search icon */}
-              <button className="hidden sm:flex w-9 h-9 items-center justify-center rounded-lg text-cream-100 hover:bg-forest-700/60 transition-all">
-                <Search size={18} strokeWidth={1.75} />
-              </button>
+              {/* Search dropdown */}
+              <div className="relative" ref={searchRef}>
+                <button
+                  onClick={() => setSearchOpen(!searchOpen)}
+                  className="w-9 h-9 flex items-center justify-center rounded-lg text-cream-100 hover:bg-forest-700/60 transition-all"
+                  aria-label="Search"
+                >
+                  <Search size={18} strokeWidth={1.75} />
+                </button>
+                {searchOpen && (
+                  <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-lift border border-cream-300 p-3 animate-fadeIn z-50">
+                    <div className="relative">
+                      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-light" />
+                      <input
+                        type="text"
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        placeholder={t('searchPlaceholder')}
+                        autoFocus
+                        className="w-full pl-9 pr-4 py-2.5 text-sm bg-cream-100 border border-cream-300 rounded-lg text-ink focus:outline-none focus:border-forest-500 transition-all"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
               <LangToggle />
               {/* AI Assistant bubble */}
               <button
@@ -132,20 +159,6 @@ export function Header() {
               >
                 {mobileOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
-            </div>
-          </div>
-
-          {/* Search bar (desktop) */}
-          <div className="hidden lg:block pb-3">
-            <div className="relative max-w-md">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-light" />
-              <input
-                type="text"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder={t('searchPlaceholder')}
-                className="w-full pl-9 pr-4 py-2 text-sm bg-forest-700/50 text-cream-100 placeholder:text-forest-200 rounded-lg border border-forest-700/50 focus:outline-none focus:bg-forest-700 focus:border-forest-400 transition-all"
-              />
             </div>
           </div>
 
@@ -213,7 +226,7 @@ export function Header() {
             { id: 'feedback' as ScreenId, icon: MessageSquare, label: t('navFeedback') },
           ].map((item) => {
             const Icon = item.icon;
-            const isActive = screen === item.id;
+            const isActive = screen === item.id || (item.id === 'events' && (screen === 'events-proposal' || screen === 'events-management'));
             return (
               <button
                 key={item.id}

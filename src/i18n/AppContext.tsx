@@ -2,7 +2,7 @@ import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { Lang } from './translations';
 import { t as translate, type TranslationKey } from './translations';
 
-export type ScreenId = 'home' | 'stalls' | 'events' | 'map' | 'heritage' | 'feedback' | 'chatbot';
+export type ScreenId = 'home' | 'stalls' | 'events' | 'events-proposal' | 'events-management' | 'map' | 'heritage' | 'feedback' | 'chatbot';
 
 interface AppContextValue {
   lang: Lang;

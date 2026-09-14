@@ -1,6 +1,6 @@
-import { Clock, MapPin, Wifi, BookOpen, Calendar, ArrowRight, Store, Car, Gift, Camera, Coffee, Baby, MessageSquare, Navigation } from 'lucide-react';
+import { Clock, MapPin, Store, Car, Gift, Camera, Coffee, Baby, MessageSquare, Navigation, ArrowRight, BookOpen, Calendar, Landmark } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
-import { stalls, calendarEvents, heroImage, aboutGalleryImages, visitorExperienceImages, mapPreviewImage } from '@/data/mockData';
+import { stalls, calendarEvents, heroImage, aboutGalleryImages, visitorExperienceImages, mapPreviewImage, heritagePreviewImage } from '@/data/mockData';
 
 export function HomeStalls() {
   const { t, lang, navigate } = useApp();
@@ -19,6 +19,13 @@ export function HomeStalls() {
   ];
 
   const upcomingEvents = calendarEvents.slice(0, 3);
+  const featuredStalls = stalls.slice(0, 3);
+
+  const heritageEntries = [
+    { num: '01', name: t('heritageSite01'), year: '1891' },
+    { num: '02', name: t('heritageSite02'), year: '1880' },
+    { num: '03', name: t('heritageSite03'), year: '1863' },
+  ];
 
   return (
     <div className="animate-fadeIn">
@@ -69,7 +76,7 @@ export function HomeStalls() {
       </section>
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ABOUT SECTION */}
+        {/* ABOUT SECTION — single photo */}
         <section className="py-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
@@ -81,44 +88,107 @@ export function HomeStalls() {
                 <p className="text-ink-soft leading-relaxed">{t('aboutP3')}</p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {aboutGalleryImages.map((img, i) => (
-                <div key={i} className={`rounded-xl overflow-hidden shadow-card ${i === 0 ? 'col-span-2 aspect-[2/1]' : 'aspect-square'}`}>
-                  <img src={img} alt={`Gallery ${i + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                </div>
-              ))}
+            <div className="rounded-xl overflow-hidden shadow-card aspect-[4/3]">
+              <img src={aboutGalleryImages[0]} alt="Bookshelf interior" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
             </div>
           </div>
         </section>
 
-        {/* FEATURED STALLS */}
+        {/* FEATURED STALLS — 3 cards only */}
         <section className="py-12 border-t border-cream-300">
-          <div className="flex items-end justify-between mb-6 flex-wrap gap-2">
-            <div>
-              <h2 className="section-title">{t('stallsTitle')}</h2>
-              <p className="bilingual-en mt-1">{t('stallsSubtitle')}</p>
-            </div>
-            <button onClick={() => navigate('map')} className="text-sm text-forest-600 font-medium hover:text-forest-700 flex items-center gap-1">
-              {t('viewAllStalls')} <ArrowRight size={15} />
-            </button>
+          <div className="mb-6">
+            <h2 className="section-title">{t('featuredStallsTitle')}</h2>
+            <p className="bilingual-en mt-1">{t('featuredStallsSubtitle')}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {stalls.map((stall) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            {featuredStalls.map((stall) => (
               <div key={stall.id} className="card-hover overflow-hidden group">
-                <div className="aspect-[3/2] overflow-hidden">
+                <div className="aspect-[3/2] overflow-hidden relative">
                   <img src={stall.image} alt={lang === 'vi' ? stall.nameVi : stall.nameEn} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <span className="absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-bold bg-forest-600 text-white shadow-soft">
+                    {stall.code}
+                  </span>
                 </div>
                 <div className="p-5">
-                  <span className="tag-low mb-3">{lang === 'vi' ? stall.categoryVi : stall.categoryEn}</span>
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {(lang === 'vi' ? stall.tagsVi : stall.tagsEn).map((tag, i) => (
+                      <span key={i} className="tag-low text-[10px]">{tag}</span>
+                    ))}
+                  </div>
                   <h3 className="font-serif text-lg font-semibold text-ink mb-1">
                     {lang === 'vi' ? stall.nameVi : stall.nameEn}
                   </h3>
-                  <p className="text-sm text-ink-muted leading-relaxed">
+                  <p className="text-sm text-ink-muted leading-relaxed mb-3">
                     {lang === 'vi' ? stall.descVi : stall.descEn}
                   </p>
+                  <div className="flex items-center gap-1.5 text-xs text-forest-600 font-medium mb-3">
+                    <BookOpen size={13} />
+                    {stall.bookCount}
+                  </div>
+                  <div className="flex items-center gap-3 pt-2 border-t border-cream-200">
+                    <button className="text-sm text-forest-600 font-medium hover:text-forest-700 flex items-center gap-1">
+                      {t('stallViewDetail')}
+                      <ArrowRight size={14} />
+                    </button>
+                    <span className="text-cream-300">|</span>
+                    <button onClick={() => navigate('map')} className="text-sm text-ink-muted font-medium hover:text-forest-600 flex items-center gap-1">
+                      <MapPin size={14} />
+                      {t('stallViewMap')}
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
+          </div>
+          <button onClick={() => navigate('stalls')} className="btn-primary group">
+            {t('viewAllStalls')}
+            <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" strokeWidth={1.75} />
+          </button>
+        </section>
+
+        {/* HERITAGE PREVIEW SECTION */}
+        <section className="py-12 border-t border-cream-300">
+          <div className="mb-6">
+            <h2 className="section-title">{t('heritagePreviewTitle')}</h2>
+            <h3 className="font-serif text-xl sm:text-2xl font-bold text-ink mt-2 mb-3">
+              {t('heritagePreviewHeading')}
+            </h3>
+            <p className="text-ink-soft leading-relaxed max-w-3xl">
+              {t('heritagePreviewIntro')}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Featured photo with label overlay */}
+            <div className="relative rounded-xl overflow-hidden shadow-card aspect-[4/3] group">
+              <img src={heritagePreviewImage} alt="Heritage site" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-ink/70 backdrop-blur-sm">
+                <span className="text-xs font-bold text-cream-100 tracking-wide">DI SẢN SỐ 01/27</span>
+              </div>
+            </div>
+            {/* Numbered list */}
+            <div className="flex flex-col justify-center">
+              <div className="space-y-4">
+                {heritageEntries.map((entry) => (
+                  <div key={entry.num} className="flex items-center gap-4 pb-4 border-b border-cream-300 last:border-0">
+                    <span className="font-serif text-2xl font-bold text-forest-600/40 shrink-0 w-8">
+                      {entry.num}
+                    </span>
+                    <div className="flex-1">
+                      <p className="font-serif text-base font-semibold text-ink">{entry.name}</p>
+                    </div>
+                    <span className="text-sm text-ink-muted font-medium">{entry.year}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm text-ink-light italic mt-4 mb-5">
+                {t('heritageMoreSites')}
+              </p>
+              <button onClick={() => navigate('heritage')} className="inline-flex items-center gap-2 px-6 py-3 bg-forest-700 text-cream-100 font-medium rounded-lg shadow-soft hover:bg-forest-800 transition-all active:scale-[0.98] w-fit">
+                <Landmark size={18} strokeWidth={1.75} />
+                {t('heritageExploreAll')}
+                <ArrowRight size={18} strokeWidth={1.75} />
+              </button>
+            </div>
           </div>
         </section>
 

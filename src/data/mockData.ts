@@ -1,11 +1,15 @@
 export interface Stall {
   id: string;
+  code: string;
   nameVi: string;
   nameEn: string;
   categoryVi: string;
   categoryEn: string;
+  tagsVi: string[];
+  tagsEn: string[];
   descVi: string;
   descEn: string;
+  bookCount: string;
   image: string;
 }
 
@@ -31,7 +35,7 @@ export interface CalendarEvent {
 export interface MapPoint {
   id: number;
   label: string;
-  type: 'stall' | 'amenity' | 'heritage' | 'parking' | 'cafe';
+  type: 'stall' | 'amenity' | 'heritage' | 'parking' | 'cafe' | 'checkin' | 'kids' | 'exhibition';
   nameVi: string;
   nameEn: string;
   descVi: string;
@@ -53,34 +57,130 @@ export interface HeritageSite {
 
 export const stalls: Stall[] = [
   {
-    id: 'kimdong',
-    nameVi: 'Gian hàng Kim Đồng',
-    nameEn: 'Kim Đồng Stall',
-    categoryVi: 'Văn học thiếu nhi',
-    categoryEn: 'Children\'s Literature',
-    descVi: 'Văn học thiếu nhi và truyện tranh — gian hàng thân thiện với các bạn nhỏ.',
-    descEn: 'Children\'s literature & comics — a kid-friendly stall.',
-    image: 'https://images.pexels.com/photos/34708262/pexels-photo-34708262.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    id: 'nxbtre',
+    code: 'A01',
+    nameVi: 'NXB Trẻ',
+    nameEn: 'NXB Trẻ (Youth Publishing House)',
+    categoryVi: 'Văn học · Thiếu nhi',
+    categoryEn: 'Literature · Children',
+    tagsVi: ['Văn học', 'Thiếu nhi'],
+    tagsEn: ['Literature', 'Children'],
+    descVi: 'Nhà xuất bản hàng đầu Việt Nam với hơn 40 năm lịch sử, chuyên xuất bản sách văn học và thiếu nhi chất lượng cao.',
+    descEn: 'A leading Vietnamese publisher with 40+ years of history, specializing in quality literature and children\'s books.',
+    bookCount: '1.240 đầu sách',
+    image: 'https://images.pexels.com/photos/27854754/pexels-photo-27854754.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
-    id: 'nhanam',
-    nameVi: 'Gian hàng Nhã Nam',
-    nameEn: 'Nhã Nam Stall',
-    categoryVi: 'Văn học trong & ngoài nước',
-    categoryEn: 'Vietnamese & World Literature',
-    descVi: 'Văn học trong và ngoài nước — những ấn bản đẹp và hiếm.',
-    descEn: 'Vietnamese & world literature — beautiful and rare editions.',
-    image: 'https://images.pexels.com/photos/3747461/pexels-photo-3747461.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    id: 'dongtay',
+    code: 'A02',
+    nameVi: 'Đông Tây Book',
+    nameEn: 'Đông Tây Book',
+    categoryVi: 'Kinh tế · Quản trị',
+    categoryEn: 'Economics · Management',
+    tagsVi: ['Kinh tế', 'Quản trị'],
+    tagsEn: ['Economics', 'Management'],
+    descVi: 'Chuyên cung cấp sách kinh tế, quản trị và kỹ năng mềm dành cho doanh nhân và người đi làm.',
+    descEn: 'Specializes in economics, management, and soft-skills books for entrepreneurs and professionals.',
+    bookCount: '890 đầu sách',
+    image: 'https://images.pexels.com/photos/29614944/pexels-photo-29614944.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+  },
+  {
+    id: 'alpha',
+    code: 'A03',
+    nameVi: 'Alpha Books',
+    nameEn: 'Alpha Books',
+    categoryVi: 'Khoa học · Công nghệ',
+    categoryEn: 'Science · Technology',
+    tagsVi: ['Khoa học', 'Công nghệ'],
+    tagsEn: ['Science', 'Technology'],
+    descVi: 'Đầu mối cung cấp sách khoa học, công nghệ và tư duy sáng tạo cho giới trẻ.',
+    descEn: 'A leading source for science, technology, and creative-thinking books for young readers.',
+    bookCount: '760 đầu sách',
+    image: 'https://images.pexels.com/photos/3862153/pexels-photo-3862153.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+  },
+  {
+    id: 'kimdong',
+    code: 'A04',
+    nameVi: 'NXB Kim Đồng',
+    nameEn: 'NXB Kim Đồng (Kim Dong Publishing)',
+    categoryVi: 'Thiếu nhi · Truyện tranh',
+    categoryEn: 'Children · Comics',
+    tagsVi: ['Thiếu nhi', 'Truyện tranh'],
+    tagsEn: ['Children', 'Comics'],
+    descVi: 'Văn học thiếu nhi và truyện tranh quen thuộc với nhiều thế hệ độc giả Việt Nam.',
+    descEn: 'Beloved children\'s literature and comics familiar to generations of Vietnamese readers.',
+    bookCount: '1.050 đầu sách',
+    image: 'https://images.pexels.com/photos/34750570/pexels-photo-34750570.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
     id: 'thaiha',
-    nameVi: 'Gian hàng Thái Hà',
-    nameEn: 'Thái Hà Stall',
-    categoryVi: 'Sách kỹ năng & kinh doanh',
-    categoryEn: 'Skills & Business Books',
-    descVi: 'Sách kỹ năng và kinh doanh — phát triển bản thân mỗi ngày.',
-    descEn: 'Skills & business books — personal development every day.',
-    image: 'https://images.pexels.com/photos/20774772/pexels-photo-20774772.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    code: 'A05',
+    nameVi: 'Thái Hà Books',
+    nameEn: 'Thái Hà Books',
+    categoryVi: 'Kỹ năng · Truyền cảm hứng',
+    categoryEn: 'Skills · Inspirational',
+    tagsVi: ['Kỹ năng', 'Truyền cảm hứng'],
+    tagsEn: ['Skills', 'Inspirational'],
+    descVi: 'Nổi bật với sách kỹ năng, Phật giáo và nhiều tác phẩm truyền cảm hứng.',
+    descEn: 'Known for skills books, Buddhism titles, and many inspirational works.',
+    bookCount: '680 đầu sách',
+    image: 'https://images.pexels.com/photos/13279386/pexels-photo-13279386.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+  },
+  {
+    id: 'firstnews',
+    code: 'A06',
+    nameVi: 'First News – Trí Việt',
+    nameEn: 'First News – Trí Việt',
+    categoryVi: 'Sách dịch · Khởi nghiệp',
+    categoryEn: 'Translated · Entrepreneurship',
+    tagsVi: ['Sách dịch', 'Khởi nghiệp'],
+    tagsEn: ['Translated', 'Entrepreneurship'],
+    descVi: 'Tập trung sách dịch nổi tiếng, sách doanh nhân và tủ sách Hạt giống tâm hồn.',
+    descEn: 'Focuses on famous translated works, business books, and the "Soul Seeds" series.',
+    bookCount: '920 đầu sách',
+    image: 'https://images.pexels.com/photos/27854757/pexels-photo-27854757.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+  },
+  {
+    id: 'phuongnam',
+    code: 'A07',
+    nameVi: 'Phương Nam Book',
+    nameEn: 'Phương Nam Book',
+    categoryVi: 'Tổng hợp · Ngoại văn',
+    categoryEn: 'General · Foreign Language',
+    tagsVi: ['Tổng hợp', 'Ngoại văn'],
+    tagsEn: ['General', 'Foreign Language'],
+    descVi: 'Quy mô lớn, đa dạng thể loại từ thiếu nhi, tiểu thuyết đến sách ngoại văn.',
+    descEn: 'Large-scale, diverse genres from children\'s books and novels to foreign-language titles.',
+    bookCount: '1.480 đầu sách',
+    image: 'https://images.pexels.com/photos/8045884/pexels-photo-8045884.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+  },
+  {
+    id: 'tonghop',
+    code: 'A08',
+    nameVi: 'NXB Tổng hợp TP.HCM',
+    nameEn: 'Ho Chi Minh City General Publishing House',
+    categoryVi: 'Học thuật · Nghiên cứu',
+    categoryEn: 'Academic · Research',
+    tagsVi: ['Học thuật', 'Nghiên cứu'],
+    tagsEn: ['Academic', 'Research'],
+    descVi: 'Sách học thuật, tham khảo chuyên ngành và ấn phẩm văn hóa – lịch sử.',
+    descEn: 'Academic books, specialized reference, and cultural–historical publications.',
+    bookCount: '540 đầu sách',
+    image: 'https://images.pexels.com/photos/5499564/pexels-photo-5499564.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+  },
+  {
+    id: 'ngoaiVan',
+    code: 'A09',
+    nameVi: 'Khu Ngoại văn & Artbook',
+    nameEn: 'Foreign Books & Artbook Zone',
+    categoryVi: 'Ngoại ngữ · Quà lưu niệm',
+    categoryEn: 'Foreign Language · Souvenirs',
+    tagsVi: ['Ngoại ngữ', 'Quà lưu niệm'],
+    tagsEn: ['Foreign Language', 'Souvenirs'],
+    descVi: 'Sách tiếng Anh, Pháp, Nhật và artbook mỹ thuật – kiến trúc, phù hợp du khách quốc tế và người học ngoại ngữ.',
+    descEn: 'English, French, Japanese books and fine art–architecture artbooks, ideal for international visitors and language learners.',
+    bookCount: '410 đầu sách',
+    image: 'https://images.pexels.com/photos/11565595/pexels-photo-11565595.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
 ];
 
@@ -148,8 +248,8 @@ export const calendarEvents: CalendarEvent[] = [
     dateLabelEn: 'Sunday, Oct 11, 2026',
     timeVi: '08:30 – 11:30',
     timeEn: '8:30 AM – 11:30 AM',
-    locationVi: 'Khu vui chơi thiếu nhi',
-    locationEn: 'Kids\' play area',
+    locationVi: 'Khu gian thiếu nhi',
+    locationEn: 'Kids\' area',
     descVi: 'Ngày hội dành riêng cho các bạn nhỏ với hoạt động đọc sách, trò chơi và kể chuyện. Mỗi bé nhận một cuốn sách nhỏ làm quà.',
     descEn: 'A special day for young readers with reading activities, games, and storytelling. Each child receives a small book as a gift.',
     priority: 'low',
@@ -166,8 +266,8 @@ export const calendarEvents: CalendarEvent[] = [
     dateLabelEn: 'Saturday, Oct 17, 2026',
     timeVi: '14:00 – 16:30',
     timeEn: '2:00 PM – 4:30 PM',
-    locationVi: 'Khu triển lãm',
-    locationEn: 'Exhibition area',
+    locationVi: 'Khu trưng bày – giao lưu tác giả',
+    locationEn: 'Exhibition & author-talk area',
     descVi: 'Workshop thực hành vẽ minh họa sách tranh dành cho người yêu nghệ thuật. Học cách kể chuyện qua hình ảnh từ họa sĩ chuyên nghiệp.',
     descEn: 'A hands-on picture book illustration workshop for art lovers. Learn to tell stories through images from a professional illustrator.',
     priority: 'medium',
@@ -196,32 +296,36 @@ export const calendarEvents: CalendarEvent[] = [
 ];
 
 export const mapPoints: MapPoint[] = [
-  // Parking (blue)
-  { id: 0, label: 'P1', type: 'parking', nameVi: 'Bãi giữ xe Diamond Plaza', nameEn: 'Diamond Plaza Parking', descVi: '', descEn: '', x: 12, y: 18, addressVi: '34 Lê Duẩn, P. Bến Nghé, Q.1', addressEn: '34 Lê Duẩn, Bến Nghé Ward, Dist. 1', capacity: '1.000 xe', hoursVi: '9:30 – 22:00', hoursEn: '9:30 AM – 10:00 PM' },
-  { id: 1, label: 'P2', type: 'parking', nameVi: 'Bãi giữ xe đường sách – Hai Bà Trưng', nameEn: 'Book Street Parking – Hai Bà Trưng', descVi: '', descEn: '', x: 8, y: 45, addressVi: 'Góc Nguyễn Văn Bình & Hai Bà Trưng', addressEn: 'Corner of Nguyễn Văn Bình & Hai Bà Trưng', capacity: '200 xe', hoursVi: '8:00 – 22:00', hoursEn: '8:00 AM – 10:00 PM' },
-  { id: 2, label: 'P3', type: 'parking', nameVi: 'Bãi giữ xe đường sách Nguyễn Văn Bình', nameEn: 'Book Street Parking – Nguyễn Văn Bình', descVi: '', descEn: '', x: 88, y: 15, addressVi: 'Góc Nguyễn Văn Bình & Công Xã Paris', addressEn: 'Corner of Nguyễn Văn Bình & Công Xã Paris', capacity: '200 xe', hoursVi: '8:00 – 22:00', hoursEn: '8:00 AM – 10:00 PM' },
-  { id: 3, label: 'P4', type: 'parking', nameVi: 'Bãi giữ xe Bưu điện thành phố', nameEn: 'City Post Office Parking', descVi: '', descEn: '', x: 92, y: 50, addressVi: 'Cạnh Bưu điện TP', addressEn: 'Next to City Post Office', capacity: '60 xe', hoursVi: '7:00 – 21:30', hoursEn: '7:00 AM – 9:30 PM' },
-  { id: 4, label: 'P5', type: 'parking', nameVi: 'Bãi giữ xe đường Lê Duẩn', nameEn: 'Lê Duẩn Street Parking', descVi: '', descEn: '', x: 15, y: 75, addressVi: 'Đường Lê Duẩn', addressEn: 'Lê Duẩn Street', capacity: '2.000 xe', hoursVi: '7:00 – 23:00', hoursEn: '7:00 AM – 11:00 PM' },
+  // Parking (blue) — spread around the map edges
+  { id: 0, label: 'P1', type: 'parking', nameVi: 'Bãi giữ xe Diamond Plaza', nameEn: 'Diamond Plaza Parking', descVi: '', descEn: '', x: 5, y: 8, addressVi: '34 Lê Duẩn, P. Bến Nghé, Q.1', addressEn: '34 Lê Duẩn, Bến Nghé Ward, Dist. 1', capacity: '1.000 xe', hoursVi: '9:30 – 22:00', hoursEn: '9:30 AM – 10:00 PM' },
+  { id: 1, label: 'P2', type: 'parking', nameVi: 'Bãi giữ xe Hai Bà Trưng', nameEn: 'Hai Bà Trưng Parking', descVi: '', descEn: '', x: 5, y: 35, addressVi: 'Góc Nguyễn Văn Bình & Hai Bà Trưng', addressEn: 'Corner of Nguyễn Văn Bình & Hai Bà Trưng', capacity: '200 xe', hoursVi: '8:00 – 22:00', hoursEn: '8:00 AM – 10:00 PM' },
+  { id: 2, label: 'P3', type: 'parking', nameVi: 'Bãi giữ xe Nguyễn Văn Bình', nameEn: 'Nguyễn Văn Bình Parking', descVi: '', descEn: '', x: 5, y: 62, addressVi: 'Góc Nguyễn Văn Bình & Công Xã Paris', addressEn: 'Corner of Nguyễn Văn Bình & Công Xã Paris', capacity: '200 xe', hoursVi: '8:00 – 22:00', hoursEn: '8:00 AM – 10:00 PM' },
+  { id: 3, label: 'P4', type: 'parking', nameVi: 'Bãi giữ xe Bưu điện thành phố', nameEn: 'City Post Office Parking', descVi: '', descEn: '', x: 93, y: 35, addressVi: 'Cạnh Bưu điện TP', addressEn: 'Next to City Post Office', capacity: '60 xe', hoursVi: '7:00 – 21:30', hoursEn: '7:00 AM – 9:30 PM' },
+  { id: 4, label: 'P5', type: 'parking', nameVi: 'Bãi giữ xe đường Lê Duẩn', nameEn: 'Lê Duẩn Street Parking', descVi: '', descEn: '', x: 93, y: 8, addressVi: 'Đường Lê Duẩn', addressEn: 'Lê Duẩn Street', capacity: '2.000 xe', hoursVi: '7:00 – 23:00', hoursEn: '7:00 AM – 11:00 PM' },
 
-  // Stalls (green)
-  { id: 5, label: 'S1', type: 'stall', nameVi: 'Gian hàng Kim Đồng', nameEn: 'Kim Đồng Stall', descVi: 'Văn học thiếu nhi và truyện tranh.', descEn: 'Children\'s literature & comics.', x: 28, y: 30, addressVi: 'Hơn 20 gian hàng xuất bản dọc tuyến đường', addressEn: '20+ publisher stalls line the street' },
-  { id: 6, label: 'S2', type: 'stall', nameVi: 'Gian hàng Nhã Nam', nameEn: 'Nhã Nam Stall', descVi: 'Văn học trong & ngoài nước.', descEn: 'Vietnamese & world literature.', x: 40, y: 42 },
-  { id: 7, label: 'S3', type: 'stall', nameVi: 'Gian hàng Thái Hà', nameEn: 'Thái Hà Stall', descVi: 'Sách kỹ năng & kinh doanh.', descEn: 'Skills & business books.', x: 50, y: 35 },
-  { id: 8, label: 'S4', type: 'stall', nameVi: 'Gian hàng Alphabooks', nameEn: 'Alphabooks Stall', descVi: 'Kinh tế & phát triển bản thân.', descEn: 'Economics & self-development.', x: 58, y: 48 },
-  { id: 9, label: 'S5', type: 'stall', nameVi: 'Gian hàng Phương Nam', nameEn: 'Phương Nam Stall', descVi: 'Sách giáo khoa & tham khảo.', descEn: 'Textbooks & reference books.', x: 68, y: 38 },
-  { id: 10, label: 'S6', type: 'stall', nameVi: 'Gian hàng Fahasa', nameEn: 'Fahasa Stall', descVi: 'Sách ngoại văn & văn phòng phẩm.', descEn: 'Foreign books & stationery.', x: 35, y: 55 },
+  // Stalls (green) — alternating top and bottom sides of the straight path
+  { id: 5, label: 'A01', type: 'stall', nameVi: 'NXB Trẻ', nameEn: 'NXB Trẻ', descVi: 'Văn học & thiếu nhi — 1.240 đầu sách.', descEn: 'Literature & children — 1,240 titles.', x: 15, y: 22 },
+  { id: 6, label: 'A02', type: 'stall', nameVi: 'Đông Tây Book', nameEn: 'Đông Tây Book', descVi: 'Kinh tế & quản trị — 890 đầu sách.', descEn: 'Economics & management — 890 titles.', x: 28, y: 78 },
+  { id: 7, label: 'A03', type: 'stall', nameVi: 'Alpha Books', nameEn: 'Alpha Books', descVi: 'Khoa học & công nghệ — 760 đầu sách.', descEn: 'Science & technology — 760 titles.', x: 22, y: 22 },
+  { id: 8, label: 'A04', type: 'stall', nameVi: 'NXB Kim Đồng', nameEn: 'NXB Kim Đồng', descVi: 'Thiếu nhi & truyện tranh — 1.050 đầu sách.', descEn: 'Children & comics — 1,050 titles.', x: 35, y: 78 },
+  { id: 9, label: 'A05', type: 'stall', nameVi: 'Thái Hà Books', nameEn: 'Thái Hà Books', descVi: 'Kỹ năng & truyền cảm hứng — 680 đầu sách.', descEn: 'Skills & inspirational — 680 titles.', x: 42, y: 22 },
+  { id: 10, label: 'A06', type: 'stall', nameVi: 'First News – Trí Việt', nameEn: 'First News – Trí Việt', descVi: 'Sách dịch & khởi nghiệp — 920 đầu sách.', descEn: 'Translated & entrepreneurship — 920 titles.', x: 55, y: 78 },
+  { id: 11, label: 'A07', type: 'stall', nameVi: 'Phương Nam Book', nameEn: 'Phương Nam Book', descVi: 'Tổng hợp & ngoại văn — 1.480 đầu sách.', descEn: 'General & foreign — 1,480 titles.', x: 62, y: 22 },
+  { id: 12, label: 'A08', type: 'stall', nameVi: 'NXB Tổng hợp TP.HCM', nameEn: 'HCMC General Publishing', descVi: 'Học thuật & nghiên cứu — 540 đầu sách.', descEn: 'Academic & research — 540 titles.', x: 72, y: 78 },
+  { id: 13, label: 'A09', type: 'stall', nameVi: 'Khu Ngoại văn & Artbook', nameEn: 'Foreign Books & Artbook', descVi: 'Ngoại ngữ & quà lưu niệm — 410 đầu sách.', descEn: 'Foreign language & souvenirs — 410 titles.', x: 80, y: 22 },
 
   // Cafes (brown)
-  { id: 11, label: 'C1', type: 'cafe', nameVi: 'Phương Nam Coffee Book', nameEn: 'Phương Nam Coffee Book', descVi: 'Không gian thoáng mát, hiện đại, phù hợp ngồi đọc sách.', descEn: 'Bright, modern space, great for reading.', x: 45, y: 62 },
-  { id: 12, label: 'C2', type: 'cafe', nameVi: 'Bản Coffee', nameEn: 'Bản Coffee', descVi: 'Không gian thoáng mát, hiện đại, phù hợp ngồi đọc sách.', descEn: 'Bright, modern space, great for reading.', x: 72, y: 58 },
+  { id: 14, label: 'C1', type: 'cafe', nameVi: 'Phương Nam Coffee Book', nameEn: 'Phương Nam Coffee Book', descVi: 'Bàn ghế gọn gàng dưới bóng cây, lý tưởng để vừa nhâm nhi cà phê vừa đọc sách.', descEn: 'Cozy seating under trees — perfect for coffee and a book.', x: 48, y: 50 },
+  { id: 15, label: 'C2', type: 'cafe', nameVi: 'Bản Coffee', nameEn: 'Bản Coffee', descVi: 'Bàn ghế gọn gàng dưới bóng cây, lý tưởng để vừa nhâm nhi cà phê vừa đọc sách.', descEn: 'Cozy seating under trees — perfect for coffee and a book.', x: 65, y: 50 },
 
-  // Amenities (purple)
-  { id: 13, label: 'A1', type: 'amenity', nameVi: 'Góc check-in', nameEn: 'Photo corner', descVi: 'Không gian thiết kế độc đáo, lý tưởng để chụp ảnh.', descEn: 'Uniquely designed, perfect for photos.', x: 55, y: 70 },
-  { id: 14, label: 'A2', type: 'amenity', nameVi: 'Khu triển lãm sách', nameEn: 'Book exhibition area', descVi: 'Nơi diễn ra triển lãm, hội thảo giao lưu tác giả – độc giả.', descEn: 'Hosts exhibitions and author talks.', x: 30, y: 68 },
-  { id: 15, label: 'A3', type: 'amenity', nameVi: 'Khu vui chơi thiếu nhi', nameEn: 'Kids\' play area', descVi: 'Không gian trải nghiệm, trò chơi và truyện tranh cho trẻ em.', descEn: 'Play area with games and comics for kids.', x: 80, y: 72 },
+  // Check-in corner (amenity type, special)
+  { id: 16, label: 'CH1', type: 'checkin', nameVi: 'Góc check-in Bưu điện Trung tâm', nameEn: 'Central Post Office Check-in Corner', descVi: 'Phông nền kiến trúc Pháp cổ điển, góc chụp ảnh được yêu thích nhất đường sách. Đẹp nhất lúc sáng sớm hoặc xế chiều.', descEn: 'Classic French architecture backdrop — the most-loved photo spot on the street. Best in early morning or late afternoon.', x: 90, y: 62 },
 
-  // Heritage (gold)
-  { id: 16, label: 'H1', type: 'heritage', nameVi: 'Di sản văn hóa Thủ Đức', nameEn: 'Thủ Đức Heritage Site', descVi: 'Di sản văn hóa — điểm tham quan lịch sử tại Thủ Đức.', descEn: 'Heritage site — historical visit point in Thủ Đức.', x: 62, y: 25 },
+  // Kids area (amenity type)
+  { id: 17, label: 'K1', type: 'kids', nameVi: 'Khu gian thiếu nhi', nameEn: 'Kids\' Area', descVi: 'Kệ sách thấp, giờ kể chuyện và workshop vẽ – tô màu vào cuối tuần (9h–11h và 15h–17h).', descEn: 'Low bookshelves, storytelling and drawing–coloring workshops on weekends (9–11am and 3–5pm).', x: 50, y: 78 },
+
+  // Exhibition/event area (amenity type)
+  { id: 18, label: 'E1', type: 'exhibition', nameVi: 'Khu trưng bày – giao lưu tác giả', nameEn: 'Exhibition & Author-talk Area', descVi: 'Nơi tổ chức book-launch, ký tặng và talk-show cuối tuần, thường vào 10h–12h hoặc 15h–17h.', descEn: 'Hosts book launches, signings, and weekend talk shows, usually 10am–12pm or 3–5pm.', x: 18, y: 50 },
 ];
 
 export const heritageSites: HeritageSite[] = [
@@ -233,12 +337,13 @@ export const heritageSites: HeritageSite[] = [
 ];
 
 export const heroImage = 'https://images.pexels.com/photos/12898231/pexels-photo-12898231.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
+
+// Reduced from 4 to 2: keep the large bookshelf photo + the two friends reading together
 export const aboutGalleryImages = [
   'https://images.pexels.com/photos/34149049/pexels-photo-34149049.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-  'https://images.pexels.com/photos/2875855/pexels-photo-2875855.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-  'https://images.pexels.com/photos/2079452/pexels-photo-2079452.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-  'https://images.pexels.com/photos/10638213/pexels-photo-10638213.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
 ];
+
+export const heritagePreviewImage = 'https://images.pexels.com/photos/29820533/pexels-photo-29820533.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
 
 export const visitorExperienceImages = {
   checkin: 'https://images.pexels.com/photos/36236916/pexels-photo-36236916.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',

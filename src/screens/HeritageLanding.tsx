@@ -1,35 +1,14 @@
-import { MapPin, Calendar, Send, Image as ImageIcon, Landmark } from 'lucide-react';
+import { MapPin, Calendar, Send, Image as ImageIcon } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
 import { QRCode } from '@/components/QRCode';
-import { LangToggle } from '@/components/LangToggle';
-import { Logo } from '@/components/Logo';
 import { heritageImages } from '@/data/mockData';
 
 export function HeritageLanding() {
   const { t, lang, navigate } = useApp();
 
   return (
-    <div className="min-h-screen bg-cream-100">
-      {/* Standalone header */}
-      <header className="sticky top-0 z-50 bg-forest-600 shadow-soft">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <button onClick={() => navigate('home')}>
-              <div className="[&_span]:text-cream-100 [&_.text-ink-muted]:text-forest-200">
-                <Logo size="md" />
-              </div>
-            </button>
-            <div className="flex items-center gap-3">
-              <span className="text-cream-100 font-serif font-semibold text-lg tracking-wide hidden sm:block">
-                {t('heritageTitle')}
-              </span>
-              <LangToggle />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+    <div className="bg-cream-100 animate-fadeIn">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero photo area */}
         <div className="relative w-full h-[350px] sm:h-[450px] rounded-xl overflow-hidden mb-8 shadow-card">
           <img src={heritageImages.hero} alt="Heritage site" className="w-full h-full object-cover" />
