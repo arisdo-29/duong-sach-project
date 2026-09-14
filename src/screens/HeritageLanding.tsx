@@ -4,6 +4,7 @@ import { useApp } from '@/i18n/AppContext';
 import { QRCode } from '@/components/QRCode';
 import { heritageImages, heritageSites, type HeritageSite } from '@/data/mockData';
 
+
 export function HeritageLanding() {
   const { lang, navigate, selectedHeritageId, setSelectedHeritageId } = useApp();
   const [query, setQuery] = useState('');
