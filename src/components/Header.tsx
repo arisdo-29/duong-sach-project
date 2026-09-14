@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, Menu, X, Calendar, MapPin, Home, Store, Landmark, MessageSquare, ChevronDown, BookOpen } from 'lucide-react';
+import { Search, Menu, X, Calendar, MapPin, Home, Store, Landmark, MessageSquare, ChevronDown, BookOpen, ShieldCheck } from 'lucide-react';
 import { useApp, type ScreenId } from '@/i18n/AppContext';
 import { Logo } from './Logo';
 import { LangToggle } from './LangToggle';
@@ -56,7 +56,7 @@ export function Header() {
             <nav className="hidden lg:flex items-center gap-0.5">
               {navItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = screen === item.id || (item.id === 'events' && (screen === 'events-proposal' || screen === 'events-management'));
+                const isActive = screen === item.id || (item.id === 'events' && screen === 'events-proposal');
                 return (
                   <button
                     key={item.id}
@@ -144,6 +144,14 @@ export function Header() {
                 )}
               </div>
               <LangToggle />
+              <button
+                onClick={() => handleNav('admin')}
+                className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg border border-forest-300/50 text-xs font-medium text-cream-100 hover:bg-forest-700/60 transition-all"
+                title="Cổng quản trị nội bộ"
+              >
+                <ShieldCheck size={16} strokeWidth={1.75} />
+                Đăng nhập quản trị
+              </button>
               {/* AI Assistant bubble */}
               <button
                 onClick={() => handleNav('chatbot')}
@@ -210,6 +218,13 @@ export function Header() {
                   <BookOpen size={18} strokeWidth={1.75} />
                   {t('navAssistant')}
                 </button>
+                <button
+                  onClick={() => handleNav('admin')}
+                  className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium text-cream-100 hover:bg-forest-700/60 transition-all"
+                >
+                  <ShieldCheck size={18} strokeWidth={1.75} />
+                  Đăng nhập quản trị
+                </button>
               </div>
             </div>
           )}
@@ -226,7 +241,7 @@ export function Header() {
             { id: 'feedback' as ScreenId, icon: MessageSquare, label: t('navFeedback') },
           ].map((item) => {
             const Icon = item.icon;
-            const isActive = screen === item.id || (item.id === 'events' && (screen === 'events-proposal' || screen === 'events-management'));
+            const isActive = screen === item.id || (item.id === 'events' && screen === 'events-proposal');
             return (
               <button
                 key={item.id}

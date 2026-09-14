@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MapPin, Navigation, Store, Landmark, Car, Coffee, ArrowRight, MessageSquare, Info, Camera, Baby, BookOpen } from 'lucide-react';
+import { MapPin, Store, Landmark, Car, Coffee, ArrowRight, MessageSquare, Info, Camera, Baby, BookOpen } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
 import { mapPoints, type MapPoint } from '@/data/mockData';
 

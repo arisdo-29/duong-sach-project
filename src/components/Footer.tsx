@@ -1,4 +1,4 @@
-import { BookOpen, MapPin, Clock, Phone, Mail, Facebook, Instagram, Youtube, ArrowRight } from 'lucide-react';
+import { BookOpen, MapPin, Clock, Phone, Mail, Facebook, Instagram, Youtube } from 'lucide-react';
 import { useApp, type ScreenId } from '@/i18n/AppContext';
 
 export function Footer() {
@@ -141,7 +141,7 @@ export function Footer() {
           </div>
 
           <div className="mt-10 pt-6 border-t border-white/10">
-            <p className="text-xs text-cream-100/40 text-center">{t('footerRights')}</p>
+            <div className="flex justify-center gap-3 text-xs text-cream-100/40"><p>{t('footerRights')}</p><button onClick={() => navigate('admin')} className="hover:text-cream-100 underline">Cổng quản trị</button></div>
           </div>
         </div>
       </footer>

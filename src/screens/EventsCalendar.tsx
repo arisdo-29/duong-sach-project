@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, CheckCircle2, Clock, Calendar, X, MapPin, CalendarPlus, ArrowRight, Settings } from 'lucide-react';
+import { Plus, Clock, Calendar, X, MapPin, CalendarPlus, ArrowRight } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
 import { calendarEvents, type CalendarEvent } from '@/data/mockData';
 
@@ -82,7 +82,7 @@ export function EventsCalendar() {
       </div>
 
       {/* Sub-page links */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="max-w-xl">
         <button
           onClick={() => navigate('events-proposal')}
           className="card-hover p-5 flex items-center gap-4 text-left"
@@ -97,19 +97,6 @@ export function EventsCalendar() {
           <ArrowRight size={18} className="text-forest-500 shrink-0" />
         </button>
 
-        <button
-          onClick={() => navigate('events-management')}
-          className="card-hover p-5 flex items-center gap-4 text-left"
-        >
-          <div className="w-11 h-11 rounded-lg bg-forest-50 flex items-center justify-center shrink-0">
-            <Settings size={20} className="text-forest-600" strokeWidth={1.75} />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-serif text-base font-semibold text-ink">{t('reviewPanelTitle')}</h3>
-            <p className="text-sm text-ink-muted mt-0.5">{t('reviewSubtitle')}</p>
-          </div>
-          <ArrowRight size={18} className="text-forest-500 shrink-0" />
-        </button>
       </div>
 
       {/* Event detail modal */}
