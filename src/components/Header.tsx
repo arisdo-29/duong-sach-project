@@ -1,23 +1,18 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, Menu, X, Calendar, MapPin, Home, Store, Landmark, MessageSquare, ChevronDown, BookOpen, ShieldCheck } from 'lucide-react';
+import { Search, Menu, X, Calendar, MapPin, Home, Store, Landmark, MessageSquare, BookOpen, ShieldCheck } from 'lucide-react';
 import { useApp, type ScreenId } from '@/i18n/AppContext';
 import { Logo } from './Logo';
 import { LangToggle } from './LangToggle';
 
 export function Header() {
-  const { t, lang, screen, navigate } = useApp();
+  const { t, screen, navigate, setSelectedHeritageId } = useApp();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  const [heritageOpen, setHeritageOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setHeritageOpen(false);
-      }
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
         setSearchOpen(false);
       }
@@ -36,8 +31,8 @@ export function Header() {
   const handleNav = (id: ScreenId) => {
     navigate(id);
     setMobileOpen(false);
-    setHeritageOpen(false);
     setSearchOpen(false);
+    if (id === 'heritage') setSelectedHeritageId(null);
   };
 
   return (
@@ -73,35 +68,9 @@ export function Header() {
                 );
               })}
 
-              {/* Heritage dropdown */}
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setHeritageOpen(!heritageOpen)}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
-                    screen === 'heritage'
-                      ? 'bg-forest-700 text-white'
-                      : 'text-cream-100 hover:bg-forest-700/60'
-                  }`}
-                >
-                  <Landmark size={15} strokeWidth={1.75} />
-                  {t('navHeritage')}
-                  <ChevronDown size={14} className={`transition-transform ${heritageOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {heritageOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-lift border border-cream-300 py-1.5 animate-fadeIn z-50">
-                    {['Di sản số 01', 'Di sản số 02', 'Di sản số 03'].map((name, i) => (
-                      <button
-                        key={i}
-                        onClick={() => handleNav('heritage')}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-sm text-ink-soft hover:bg-forest-50 transition-colors text-left"
-                      >
-                        <Landmark size={14} className="text-forest-500 shrink-0" />
-                        {lang === 'vi' ? name : name.replace('Di sản', 'Heritage')}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <button onClick={() => handleNav('heritage')} className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${screen === 'heritage' ? 'bg-forest-700 text-white' : 'text-cream-100 hover:bg-forest-700/60'}`}>
+                <Landmark size={15} strokeWidth={1.75} />{t('navHeritage')}
+              </button>
 
               <button
                 onClick={() => handleNav('feedback')}

@@ -53,6 +53,14 @@ export interface HeritageSite {
   id: number;
   nameVi: string;
   nameEn: string;
+  category: string;
+  address: string;
+  period: string;
+  summary: string;
+  value: string;
+  highlight: string;
+  image: string;
+  sourceUrl: string;
 }
 
 export const stalls: Stall[] = [
@@ -329,11 +337,13 @@ export const mapPoints: MapPoint[] = [
 ];
 
 export const heritageSites: HeritageSite[] = [
-  { id: 0, nameVi: 'Di sản số 01', nameEn: 'Heritage #01' },
-  { id: 1, nameVi: 'Di sản số 02', nameEn: 'Heritage #02' },
-  { id: 2, nameVi: 'Di sản số 03', nameEn: 'Heritage #03' },
-  { id: 3, nameVi: 'Di sản số 04', nameEn: 'Heritage #04' },
-  { id: 4, nameVi: 'Di sản số 05', nameEn: 'Heritage #05' },
+  { id: 1, nameVi: 'Bưu điện Trung tâm Sài Gòn', nameEn: 'Saigon Central Post Office', category: 'Kiến trúc đô thị', address: '02 Công trường Công xã Paris, TP.HCM', period: 'Thế kỷ XIX', summary: 'Công trình bưu chính tiêu biểu ở trung tâm thành phố, nằm cạnh Nhà thờ Đức Bà.', value: 'Không gian lưu giữ dấu ấn kiến trúc và lịch sử liên lạc của Sài Gòn.', highlight: 'Hai bản đồ lịch sử năm 1892 và 1936 vẫn được lưu giữ trong tòa nhà.', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Buu_dien_2.jpg/1200px-Buu_dien_2.jpg', sourceUrl: 'https://vnpost.vn/vi/hoat-dong-nganh/buu-dien-trung-tam-thanh-pho-ho-chi-minh-mot-diem-den-hap-dan' },
+  { id: 2, nameVi: 'Nhà thờ Đức Bà Sài Gòn', nameEn: 'Notre-Dame Cathedral Basilica of Saigon', category: 'Kiến trúc tôn giáo', address: '01 Công xã Paris, TP.HCM', period: '1863–1880', summary: 'Biểu tượng kiến trúc tôn giáo nổi bật tại khu vực trung tâm Sài Gòn.', value: 'Gắn với diện mạo đô thị lịch sử và không gian công cộng quanh Công xã Paris.', highlight: 'Công trình là một điểm mốc quen thuộc của trung tâm thành phố.', image: 'https://images.pexels.com/photos/31184085/pexels-photo-31184085.jpeg?auto=compress&cs=tinysrgb&w=1200', sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/documents/10184/265325/Danh%2Bs%C3%A1ch%2Bdi%2Bt%C3%ADch%2B%C4%91%C3%A3%2BQ%C4%90%2Bx%E1%BA%BFp%2Bh%E1%BA%A1ng%2B%C4%91%E1%BA%BFn%2Bth%C3%A1ng%2B5%2B2017.pdf/948c1ef9-4d46-43b6-af76-c1e616dcf54d' },
+  { id: 3, nameVi: 'Dinh Độc Lập', nameEn: 'Independence Palace', category: 'Di tích lịch sử', address: '135 Nam Kỳ Khởi Nghĩa, TP.HCM', period: 'Thế kỷ XX', summary: 'Địa điểm gắn với nhiều dấu mốc của lịch sử Việt Nam hiện đại.', value: 'Di tích quốc gia đặc biệt, lưu giữ ký ức về thời khắc thống nhất đất nước.', highlight: 'Không gian trưng bày kể lại lịch sử của tòa dinh và các sự kiện quan trọng.', image: 'https://upload.wikimedia.org/wikipedia/commons/7/7d/20190923_Independence_Palace-10.jpg', sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/documents/10184/265325/Danh%2Bs%C3%A1ch%2Bdi%2Bt%C3%ADch%2B%C4%91%C3%A3%2BQ%C4%90%2Bx%E1%BA%BFp%2Bh%E1%BA%A1ng%2B%C4%91%E1%BA%BFn%2Bth%C3%A1ng%2B5%2B2017.pdf/948c1ef9-4d46-43b6-af76-c1e616dcf54d' },
+  { id: 4, nameVi: 'Bến Nhà Rồng', nameEn: 'Nha Rong Wharf', category: 'Di tích lịch sử', address: '01 Nguyễn Tất Thành, TP.HCM', period: 'Thế kỷ XIX', summary: 'Địa điểm gắn với hành trình ra đi tìm đường cứu nước của Nguyễn Tất Thành năm 1911.', value: 'Không gian giáo dục lịch sử, hiện là một phần của Bảo tàng Hồ Chí Minh.', highlight: 'Ngày 05/06/1911, Nguyễn Tất Thành rời bến cảng trên tàu Latouche-Tréville.', image: 'https://images.pexels.com/photos/30802123/pexels-photo-30802123.jpeg?auto=compress&cs=tinysrgb&w=1200', sourceUrl: 'https://baotanghochiminh.vn/chuyen-di-lich-su.htm' },
+  { id: 5, nameVi: 'Bảo tàng Thành phố Hồ Chí Minh', nameEn: 'Ho Chi Minh City Museum', category: 'Kiến trúc – bảo tàng', address: '65 Lý Tự Trọng, TP.HCM', period: 'Thế kỷ XIX', summary: 'Tòa nhà bảo tàng giới thiệu lịch sử, văn hóa và con người Thành phố Hồ Chí Minh.', value: 'Công trình được công nhận là di tích kiến trúc nghệ thuật quốc gia năm 2012.', highlight: 'Trưng bày từ thiên nhiên, khảo cổ đến lịch sử Sài Gòn – Gia Định.', image: 'https://images.pexels.com/photos/31236063/pexels-photo-31236063.jpeg?auto=compress&cs=tinysrgb&w=1200', sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/tin-chi-tiet/-/chi-tiet/bao-tang-thanh-pho-ho-chi-minh-19637-2015.html' },
+  { id: 6, nameVi: 'Bảo tàng Lịch sử TP.HCM', nameEn: 'Ho Chi Minh City History Museum', category: 'Kiến trúc – bảo tàng', address: '02 Nguyễn Bỉnh Khiêm, TP.HCM', period: 'Thế kỷ XX', summary: 'Bảo tàng nghiên cứu, bảo tồn và giới thiệu lịch sử Việt Nam cùng các nước trong khu vực.', value: 'Nơi kết nối tư liệu, hiện vật và hoạt động giáo dục di sản.', highlight: 'Nằm trong khu vực Thảo Cầm Viên, gần nhiều điểm văn hóa trung tâm.', image: 'https://images.pexels.com/photos/257621/pexels-photo-257621.jpeg?auto=compress&cs=tinysrgb&w=1200', sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/tin-chi-tiet/-/chi-tiet/bao-tang-lich-su-thanh-pho-ho-chi-minh-19126-2015.html' },
+  ...['Nhà hát Thành phố', 'Chợ Bến Thành', 'Trụ sở UBND Thành phố', 'Bảo tàng Mỹ thuật TP.HCM', 'Chùa Ngọc Hoàng', 'Hội quán Tuệ Thành', 'Chùa Bà Thiên Hậu', 'Lăng Ông Bà Chiểu', 'Đình Thông Tây Hội', 'Đình Bình Đông', 'Lò gốm cổ Hưng Lợi', 'Địa đạo Phú Thọ Hòa', 'Khu trại giam Bệnh viện Chợ Quán', 'Ngã ba Giồng', 'Di tích Rừng Sác', 'Địa đạo Củ Chi', 'Bến Bình Đông', 'Chợ Lớn', 'Nhà thờ Huyện Sĩ', 'Chùa Giác Lâm', 'Khu tưởng niệm các Vua Hùng'].map((nameVi, index) => ({ id: index + 7, nameVi, nameEn: nameVi, category: index < 4 ? 'Kiến trúc – tín ngưỡng' : 'Di tích lịch sử – văn hóa', address: 'Thành phố Hồ Chí Minh', period: 'Di sản đô thị Sài Gòn – TP.HCM', summary: `${nameVi} là một điểm đến trong tuyến khám phá di sản đô thị, phản ánh lớp trầm tích lịch sử và văn hóa của thành phố.`, value: 'Điểm dừng giúp kết nối câu chuyện cộng đồng, kiến trúc và ký ức địa phương.', highlight: 'Mở trang này qua mã QR để đọc tư liệu, ghi chú tham quan và nội dung được cập nhật.', image: 'https://images.pexels.com/photos/25949836/pexels-photo-25949836.jpeg?auto=compress&cs=tinysrgb&w=1200', sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/documents/10184/265325/Danh%2Bs%C3%A1ch%2Bdi%2Bt%C3%ADch%2B%C4%91%C3%A3%2BQ%C4%90%2Bx%E1%BA%BFp%2Bh%E1%BA%A1ng%2B%C4%91%E1%BA%BFn%2Bth%C3%A1ng%2B5%2B2017.pdf/948c1ef9-4d46-43b6-af76-c1e616dcf54d' })),
 ];
 
 export const heroImage = 'https://images.pexels.com/photos/12898231/pexels-photo-12898231.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';

@@ -95,12 +95,12 @@ export const translations = {
 
   // Events
   adminCalendar: { vi: 'Lịch sự kiện', en: 'Events Calendar' },
-  proposeEvent: { vi: '+ Đề xuất tổ chức', en: '+ Propose an event' },
+  proposeEvent: { vi: 'Đề xuất tổ chức', en: 'Propose an event' },
   eventProposalTitle: { vi: 'ĐỀ XUẤT TỔ CHỨC SỰ KIỆN', en: 'EVENT PROPOSAL' },
   eventProposalSubtitle: { vi: 'Gửi đề xuất sự kiện để Ban quản lý xét duyệt', en: 'Submit an event proposal for management review' },
   eventManagementTitle: { vi: 'BAN QUẢN LÝ — XÉT DUYỆT', en: 'MANAGEMENT — REVIEW' },
   eventManagementSubtitle: { vi: 'Xét duyệt đề xuất sự kiện', en: 'Event proposal review' },
-  backToEvents: { vi: '← Về trang sự kiện', en: '← Back to events' },
+  backToEvents: { vi: 'Về trang sự kiện', en: 'Back to events' },
   priorityLegend: {
     vi: 'Mức quan trọng có màu + nhãn',
     en: 'Priority shown by color + label',
