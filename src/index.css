@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-cream-100 text-ink font-sans;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  h1, h2, h3, h4 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-forest-600 text-white font-medium rounded-lg shadow-soft transition-all hover:bg-forest-700 hover:shadow-card active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border border-forest-600 text-forest-600 font-medium rounded-lg transition-all hover:bg-forest-50 active:scale-[0.98];
+  }
+  .btn-dark {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-ink text-white font-medium rounded-lg shadow-soft transition-all hover:bg-ink-soft active:scale-[0.98];
+  }
+  .card {
+    @apply bg-white rounded-xl shadow-card border border-cream-300/60 transition-all;
+  }
+  .card-hover {
+    @apply card hover:shadow-lift hover:-translate-y-0.5 cursor-pointer;
+  }
+  .tag {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full;
+  }
+  .tag-low {
+    @apply tag bg-priority-lowBg text-priority-low;
+  }
+  .tag-medium {
+    @apply tag bg-priority-mediumBg text-priority-medium;
+  }
+  .tag-high {
+    @apply tag bg-priority-highBg text-priority-high;
+  }
+  .input-field {
+    @apply w-full px-4 py-2.5 bg-cream-50 border border-cream-300 rounded-lg text-ink placeholder:text-ink-light focus:outline-none focus:border-forest-500 focus:ring-2 focus:ring-forest-500/20 transition-all;
+  }
+  .label-text {
+    @apply block text-sm font-medium text-ink-soft mb-1.5;
+  }
+  .section-title {
+    @apply font-serif text-xl font-semibold text-ink tracking-tight;
+  }
+  .bilingual-en {
+    @apply text-ink-muted text-sm font-sans font-normal;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #C5C5C5; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #A5A5A5; }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn { animation: fadeIn 0.4s ease-out; }
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-slideInRight { animation: slideInRight 0.3s ease-out; }
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.animate-bounce-soft { animation: bounce-soft 1.5s ease-in-out infinite; }
+
+/* QR code pattern */
+.qr-pattern {
+  background-image:
+    linear-gradient(45deg, #1A1A1A 25%, transparent 25%),
+    linear-gradient(-45deg, #1A1A1A 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #1A1A1A 75%),
+    linear-gradient(-45deg, transparent 75%, #1A1A1A 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+}
+
+/* Map grid */
+.map-grid {
+  background-image:
+    linear-gradient(to right, #E8E8E5 1px, transparent 1px),
+    linear-gradient(to bottom, #E8E8E5 1px, transparent 1px);
+  background-size: 40px 40px;
+}
