@@ -123,13 +123,6 @@ export function Header() {
               </button>
               {/* AI Assistant bubble */}
               <button
-                onClick={() => handleNav('chatbot')}
-                className="hidden sm:flex w-9 h-9 items-center justify-center rounded-lg bg-forest-700/50 text-cream-100 hover:bg-forest-700 transition-all"
-                title={t('navAssistant')}
-              >
-                <MessageSquare size={18} strokeWidth={1.75} />
-              </button>
-              <button
                 className="lg:hidden text-cream-100 p-1.5"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label="Menu"

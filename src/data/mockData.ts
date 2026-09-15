@@ -10,6 +10,7 @@ export interface Stall {
   descVi: string;
   descEn: string;
   bookCount: string;
+  bookCountEn?: string;
   image: string;
 }
 
@@ -77,6 +78,7 @@ export const stalls: Stall[] = [
     descVi: 'Nhà xuất bản hàng đầu Việt Nam với hơn 40 năm lịch sử, chuyên xuất bản sách văn học và thiếu nhi chất lượng cao.',
     descEn: 'A leading Vietnamese publisher with 40+ years of history, specializing in quality literature and children\'s books.',
     bookCount: '1.240 đầu sách',
+    bookCountEn: '1,240 titles',
     image: 'https://images.pexels.com/photos/27854754/pexels-photo-27854754.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
@@ -91,6 +93,7 @@ export const stalls: Stall[] = [
     descVi: 'Chuyên cung cấp sách kinh tế, quản trị và kỹ năng mềm dành cho doanh nhân và người đi làm.',
     descEn: 'Specializes in economics, management, and soft-skills books for entrepreneurs and professionals.',
     bookCount: '890 đầu sách',
+    bookCountEn: '890 titles',
     image: 'https://images.pexels.com/photos/29614944/pexels-photo-29614944.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
@@ -105,6 +108,7 @@ export const stalls: Stall[] = [
     descVi: 'Đầu mối cung cấp sách khoa học, công nghệ và tư duy sáng tạo cho giới trẻ.',
     descEn: 'A leading source for science, technology, and creative-thinking books for young readers.',
     bookCount: '760 đầu sách',
+    bookCountEn: '760 titles',
     image: 'https://images.pexels.com/photos/3862153/pexels-photo-3862153.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
@@ -119,6 +123,7 @@ export const stalls: Stall[] = [
     descVi: 'Văn học thiếu nhi và truyện tranh quen thuộc với nhiều thế hệ độc giả Việt Nam.',
     descEn: 'Beloved children\'s literature and comics familiar to generations of Vietnamese readers.',
     bookCount: '1.050 đầu sách',
+    bookCountEn: '1,050 titles',
     image: 'https://images.pexels.com/photos/34750570/pexels-photo-34750570.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
@@ -133,6 +138,7 @@ export const stalls: Stall[] = [
     descVi: 'Nổi bật với sách kỹ năng, Phật giáo và nhiều tác phẩm truyền cảm hứng.',
     descEn: 'Known for skills books, Buddhism titles, and many inspirational works.',
     bookCount: '680 đầu sách',
+    bookCountEn: '680 titles',
     image: 'https://images.pexels.com/photos/13279386/pexels-photo-13279386.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
@@ -147,6 +153,7 @@ export const stalls: Stall[] = [
     descVi: 'Tập trung sách dịch nổi tiếng, sách doanh nhân và tủ sách Hạt giống tâm hồn.',
     descEn: 'Focuses on famous translated works, business books, and the "Soul Seeds" series.',
     bookCount: '920 đầu sách',
+    bookCountEn: '920 titles',
     image: 'https://images.pexels.com/photos/27854757/pexels-photo-27854757.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
@@ -161,6 +168,7 @@ export const stalls: Stall[] = [
     descVi: 'Quy mô lớn, đa dạng thể loại từ thiếu nhi, tiểu thuyết đến sách ngoại văn.',
     descEn: 'Large-scale, diverse genres from children\'s books and novels to foreign-language titles.',
     bookCount: '1.480 đầu sách',
+    bookCountEn: '1,480 titles',
     image: 'https://images.pexels.com/photos/8045884/pexels-photo-8045884.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
@@ -175,6 +183,7 @@ export const stalls: Stall[] = [
     descVi: 'Sách học thuật, tham khảo chuyên ngành và ấn phẩm văn hóa – lịch sử.',
     descEn: 'Academic books, specialized reference, and cultural–historical publications.',
     bookCount: '540 đầu sách',
+    bookCountEn: '540 titles',
     image: 'https://images.pexels.com/photos/5499564/pexels-photo-5499564.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
@@ -189,6 +198,7 @@ export const stalls: Stall[] = [
     descVi: 'Sách tiếng Anh, Pháp, Nhật và artbook mỹ thuật – kiến trúc, phù hợp du khách quốc tế và người học ngoại ngữ.',
     descEn: 'English, French, Japanese books and fine art–architecture artbooks, ideal for international visitors and language learners.',
     bookCount: '410 đầu sách',
+    bookCountEn: '410 titles',
     image: 'https://images.pexels.com/photos/11565595/pexels-photo-11565595.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
 ];
@@ -508,7 +518,7 @@ export const heritageSites: HeritageSite[] = [
     image: 'https://chonthieng.com/data/uploads/2022/04/1-Chua-Ba-Thien-Hau-nguon-vinpearl.com_.jpg',
     sourceUrl: 'https://en.wikipedia.org/wiki/Thien_Hau_Temple_(Cholon)',
   },
-  ...['Lăng Ông Bà Chiểu', 'Đình Thông Tây Hội', 'Đình Bình Đông', 'Lò gốm cổ Hưng Lợi', 'Địa đạo Phú Thọ Hòa', 'Khu trại giam Bệnh viện Chợ Quán', 'Ngã ba Giồng', 'Di tích Rừng Sác', 'Địa đạo Củ Chi', 'Bến Bình Đông', 'Chợ Lớn', 'Nhà thờ Huyện Sĩ', 'Chùa Giác Lâm', 'Khu tưởng niệm các Vua Hùng'].map((nameVi, index) => ({ id: index + 7, nameVi, nameEn: nameVi, category: index < 4 ? 'Kiến trúc – tín ngưỡng' : 'Di tích lịch sử – văn hóa', address: 'Thành phố Hồ Chí Minh', period: 'Di sản đô thị Sài Gòn – TP.HCM', summary: `${nameVi} là một điểm đến trong tuyến khám phá di sản đô thị, phản ánh lớp trầm tích lịch sử và văn hóa của thành phố.`, value: 'Điểm dừng giúp kết nối câu chuyện cộng đồng, kiến trúc và ký ức địa phương.', highlight: 'Mở trang này qua mã QR để đọc tư liệu, ghi chú tham quan và nội dung được cập nhật.', image: 'https://images.pexels.com/photos/25949836/pexels-photo-25949836.jpeg?auto=compress&cs=tinysrgb&w=1200', sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/documents/10184/265325/Danh%2Bs%C3%A1ch%2Bdi%2Bt%C3%ADch%2B%C4%91%C3%A3%2BQ%C4%90%2Bx%E1%BA%BFp%2Bh%E1%BA%A1ng%2B%C4%91%E1%BA%BFn%2Bth%C3%A1ng%2B5%2B2017.pdf/948c1ef9-4d46-43b6-af76-c1e616dcf54d' })),
+  ...['Lăng Ông Bà Chiểu', 'Đình Thông Tây Hội', 'Đình Bình Đông', 'Lò gốm cổ Hưng Lợi', 'Địa đạo Phú Thọ Hòa', 'Khu trại giam Bệnh viện Chợ Quán', 'Ngã ba Giồng', 'Di tích Rừng Sác', 'Địa đạo Củ Chi', 'Bến Bình Đông', 'Chợ Lớn', 'Nhà thờ Huyện Sĩ', 'Chùa Giác Lâm', 'Khu tưởng niệm các Vua Hùng'].map((nameVi, index) => ({ id: index + 14, nameVi, nameEn: nameVi, category: index < 4 ? 'Kiến trúc – tín ngưỡng' : 'Di tích lịch sử – văn hóa', address: 'Thành phố Hồ Chí Minh', period: 'Di sản đô thị Sài Gòn – TP.HCM', summary: `${nameVi} là một điểm đến trong tuyến khám phá di sản đô thị, phản ánh lớp trầm tích lịch sử và văn hóa của thành phố.`, value: 'Điểm dừng giúp kết nối câu chuyện cộng đồng, kiến trúc và ký ức địa phương.', highlight: 'Mở trang này qua mã QR để đọc tư liệu, ghi chú tham quan và nội dung được cập nhật.', image: 'https://images.pexels.com/photos/25949836/pexels-photo-25949836.jpeg?auto=compress&cs=tinysrgb&w=1200', sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/documents/10184/265325/Danh%2Bs%C3%A1ch%2Bdi%2Bt%C3%ADch%2B%C4%91%C3%A3%2BQ%C4%90%2Bx%E1%BA%BFp%2Bh%E1%BA%A1ng%2B%C4%91%E1%BA%BFn%2Bth%C3%A1ng%2B5%2B2017.pdf/948c1ef9-4d46-43b6-af76-c1e616dcf54d' })),
 ];
 
 export const heroImage = 'https://images.pexels.com/photos/12898231/pexels-photo-12898231.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
