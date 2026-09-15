@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Clock, Calendar, X, MapPin, CalendarPlus, ArrowRight } from 'lucide-react';
+import { Plus, Clock, Calendar, X, MapPin, ArrowRight } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
 import { calendarEvents, type CalendarEvent } from '@/data/mockData';
 
@@ -140,10 +140,6 @@ export function EventsCalendar() {
                   {lang === 'vi' ? selectedEvent.descVi : selectedEvent.descEn}
                 </p>
               </div>
-              <button className="btn-primary w-full">
-                <CalendarPlus size={18} strokeWidth={1.75} />
-                {t('addtoCalendar')}
-              </button>
             </div>
           </div>
         </div>
