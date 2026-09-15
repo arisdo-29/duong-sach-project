@@ -359,8 +359,8 @@ export const heritageSites: HeritageSite[] = [
   value: 'Không chỉ là di sản kiến trúc với mặt tiền theo phong cách Phục Hưng, khung sắt kiểu nhà ga châu Âu và mái vòm cong đặc trưng, công trình còn là chứng nhân lịch sử của ngành bưu chính viễn thông Việt Nam thời Pháp thuộc, phản ánh quá trình đô thị hóa và giao lưu văn hóa Đông - Tây tại Sài Gòn cuối thế kỷ XIX. Đến nay, tòa nhà vẫn hoạt động như một bưu điện, đồng thời là điểm tham quan du lịch nổi tiếng thu hút đông đảo du khách trong và ngoài nước.',
   highlight: 'Hai tấm bản đồ lịch sử "Sài Gòn và các vùng phụ cận năm 1892" và "Sài Gòn - Chợ Lớn năm 1936" vẫn được lưu giữ, trưng bày trên tường trong tòa nhà, cùng hệ thống cửa gỗ, ghế gỗ và các họa tiết trang trí bằng sắt uốn nguyên bản từ thời Pháp.',
   image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Buu_dien_2.jpg/1200px-Buu_dien_2.jpg',
-  sourceUrl: 'https://vnpost.vn/vi/hoat-dong-nganh/buu-dien-trung-tam-thanh-pho-ho-chi-minh-mot-diem-den-hap-dan'},
-  
+  sourceUrl: 'https://vnpost.vn/vi/hoat-dong-nganh/buu-dien-trung-tam-thanh-pho-ho-chi-minh-mot-diem-den-hap-dan'
+},
  {
   id: 2,
   nameVi: 'Nhà thờ Đức Bà Sài Gòn',
@@ -371,10 +371,10 @@ export const heritageSites: HeritageSite[] = [
   summary: 'Nhà thờ chính tòa Công giáo lớn nhất tại Sài Gòn, do kiến trúc sư J. Bourard thiết kế theo phong cách Roman kết hợp Gothic, mang đậm dấu ấn kiến trúc Pháp cuối thế kỷ XIX. Toàn bộ vật liệu xây dựng như gạch, ngói, kính màu đều được nhập trực tiếp từ Pháp.',
   value: 'Là biểu tượng kiến trúc tôn giáo tiêu biểu và một trong những công trình mang tính nhận diện nhất của Sài Gòn - TP.HCM, gắn liền với diện mạo đô thị lịch sử quanh khu vực Công xã Paris cùng Bưu điện Trung tâm. Công trình phản ánh sự giao thoa văn hóa Đông - Tây và vai trò trung tâm sinh hoạt tôn giáo, cộng đồng suốt hơn một thế kỷ qua.',
   highlight: 'Hai tháp chuông cao khoảng 58m với 6 chuông đồng lớn được đúc tại Pháp, cùng bức tượng Đức Mẹ Hòa Bình bằng đá cẩm thạch đặt phía trước sân nhà thờ từ năm 1959. Công trình không sử dụng xi măng cốt thép mà xây bằng gạch trần chuyên dụng vẫn giữ được màu sắc nguyên vẹn qua hơn 140 năm mà không cần sơn phủ. Đây cũng là điểm mốc quen thuộc, thường xuất hiện trong các sự kiện văn hóa lớn của trung tâm thành phố.',
-  image: 'https://sacotravel.com/wp-content/uploads/2021/04/nha_tho_duc_ba_05.jpg',
+  image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvmIjMmmSYnfE4T_C8DjAwHeTWAMwF2IdxzIU3nLQ6P_NUcnMl3PaEydw&s=10',
   sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/documents/10184/265325/Danh%2Bs%C3%A1ch%2Bdi%2Bt%C3%ADch%2B%C4%91%C3%A3%2BQ%C4%90%2Bx%E1%BA%BFp%2Bh%E1%BA%A1ng%2B%C4%91%E1%BA%BFn%2Bth%C3%A1ng%2B5%2B2017.pdf/948c1ef9-4d46-43b6-af76-c1e616dcf54d'
 },
-  {
+ {
   id: 3,
   nameVi: 'Dinh Độc Lập',
   nameEn: 'Independence Palace',
@@ -397,7 +397,7 @@ export const heritageSites: HeritageSite[] = [
   summary: 'Nguyên là trụ sở của hãng vận tải Messageries Maritimes (Pháp), Bến Nhà Rồng mang kiến trúc phương Tây kết hợp hai con rồng lớn gắn trên nóc theo mô-típ Á Đông, nên được gọi là Nhà Rồng. Đây là địa điểm gắn liền với hành trình ra đi tìm đường cứu nước của người thanh niên Nguyễn Tất Thành năm 1911.',
   value: 'Từ năm 1979, công trình được chọn làm Bảo tàng Hồ Chí Minh - Chi nhánh TP.HCM, trở thành không gian giáo dục truyền thống và lịch sử cách mạng quan trọng, lưu giữ nhiều hiện vật, tư liệu về cuộc đời và sự nghiệp của Chủ tịch Hồ Chí Minh, đặc biệt là hành trình 30 năm bôn ba tìm đường cứu nước.',
   highlight: 'Ngày 05/06/1911, tại bến cảng này, Nguyễn Tất Thành với tên gọi Văn Ba đã lên con tàu Amiral Latouche-Tréville rời Sài Gòn sang Pháp, mở đầu hành trình 30 năm tìm đường cứu nước. Bảo tàng hiện trưng bày hơn 170.000 tư liệu, hiện vật, hình ảnh liên quan đến cuộc đời và sự nghiệp của Người.',
-  image: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Ho_Chi_Minh_Museum%2C_Saigon.jpg/1280px-Ho_Chi_Minh_Museum%2C_Saigon.jpg?utm_source=vi.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+  image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcBYf3az7R-temAnUrrlwvyXM3_M_fgZkpzfMUBqVYHg&s=10',
   sourceUrl: 'https://baotanghochiminh.vn/chuyen-di-lich-su.htm'
 },
   {
@@ -410,10 +410,10 @@ export const heritageSites: HeritageSite[] = [
   summary: 'Tòa nhà nguyên là dinh thự của Thống đốc Nam Kỳ, sau này còn được gọi là "Dinh Gia Long", do kiến trúc sư người Pháp Alfred Foulhoux thiết kế theo phong cách cổ điển kết hợp yếu tố phương Đông. Từ năm 1978, công trình được chuyển đổi thành Bảo tàng Thành phố Hồ Chí Minh, giới thiệu lịch sử, văn hóa và con người vùng đất Sài Gòn - Gia Định qua các thời kỳ.',
   value: 'Công trình được công nhận là di tích kiến trúc nghệ thuật cấp quốc gia năm 2012, tiêu biểu cho phong cách kiến trúc cổ điển Pháp cuối thế kỷ XIX kết hợp trang trí phương Đông. Đây từng là nơi làm việc của nhiều chính quyền qua các giai đoạn lịch sử khác nhau, từ thời Pháp thuộc đến chính quyền Sài Gòn trước 1975.',
   highlight: 'Không gian trưng bày hơn 100.000 tư liệu, hiện vật theo các chủ đề từ thiên nhiên, khảo cổ, địa lý - hành chính Sài Gòn xưa đến quá trình đấu tranh cách mạng và phát triển đô thị của Thành phố. Tòa nhà còn có hệ thống hầm ngầm kiên cố từng được sử dụng làm nơi trú ẩn trong các giai đoạn biến động lịch sử.',
-  image: 'https://hcmc-museum.edu.vn/',
+  image: 'https://hcmc-museum.edu.vn/wp-content/uploads/2021/11/07-1400x580.jpg',
   sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/tin-chi-tiet/-/chi-tiet/bao-tang-thanh-pho-ho-chi-minh-19637-2015.html'
 },
-  {
+      {
   id: 6,
   nameVi: 'Bảo tàng Lịch sử TP.HCM',
   nameEn: 'Ho Chi Minh City History Museum',
@@ -423,9 +423,10 @@ export const heritageSites: HeritageSite[] = [
   summary: 'Công trình do kiến trúc sư người Pháp Auguste Delaval thiết kế theo phong cách kiến trúc Đông Dương (Indochine), kết hợp giữa kỹ thuật xây dựng phương Tây và các họa tiết trang trí truyền thống Á Đông như mái ngói cong, hoa văn lưỡng long. Bảo tàng chuyên nghiên cứu, bảo tồn và giới thiệu lịch sử - văn hóa Việt Nam cùng một số nước trong khu vực châu Á.',
   value: 'Là nơi kết nối tư liệu, hiện vật khảo cổ và hoạt động giáo dục di sản, bảo tàng lưu giữ hàng chục nghìn hiện vật quý từ thời tiền sử, các nền văn hóa Óc Eo, Champa, Đại Việt cho đến các hiện vật văn hóa của Trung Quốc, Nhật Bản, Campuchia và các nước Đông Nam Á khác.',
   highlight: 'Nằm trong khuôn viên Thảo Cầm Viên Sài Gòn, gần nhiều điểm văn hóa trung tâm, bảo tàng có các bộ sưu tập nổi bật như xác ướp Xóm Cải, cổ vật văn hóa Óc Eo, tượng cổ Champa và hệ thống trưng bày chuyên đề về lịch sử Sài Gòn - Gia Định qua các thời kỳ.',
-  image: 'https://images.pexels.com/photos/257621/pexels-photo-257621.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  image: 'https://mia.vn/media/uploads/blog-du-lich/bao-tang-lich-su-thanh-pho-ho-chi-minh-1-1692719389.jpg',
   sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/tin-chi-tiet/-/chi-tiet/bao-tang-lich-su-thanh-pho-ho-chi-minh-19126-2015.html'
 },
+ {
     id: 7,
     nameVi: 'Nhà hát Thành phố',
     nameEn: 'Saigon Opera House (Municipal Theatre)',
@@ -435,9 +436,7 @@ export const heritageSites: HeritageSite[] = [
     summary: 'Nhà hát opera theo phong cách Pháp cổ điển, một trong những công trình kiến trúc lâu đời nhất trung tâm Sài Gòn.',
     value: 'Chứng nhân lịch sử qua nhiều giai đoạn: từ nhà hát opera, trụ sở Hạ Nghị viện, đến nay là trung tâm biểu diễn nghệ thuật của thành phố.',
     highlight: 'Mặt tiền lấy cảm hứng từ bảo tàng Petit Palais (Paris); khánh thành đúng ngày 1/1/1900.',
-
-    image: 'https://cdn.justfly.vn/1050x700/media/c5/77/9ca5-96c9-453a-82f3-31522933b55e.jpg',
-   
+    image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Saigon-Opera-House-2007.jpg',
     sourceUrl: 'https://en.wikipedia.org/wiki/Ho_Chi_Minh_City_Opera_House',
   },
   {
