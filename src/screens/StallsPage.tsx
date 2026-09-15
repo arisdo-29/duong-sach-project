@@ -93,7 +93,7 @@ export function StallsPage() {
                 </p>
                 <div className="flex items-center gap-1.5 text-xs text-forest-600 font-medium mb-3">
                   <BookOpen size={13} />
-                  {stall.bookCount}
+                  {lang === 'vi' ? stall.bookCount : (stall.bookCountEn ?? stall.bookCount)}
                 </div>
                 <div className="flex items-center gap-3 pt-2 border-t border-cream-200">
                   <button className="text-sm text-forest-600 font-medium hover:text-forest-700 flex items-center gap-1">
