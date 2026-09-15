@@ -22,12 +22,14 @@ export function EventsCalendar() {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <div>
           <h1 className="section-title">{t('adminCalendar')}</h1>
-          <p className="bilingual-en mt-1">{t('priorityLegend')}</p>
         </div>
-        <button onClick={() => navigate('events-proposal')} className="btn-primary">
-          <Plus size={18} strokeWidth={2} />
-          {t('proposeEvent')}
-        </button>
+        <div className="flex flex-col items-end gap-1">
+          <button onClick={() => navigate('events-proposal')} className="btn-primary">
+            <Plus size={18} strokeWidth={2} />
+            {t('proposeEvent')}
+          </button>
+          <span className="text-[11px] text-ink-muted">{t('eventProposalSubtitle')}</span>
+        </div>
       </div>
 
       {/* Legend */}
@@ -79,24 +81,6 @@ export function EventsCalendar() {
             </div>
           );
         })}
-      </div>
-
-      {/* Sub-page links */}
-      <div className="max-w-xl">
-        <button
-          onClick={() => navigate('events-proposal')}
-          className="card-hover p-5 flex items-center gap-4 text-left"
-        >
-          <div className="w-11 h-11 rounded-lg bg-forest-50 flex items-center justify-center shrink-0">
-            <Plus size={20} className="text-forest-600" strokeWidth={1.75} />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-serif text-base font-semibold text-ink">{t('proposalFormTitle')}</h3>
-            <p className="text-sm text-ink-muted mt-0.5">{t('eventProposalSubtitle')}</p>
-          </div>
-          <ArrowRight size={18} className="text-forest-500 shrink-0" />
-        </button>
-
       </div>
 
       {/* Event detail modal */}
