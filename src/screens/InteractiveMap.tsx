@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { MapPin, Store, Landmark, Car, Coffee, ArrowRight, MessageSquare, Info, Camera, Baby, BookOpen } from 'lucide-react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapPin, Store, Landmark, Car, Coffee, ArrowRight, MessageSquare, Info, Camera, Baby, BookOpen, Search, LocateFixed, Layers, Plus, Minus, X } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
 import { mapPoints, type MapPoint } from '@/data/mockData';
 
@@ -16,9 +20,54 @@ const pointTypeConfig = {
 
 const filterOrder: (keyof typeof pointTypeConfig)[] = ['stall', 'cafe', 'checkin', 'kids', 'exhibition', 'parking'];
 
+// --- Quy đổi x/y (%) hiện có trong mockData sang tọa độ thật ngoài đời ---
+// Nên double-check lại 2 điểm này trên Google Maps (chuột phải → "Ô này là gì?") để chuẩn xác tuyệt đối
+const STREET_START = { lat: 10.77972, lng: 106.69790 }; // đầu phía Nhà thờ Đức Bà (x ≈ 3%)
+const STREET_END   = { lat: 10.77937, lng: 106.69935 }; // đầu phía Bưu điện Trung tâm (x ≈ 97%)
+const ROW_SPREAD = 0.00006; // độ lệch Bắc/Nam ứng với y=0 và y=100 trên sơ đồ cũ
+
+function pointToLatLng(point: MapPoint): [number, number] {
+  const t = point.x / 100;
+  const rowOffset = (50 - point.y) / 50 * ROW_SPREAD; // y=50 (giữa) => 0, y<50 lệch bắc, y>50 lệch nam
+  const lat = STREET_START.lat + (STREET_END.lat - STREET_START.lat) * t + rowOffset;
+  const lng = STREET_START.lng + (STREET_END.lng - STREET_START.lng) * t;
+  return [lat, lng];
+}
+
+function buildPinIcon(type: keyof typeof pointTypeConfig, label: string, isSelected: boolean) {
+  const cfg = pointTypeConfig[type] || pointTypeConfig.amenity;
+  const Icon = cfg.icon;
+  const html = renderToStaticMarkup(
+    <div className="flex flex-col items-center gap-0.5">
+      <div className={`w-8 h-8 rounded-full ${cfg.color} flex items-center justify-center shadow-lift ring-2 ${isSelected ? `ring-4 ${cfg.ring} scale-125` : 'ring-white/60'}`}>
+        <Icon size={15} color="white" strokeWidth={1.75} />
+      </div>
+      <div className={`px-1.5 py-0.5 rounded-full text-[9px] font-semibold shadow-soft whitespace-nowrap ${isSelected ? 'bg-ink text-white' : 'bg-white/90 text-ink-soft'}`}>
+        {label}
+      </div>
+    </div>
+  );
+  return L.divIcon({ html, className: '', iconSize: [70, 50], iconAnchor: [35, 42] });
+}
+
+function MapControls({ center }: { center: [number, number] }) {
+  const map = useMap();
+
+  return (
+    <div className="absolute right-4 bottom-5 z-[1000] flex flex-col gap-2">
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.18)]">
+        <button aria-label="Zoom in" onClick={() => map.zoomIn()} className="flex h-10 w-10 items-center justify-center border-b border-slate-200 text-slate-600 transition hover:bg-slate-50"><Plus size={18} /></button>
+        <button aria-label="Zoom out" onClick={() => map.zoomOut()} className="flex h-10 w-10 items-center justify-center text-slate-600 transition hover:bg-slate-50"><Minus size={18} /></button>
+      </div>
+      <button aria-label="Center map" onClick={() => map.setView(center, 19)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.18)] transition hover:bg-slate-50"><LocateFixed size={18} /></button>
+    </div>
+  );
+}
+
 export function InteractiveMap() {
   const { t, lang, selectedPoint, setSelectedPoint, navigate } = useApp();
   const [filters, setFilters] = useState<Set<string>>(new Set(['stall', 'cafe', 'checkin', 'kids', 'exhibition', 'parking']));
+  const [search, setSearch] = useState('');
 
   const toggleFilter = (type: string) => {
     setFilters((prev) => {
@@ -29,8 +78,12 @@ export function InteractiveMap() {
     });
   };
 
-  const visiblePoints = mapPoints.filter((p) => filters.has(p.type));
+  const visiblePoints = mapPoints.filter((p) => {
+    const searchable = `${p.label} ${p.nameVi} ${p.nameEn}`.toLowerCase();
+    return filters.has(p.type) && searchable.includes(search.toLowerCase());
+  });
   const selected = mapPoints.find((p) => p.id === selectedPoint) || null;
+  const mapCenter = pointToLatLng({ x: 50, y: 50 } as MapPoint);
 
   const typeLabel = (type: MapPoint['type']) => {
     if (type === 'stall') return t('pointTypeStall');
@@ -45,16 +98,20 @@ export function InteractiveMap() {
   };
 
   return (
-    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
-      {/* Title + intro */}
-      <div className="mb-4">
+    <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 animate-fadeIn">
+      <div className="mb-5">
         <h1 className="section-title">{t('mapTitle')}</h1>
-        <p className="text-sm text-ink-soft leading-relaxed mt-2 max-w-2xl">{t('mapIntro')}</p>
+        <p className="mt-1 max-w-2xl text-sm leading-relaxed text-ink-soft">{t('mapIntro')}</p>
       </div>
 
-      {/* Filter chips */}
-      <div className="flex items-center gap-2 mb-4 flex-wrap">
-        <span className="text-sm text-ink-muted font-medium mr-1">{t('filterPointType')}:</span>
+      <div className="mb-4 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-[0_1px_5px_rgba(0,0,0,0.08)]">
+        <Search size={18} className="shrink-0 text-slate-500" />
+        <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t('searchPlaceholder')} className="min-w-0 flex-1 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400" />
+        {search && <button aria-label="Clear search" onClick={() => setSearch('')} className="text-slate-400 hover:text-slate-700"><X size={17} /></button>}
+      </div>
+
+      <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-1">
+        <span className="mr-1 shrink-0 text-xs font-medium text-ink-muted">{t('filterPointType')}:</span>
         {filterOrder.map((type) => {
           const cfg = pointTypeConfig[type];
           const Icon = cfg.icon;
@@ -63,10 +120,8 @@ export function InteractiveMap() {
             <button
               key={type}
               onClick={() => toggleFilter(type)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full border transition-all ${
-                active
-                  ? 'bg-forest-50 border-forest-300 text-forest-700'
-                  : 'bg-cream-50 border-cream-300 text-ink-light'
+              className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
+                active ? 'border-blue-200 bg-blue-50 text-blue-700' : 'border-slate-200 bg-slate-50 text-slate-400'
               }`}
             >
               <Icon size={13} />
@@ -76,82 +131,41 @@ export function InteractiveMap() {
         })}
       </div>
 
-      {/* Map + Info panel */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Map area */}
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <div className="card p-4 relative">
-            <div className="map-grid relative w-full h-[520px] rounded-lg bg-cream-200 overflow-hidden">
-              {/* Straight walking path — horizontal line across the middle */}
-              <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
-                <line
-                  x1="8" y1="50" x2="92" y2="50"
-                  stroke="#3C6255"
-                  strokeWidth="1.5"
-                  strokeDasharray="3 2"
-                  fill="none"
-                  opacity="0.5"
-                />
-              </svg>
-
-              {/* Path label */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-semibold text-forest-600/30 tracking-widest pointer-events-none">
-                {t('walkingPath')}
-              </div>
-
-              {/* End labels: Notre-Dame Cathedral (left) and Central Post Office (right) */}
-              <div className="absolute left-[3%] top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
-                <div className="w-10 h-10 rounded-lg bg-amber-100 border-2 border-amber-300 flex items-center justify-center shadow-soft">
-                  <Landmark size={18} className="text-amber-600" strokeWidth={1.5} />
-                </div>
-                <span className="text-[10px] font-semibold text-amber-700 bg-white/90 rounded px-1.5 py-0.5 shadow-soft whitespace-nowrap">
-                  {lang === 'vi' ? 'Nhà thờ Đức Bà' : 'Notre-Dame Cathedral'}
-                </span>
-              </div>
-              <div className="absolute right-[3%] top-1/2 -translate-y-1/2 translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
-                <div className="w-10 h-10 rounded-lg bg-amber-100 border-2 border-amber-300 flex items-center justify-center shadow-soft">
-                  <Landmark size={18} className="text-amber-600" strokeWidth={1.5} />
-                </div>
-                <span className="text-[10px] font-semibold text-amber-700 bg-white/90 rounded px-1.5 py-0.5 shadow-soft whitespace-nowrap">
-                  {lang === 'vi' ? 'Bưu điện Trung tâm' : 'Central Post Office'}
-                </span>
-              </div>
-
-              {/* Pins */}
+          <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-[0_3px_14px_rgba(15,23,42,0.14)]">
+            <div className="absolute left-4 top-4 z-[1000] hidden h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.18)] sm:flex">
+              <Layers size={18} />
+            </div>
+            <MapContainer
+              center={mapCenter}
+              zoom={19}
+              maxZoom={20}
+              scrollWheelZoom
+              zoomControl={false}
+              className="h-[600px] w-full"
+            >
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap" />
+              <MapControls center={mapCenter} />
               {visiblePoints.map((point) => {
-                const cfg = pointTypeConfig[point.type as keyof typeof pointTypeConfig] || pointTypeConfig.amenity;
-                const Icon = cfg.icon;
                 const isSelected = selected?.id === point.id;
                 return (
-                  <button
+                  <Marker
                     key={point.id}
-                    onClick={() => setSelectedPoint(point.id)}
-                    className="absolute -translate-x-1/2 -translate-y-full transition-all hover:scale-110 z-10"
-                    style={{ left: `${point.x}%`, top: `${point.y}%` }}
+                    position={pointToLatLng(point)}
+                    icon={buildPinIcon(point.type as keyof typeof pointTypeConfig, point.label, isSelected)}
+                    eventHandlers={{ click: () => setSelectedPoint(point.id) }}
                   >
-                    <div className="flex flex-col items-center gap-0.5">
-                      <div className={`w-8 h-8 rounded-full ${cfg.color} flex items-center justify-center shadow-lift ring-2 transition-all ${
-                        isSelected ? `ring-4 ${cfg.ring} scale-125` : 'ring-white/60'
-                      }`}>
-                        <Icon size={15} className="text-white" strokeWidth={1.75} />
-                      </div>
-                      <div className={`px-1.5 py-0.5 rounded-full text-[9px] font-semibold shadow-soft ${
-                        isSelected ? 'bg-ink text-white' : 'bg-white/90 text-ink-soft'
-                      }`}>
-                        {point.label}
-                      </div>
-                      <div className={`w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-transparent ${isSelected ? 'border-t-ink' : 'border-t-white/90'}`} />
-                    </div>
-                  </button>
+                    <Popup>{point.label}</Popup>
+                  </Marker>
                 );
               })}
-            </div>
+            </MapContainer>
           </div>
         </div>
 
-        {/* Info panel */}
         <div className="lg:col-span-1">
-          <div className="card p-6 sticky top-32">
+          <div className="card sticky top-32 p-6">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-lg bg-forest-50 flex items-center justify-center">
                 <MapPin size={16} className="text-forest-600" />
