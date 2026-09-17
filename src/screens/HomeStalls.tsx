@@ -31,7 +31,7 @@ export function HomeStalls() {
     <div className="animate-fadeIn">
       {/* HERO */}
       <section className="relative h-[480px] sm:h-[560px] overflow-hidden">
-        <img src={heroImage} alt="Book street" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={heroImage} alt="Book street" className="absolute inset-0 h-full w-full object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-b from-forest-900/50 via-forest-900/40 to-forest-900/60" />
         <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
           <div className="max-w-2xl">
