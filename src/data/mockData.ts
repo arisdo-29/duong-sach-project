@@ -62,6 +62,7 @@ export interface HeritageSite {
   highlight: string;
   image: string;
   sourceUrl: string;
+  gallery?: string[];
   
 }
 
@@ -359,6 +360,11 @@ export const heritageSites: HeritageSite[] = [
   value: 'Không chỉ là di sản kiến trúc với mặt tiền theo phong cách Phục Hưng, khung sắt kiểu nhà ga châu Âu và mái vòm cong đặc trưng, công trình còn là chứng nhân lịch sử của ngành bưu chính viễn thông Việt Nam thời Pháp thuộc, phản ánh quá trình đô thị hóa và giao lưu văn hóa Đông - Tây tại Sài Gòn cuối thế kỷ XIX. Đến nay, tòa nhà vẫn hoạt động như một bưu điện, đồng thời là điểm tham quan du lịch nổi tiếng thu hút đông đảo du khách trong và ngoài nước.',
   highlight: 'Hai tấm bản đồ lịch sử "Sài Gòn và các vùng phụ cận năm 1892" và "Sài Gòn - Chợ Lớn năm 1936" vẫn được lưu giữ, trưng bày trên tường trong tòa nhà, cùng hệ thống cửa gỗ, ghế gỗ và các họa tiết trang trí bằng sắt uốn nguyên bản từ thời Pháp.',
   image: 'https://tse3.mm.bing.net/th/id/OIP.N_ub3f5bk9L-TvNQykGALAHaD4?r=0&pid=Api&h=220&P=0',
+   gallery: [
+    'https://congvientaodan.com/wp-content/uploads/2024/10/buu-dien-trung-tam-sai-gon-4.jpg',
+    'https://media2.gody.vn/public/mytravelmap/images/2020/8/24/olipnoi4502/4cba7bae4cd9460542d3f6fd3117c057.jpeg',
+    'https://owa.bestprice.vn/images/destinations/uploads/buu-dien-trung-tam-sai-gon-609ce96be1001.jpg',
+  ],
   sourceUrl: 'https://vnpost.vn/vi/hoat-dong-nganh/buu-dien-trung-tam-thanh-pho-ho-chi-minh-mot-diem-den-hap-dan'
 },
  {
@@ -372,6 +378,11 @@ export const heritageSites: HeritageSite[] = [
   value: 'Là biểu tượng kiến trúc tôn giáo tiêu biểu và một trong những công trình mang tính nhận diện nhất của Sài Gòn - TP.HCM, gắn liền với diện mạo đô thị lịch sử quanh khu vực Công xã Paris cùng Bưu điện Trung tâm. Công trình phản ánh sự giao thoa văn hóa Đông - Tây và vai trò trung tâm sinh hoạt tôn giáo, cộng đồng suốt hơn một thế kỷ qua.',
   highlight: 'Hai tháp chuông cao khoảng 58m với 6 chuông đồng lớn được đúc tại Pháp, cùng bức tượng Đức Mẹ Hòa Bình bằng đá cẩm thạch đặt phía trước sân nhà thờ từ năm 1959. Công trình không sử dụng xi măng cốt thép mà xây bằng gạch trần chuyên dụng vẫn giữ được màu sắc nguyên vẹn qua hơn 140 năm mà không cần sơn phủ. Đây cũng là điểm mốc quen thuộc, thường xuất hiện trong các sự kiện văn hóa lớn của trung tâm thành phố.',
   image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvmIjMmmSYnfE4T_C8DjAwHeTWAMwF2IdxzIU3nLQ6P_NUcnMl3PaEydw&s=10',
+  gallery: [
+    'https://disaigon.com/wp-content/uploads/2023/06/nha-tho-duc-ba-sai-gon-8.jpg',
+    'https://dulich3mien.vn/wp-content/uploads/2022/06/6-10.jpg',
+    'https://s.rfi.fr/media/display/eee326aa-0d5e-11ea-bebe-005056a9aa4d/w:1280/p:16x9/nha_tho_duc_ba_saigon.jpg',
+  ],
   sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/documents/10184/265325/Danh%2Bs%C3%A1ch%2Bdi%2Bt%C3%ADch%2B%C4%91%C3%A3%2BQ%C4%90%2Bx%E1%BA%BFp%2Bh%E1%BA%A1ng%2B%C4%91%E1%BA%BFn%2Bth%C3%A1ng%2B5%2B2017.pdf/948c1ef9-4d46-43b6-af76-c1e616dcf54d'
 },
  {
@@ -385,6 +396,11 @@ export const heritageSites: HeritageSite[] = [
   value: 'Được xếp hạng Di tích quốc gia đặc biệt, Dinh Độc Lập là biểu tượng lưu giữ ký ức về thời khắc lịch sử thống nhất đất nước, đồng thời phản ánh dấu ấn kiến trúc và chính trị của Việt Nam trong giai đoạn nửa sau thế kỷ XX. Công trình cũng ghi dấu sự kiện ném bom Dinh năm 1962, dẫn đến việc xây dựng lại toàn bộ tòa nhà như hiện nay.',
   highlight: 'Không gian trưng bày gồm hầm chỉ huy tác chiến với hệ thống thông tin liên lạc nguyên bản, phòng khánh tiết, phòng làm việc của Tổng thống, sân bay trực thăng trên nóc và hai chiếc xe tăng mang số hiệu 843 và 390 được trưng bày trong khuôn viên, gắn liền với thời khắc lịch sử trưa 30/4/1975.',
   image: 'https://upload.wikimedia.org/wikipedia/commons/7/7d/20190923_Independence_Palace-10.jpg',
+  gallery: [
+    'https://tepcanh.com/wp-content/uploads/2025/05/hinh-anh-cua-dinh-doc-lap-3Rwkkjm.jpg',
+    'https://khamphavn.edu.vn/upload/2025/11/dinh-doc-lap-001.webp',
+    'https://www.galeriemichael.com/wp-content/uploads/images/tong-quan-ve-phong-khanh-tiet-dinh-doc-lap-khong-gian-tiep-don-quan-trong-0.jpg',
+  ],
   sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/documents/10184/265325/Danh%2Bs%C3%A1ch%2Bdi%2Bt%C3%ADch%2B%C4%91%C3%A3%2BQ%C4%90%2Bx%E1%BA%BFp%2Bh%E1%BA%A1ng%2B%C4%91%E1%BA%BFn%2Bth%C3%A1ng%2B5%2B2017.pdf/948c1ef9-4d46-43b6-af76-c1e616dcf54d'
 },
   {
@@ -398,6 +414,11 @@ export const heritageSites: HeritageSite[] = [
   value: 'Từ năm 1979, công trình được chọn làm Bảo tàng Hồ Chí Minh - Chi nhánh TP.HCM, trở thành không gian giáo dục truyền thống và lịch sử cách mạng quan trọng, lưu giữ nhiều hiện vật, tư liệu về cuộc đời và sự nghiệp của Chủ tịch Hồ Chí Minh, đặc biệt là hành trình 30 năm bôn ba tìm đường cứu nước.',
   highlight: 'Ngày 05/06/1911, tại bến cảng này, Nguyễn Tất Thành với tên gọi Văn Ba đã lên con tàu Amiral Latouche-Tréville rời Sài Gòn sang Pháp, mở đầu hành trình 30 năm tìm đường cứu nước. Bảo tàng hiện trưng bày hơn 170.000 tư liệu, hiện vật, hình ảnh liên quan đến cuộc đời và sự nghiệp của Người.',
   image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcBYf3az7R-temAnUrrlwvyXM3_M_fgZkpzfMUBqVYHg&s=10',
+  gallery: [
+    'https://image.vietgoing.com/editor/image_rwh1622796161.jpg',
+    'https://image.vietgoing.com/editor/image_nqi1622795857.jpg',
+    'https://www.vietfuntravel.com.vn/image/data/Hinh-Sai-Gon/633-net-doc-dao-trong-kien-truc-ben-nha-rong/net-doc-dao-trong-kien-truc-ben-nha-rong-h5.jpg',
+  ],
   sourceUrl: 'https://baotanghochiminh.vn/chuyen-di-lich-su.htm'
 },
   {
@@ -411,6 +432,11 @@ export const heritageSites: HeritageSite[] = [
   value: 'Công trình được công nhận là di tích kiến trúc nghệ thuật cấp quốc gia năm 2012, tiêu biểu cho phong cách kiến trúc cổ điển Pháp cuối thế kỷ XIX kết hợp trang trí phương Đông. Đây từng là nơi làm việc của nhiều chính quyền qua các giai đoạn lịch sử khác nhau, từ thời Pháp thuộc đến chính quyền Sài Gòn trước 1975.',
   highlight: 'Không gian trưng bày hơn 100.000 tư liệu, hiện vật theo các chủ đề từ thiên nhiên, khảo cổ, địa lý - hành chính Sài Gòn xưa đến quá trình đấu tranh cách mạng và phát triển đô thị của Thành phố. Tòa nhà còn có hệ thống hầm ngầm kiên cố từng được sử dụng làm nơi trú ẩn trong các giai đoạn biến động lịch sử.',
   image: 'https://hcmc-museum.edu.vn/wp-content/uploads/2021/11/07-1400x580.jpg',
+  gallery: [
+    'https://static.vinwonders.com/production/bao-tang-thanh-pho-ho-chi-minh-6.jpg',
+    'https://dulichdaydo.net/wp-content/uploads/2022/07/bao-tang-thanh-pho-ho-chi-minh-2-1024x667.jpg',
+    'https://hcmc-museum.edu.vn/wp-content/uploads/2022/04/1-1-768x453.jpg',
+  ],
   sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/tin-chi-tiet/-/chi-tiet/bao-tang-thanh-pho-ho-chi-minh-19637-2015.html'
 },
       {
@@ -424,6 +450,11 @@ export const heritageSites: HeritageSite[] = [
   value: 'Là nơi kết nối tư liệu, hiện vật khảo cổ và hoạt động giáo dục di sản, bảo tàng lưu giữ hàng chục nghìn hiện vật quý từ thời tiền sử, các nền văn hóa Óc Eo, Champa, Đại Việt cho đến các hiện vật văn hóa của Trung Quốc, Nhật Bản, Campuchia và các nước Đông Nam Á khác.',
   highlight: 'Nằm trong khuôn viên Thảo Cầm Viên Sài Gòn, gần nhiều điểm văn hóa trung tâm, bảo tàng có các bộ sưu tập nổi bật như xác ướp Xóm Cải, cổ vật văn hóa Óc Eo, tượng cổ Champa và hệ thống trưng bày chuyên đề về lịch sử Sài Gòn - Gia Định qua các thời kỳ.',
   image: 'https://mia.vn/media/uploads/blog-du-lich/bao-tang-lich-su-thanh-pho-ho-chi-minh-1-1692719389.jpg',
+  gallery: [
+    'https://cdn3.ivivu.com/2023/03/B%E1%BA%A3o-t%C3%A0ng-L%E1%BB%8Bch-s%E1%BB%AD-Vi%E1%BB%87t-Nam-ivivu.jpg',
+    'https://static.vinwonders.com/production/luu-y-di-bao-tang-lich-su-tphcm.jpg',
+    'https://sacotravel.com/wp-content/uploads/2024/01/phong-5-bao-tang-lich-su-tphcm-1536x509.jpg',
+  ],
   sourceUrl: 'https://svhtt.hochiminhcity.gov.vn/tin-chi-tiet/-/chi-tiet/bao-tang-lich-su-thanh-pho-ho-chi-minh-19126-2015.html'
 },
  {
@@ -437,6 +468,11 @@ export const heritageSites: HeritageSite[] = [
     value: 'Chứng nhân lịch sử qua nhiều giai đoạn: từ nhà hát opera, trụ sở Hạ Nghị viện, đến nay là trung tâm biểu diễn nghệ thuật của thành phố.',
     highlight: 'Mặt tiền lấy cảm hứng từ bảo tàng Petit Palais (Paris); khánh thành đúng ngày 1/1/1900.',
     image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Saigon-Opera-House-2007.jpg',
+    gallery: [
+    'https://2.bp.blogspot.com/-Lxy0SLehMRs/UsJpcbPI7GI/AAAAAAAAD30/EUIR6j7_B0A/s1600/Nha+hat+thanh+pho+3.jpg',
+    'https://3.bp.blogspot.com/-wwtC7vImZOM/UsJpdTr8G1I/AAAAAAAAD3s/UiTP8SwlrPU/s1600/Nha+hat+thanh+pho+5.jpg',
+    'https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2023/1/23/1140749/Nha-Hat-Lon-Hai-Phon.jpg',
+  ],
     sourceUrl: 'https://en.wikipedia.org/wiki/Ho_Chi_Minh_City_Opera_House',
   },
   {
@@ -450,6 +486,11 @@ export const heritageSites: HeritageSite[] = [
     value: 'Trung tâm thương mại lâu đời, phản ánh lịch sử phát triển đô thị Sài Gòn – Chợ Lớn qua hơn một thế kỷ.',
     highlight: 'Cổng Nam có tháp đồng hồ mang tính biểu tượng; lễ khánh thành năm 1914 kéo dài 3 ngày với hơn 100.000 người tham dự.',
     image: 'https://cdn3.ivivu.com/2022/10/cho_ben_thanh_ivivu.jpeg',
+    gallery: [
+    'https://tse2.mm.bing.net/th/id/OIP.cijy-p49NYVwZOWHAB5vfAHaEK?r=0&pid=Api&h=220&P=0',
+    'https://tse3.mm.bing.net/th/id/OIP.0XDLqp4PT0lfqivmt87gbgHaE7?r=0&pid=Api&h=220&P=0',
+    'https://owa.bestprice.vn/images/destinations/uploads/cho-ben-thanh-609c9442cf042.jpg',
+  ],
     sourceUrl: 'https://en.wikipedia.org/wiki/B%E1%BA%BFn_Th%C3%A0nh_Market',
   },
   {
@@ -463,6 +504,11 @@ export const heritageSites: HeritageSite[] = [
     value: 'Di tích kiến trúc nghệ thuật cấp quốc gia (công nhận năm 2020), hiện là nơi làm việc của HĐND và UBND TP.HCM.',
     highlight: 'Do kiến trúc sư Fernand Gardès thiết kế, mô phỏng tòa thị chính Paris với tháp nhọn nhô cao ở chính giữa.',
     image: 'https://cdn3.ivivu.com/2023/08/%E1%BB%A7y-ban-nh%C3%A2n-d%C3%A2n-TPHCM-ivivu.jpg',
+    gallery: [
+    'https://cdn3.ivivu.com/2023/08/%E1%BB%A7y-ban-nh%C3%A2n-d%C3%A2n-TPHCM-ivivu-2.jpg',
+    'https://media-cdn-v2.laodong.vn/storage/newsportal/2023/4/22/1183111/UBND-TPHCM-1.jpg?w=526&h=314&crop=auto&scale=both',
+    'https://ik.imagekit.io/tvlk/blog/2023/09/go-and-share-kham-pha-uy-ban-nhan-dan-tp-ho-chi-minh-4-1024x768.webp?tr=dpr-2,w-675',
+  ],
     sourceUrl: 'https://en.wikipedia.org/wiki/Ho_Chi_Minh_City_Hall',
   },
   {
