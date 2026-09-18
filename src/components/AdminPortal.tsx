@@ -1,10 +1,11 @@
 import { useState, type FormEvent } from 'react';
-import { Activity, ArrowLeft, BookOpen, CalendarDays, Check, ClipboardList, FileText, LayoutDashboard, LogOut, Menu, MessageSquare, Plus, QrCode, Send, ShieldCheck, Store } from 'lucide-react';
+import { Activity, ArrowLeft, BookOpen, Building2, CalendarDays, Check, ClipboardList, FileText, LayoutDashboard, LogOut, Menu, MessageSquare, Plus, QrCode, Send, ShieldCheck, Store } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
+import HeritageManager from '@/components/Admin/HeritageManager';
 import HeritageQR from '@/components/Admin/HeritageQR';
 import FeedbackTable from '@/components/Admin/FeedbackTable';
 
-type View = 'dashboard' | 'events' | 'heritage-qr' | 'feedbacks' | 'content' | 'audit';
+type View = 'dashboard' | 'heritages' | 'events' | 'heritage-qr' | 'feedbacks' | 'content' | 'audit';
 type Status = 'pending' | 'approved' | 'published' | 'needs-info' | 'rejected';
 type Proposal = { id: number; date: string; title: string; organizer: string; schedule: string; location: string; equipment: string; status: Status; conflict?: string };
 const initial: Proposal[] = [
@@ -28,14 +29,16 @@ export function AdminPortal() {
   if (!auth) return <Login back={() => navigate('home')} enter={() => {setAuth(true); log('Nguyễn Minh An đăng nhập hệ thống.');}} />;
   const nav = [
     { id: 'dashboard' as View, text: 'Tổng quan', Icon: LayoutDashboard },
-    { id: 'events' as View, text: 'Phê duyệt sự kiện', Icon: CalendarDays },
+    { id: 'heritages' as View, text: 'Quản lý Di sản (CRUD)', Icon: Building2 },
     { id: 'heritage-qr' as View, text: 'Mã QR Di sản', Icon: QrCode },
     { id: 'feedbacks' as View, text: 'Quản lý Góp ý', Icon: MessageSquare },
+    { id: 'events' as View, text: 'Phê duyệt sự kiện', Icon: CalendarDays },
     { id: 'content' as View, text: 'Quản lý nội dung', Icon: FileText },
     { id: 'audit' as View, text: 'Nhật ký hoạt động', Icon: ClipboardList },
   ];
   return <div className="min-h-screen bg-slate-50"><aside className={`fixed z-50 inset-y-0 left-0 w-72 bg-slate-950 text-slate-200 transition-transform lg:translate-x-0 ${menu?'translate-x-0':'-translate-x-full'}`}><div className="h-20 px-6 flex items-center gap-3 border-b border-white/10"><div className="p-2.5 rounded-xl bg-emerald-500"><BookOpen size={21}/></div><div><b className="text-white">ĐƯỜNG SÁCH</b><p className="text-xs text-slate-400">Cổng quản trị nội bộ</p></div></div><nav className="p-4 space-y-1">{nav.map(({id,text,Icon})=><button key={id} onClick={()=>{setView(id);setMenu(false)}} className={`w-full flex gap-3 items-center p-3 rounded-lg text-sm ${view===id?'bg-emerald-500 text-white':'hover:bg-white/10'}`}><Icon size={18}/>{text}{id==='events'&&pending>0?<span className="ml-auto bg-white/20 rounded-full px-2 text-xs">{pending}</span>:null}</button>)}</nav><button onClick={()=>navigate('home')} className="absolute bottom-4 left-4 right-4 flex gap-3 p-3 text-sm hover:bg-white/10 rounded-lg"><ArrowLeft size={18}/>Về website công khai</button></aside>{menu&&<button className="fixed inset-0 z-40 bg-slate-900/50 lg:hidden" onClick={()=>setMenu(false)}/>}<div className="lg:pl-72"><header className="h-20 bg-white border-b px-4 sm:px-7 flex justify-between items-center"><div className="flex gap-3 items-center"><button className="lg:hidden" onClick={()=>setMenu(true)}><Menu/></button><div><p className="text-xs text-slate-500">Quản trị nội bộ</p><h1 className="font-semibold">{nav.find(x=>x.id===view)?.text}</h1></div></div><div className="flex items-center gap-3"><div className="text-right hidden sm:block"><p className="text-sm font-medium">Nguyễn Minh An</p><p className="text-xs text-slate-500">Admin</p></div><span className="w-9 h-9 grid place-items-center rounded-full bg-emerald-100 text-emerald-700 font-bold">NA</span><button onClick={()=>setAuth(false)} className="text-slate-500"><LogOut size={19}/></button></div></header><main className="p-4 sm:p-7 max-w-[1600px] mx-auto">
     {view==='dashboard'&&<Dashboard pending={pending} approved={approved} conflicts={conflicts} schedule={monthProposals} events={()=>setView('events')}/>}
+    {view==='heritages'&&<HeritageManager />}
     {view==='events'&&<Review data={proposals} change={change}/>}
     {view==='heritage-qr'&&(
       <div className="space-y-6">

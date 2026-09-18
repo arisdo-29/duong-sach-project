@@ -10,6 +10,7 @@ export default function HeritageQR({ heritageId: initialHeritageId = 'nha-tho-du
   const [loading, setLoading] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [dbSites, setDbSites] = useState<Array<{ id: string; slug: string; name_vi: string }>>([]);
 
   useEffect(() => {
     if (initialHeritageId) {
@@ -18,6 +19,20 @@ export default function HeritageQR({ heritageId: initialHeritageId = 'nha-tho-du
       setTargetUrl(null);
     }
   }, [initialHeritageId]);
+
+  useEffect(() => {
+    axios
+      .get('/api/admin/heritages')
+      .then((res) => {
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setDbSites(res.data);
+          if (!initialHeritageId) {
+            setSelectedId(res.data[0].slug);
+          }
+        }
+      })
+      .catch((err) => console.log('Sử dụng danh sách fallback:', err));
+  }, []);
 
   const fetchQRCode = async () => {
     setLoading(true);
@@ -57,7 +72,7 @@ export default function HeritageQR({ heritageId: initialHeritageId = 'nha-tho-du
       {/* Heritage Selector */}
       <div className="mb-4 space-y-2">
         <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500">
-          Chọn di sản hoặc nhập ID:
+          Chọn di sản hoặc nhập ID / Slug:
         </label>
         <div className="flex flex-col sm:flex-row gap-2">
           <select
@@ -69,12 +84,19 @@ export default function HeritageQR({ heritageId: initialHeritageId = 'nha-tho-du
             }}
             className="flex-1 px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
           >
-            <option value="nha-tho-duc-ba">Nhà thờ Đức Bà (Mẫu: nha-tho-duc-ba)</option>
-            {heritageSites.map((site) => (
-              <option key={site.id} value={String(site.id)}>
-                #{String(site.id).padStart(2, '0')} - {site.nameVi}
-              </option>
-            ))}
+            {dbSites.length > 0 ? (
+              dbSites.map((site) => (
+                <option key={site.id} value={site.slug}>
+                  {site.name_vi} ({site.slug})
+                </option>
+              ))
+            ) : (
+              heritageSites.map((site) => (
+                <option key={site.id} value={String(site.id)}>
+                  #{String(site.id).padStart(2, '0')} - {site.nameVi}
+                </option>
+              ))
+            )}
           </select>
           <input
             type="text"
