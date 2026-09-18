@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import { MapPin, Store, Landmark, Car, Coffee, ArrowRight, MessageSquare, Info, Camera, Baby, BookOpen, Search, LocateFixed, Layers, Plus, Minus, X } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
 import { mapPoints, type MapPoint } from '@/data/mockData';
@@ -20,11 +21,19 @@ const pointTypeConfig = {
 
 const filterOrder: (keyof typeof pointTypeConfig)[] = ['stall', 'cafe', 'checkin', 'kids', 'exhibition', 'parking'];
 
+// --- Cấu hình zoom ---
+// OSM chỉ có tile tới z19. MAX_ZOOM cho phép người dùng phóng tới 20,
+// nhưng TileLayer sẽ phóng to ảnh của z19 thay vì xin tile không tồn tại.
+const MAX_ZOOM = 20;
+const MAX_NATIVE_ZOOM = 19;
+const DEFAULT_ZOOM = 19;
+// Từ zoom này trở lên mới hiện nhãn chữ dưới mỗi pin
+const LABEL_ZOOM = 19;
+
 // --- Quy đổi x/y (%) hiện có trong mockData sang tọa độ thật ngoài đời ---
-// Nên double-check lại 2 điểm này trên Google Maps (chuột phải → "Ô này là gì?") để chuẩn xác tuyệt đối
 const STREET_START = { lat: 10.77972, lng: 106.69790 }; // đầu phía Nhà thờ Đức Bà (x ≈ 3%)
 const STREET_END   = { lat: 10.77937, lng: 106.69935 }; // đầu phía Bưu điện Trung tâm (x ≈ 97%)
-const ROW_SPREAD = 0.00006; // độ lệch Bắc/Nam ứng với y=0 và y=100 trên sơ đồ cũ
+const ROW_SPREAD = 0.00012; // ~13m giữa hai dãy, tăng từ 0.00006 để pin bớt chồng nhau
 
 function pointToLatLng(point: MapPoint): [number, number] {
   const t = point.x / 100;
@@ -34,32 +43,71 @@ function pointToLatLng(point: MapPoint): [number, number] {
   return [lat, lng];
 }
 
-function buildPinIcon(type: keyof typeof pointTypeConfig, label: string, isSelected: boolean) {
+function buildPinIcon(
+  type: keyof typeof pointTypeConfig,
+  label: string,
+  isSelected: boolean,
+  showLabel: boolean,
+) {
   const cfg = pointTypeConfig[type] || pointTypeConfig.amenity;
   const Icon = cfg.icon;
+  const withLabel = showLabel || isSelected;
+
   const html = renderToStaticMarkup(
     <div className="flex flex-col items-center gap-0.5">
       <div className={`w-8 h-8 rounded-full ${cfg.color} flex items-center justify-center shadow-lift ring-2 ${isSelected ? `ring-4 ${cfg.ring} scale-125` : 'ring-white/60'}`}>
         <Icon size={15} color="white" strokeWidth={1.75} />
       </div>
-      <div className={`px-1.5 py-0.5 rounded-full text-[9px] font-semibold shadow-soft whitespace-nowrap ${isSelected ? 'bg-ink text-white' : 'bg-white/90 text-ink-soft'}`}>
-        {label}
-      </div>
+      {withLabel && (
+        <div className={`px-1.5 py-0.5 rounded-full text-[9px] font-semibold shadow-soft whitespace-nowrap ${isSelected ? 'bg-ink text-white' : 'bg-white/90 text-ink-soft'}`}>
+          {label}
+        </div>
+      )}
     </div>
   );
-  return L.divIcon({ html, className: '', iconSize: [70, 50], iconAnchor: [35, 42] });
+
+  return L.divIcon({
+    html,
+    className: '',
+    iconSize: withLabel ? [70, 50] : [32, 32],
+    iconAnchor: withLabel ? [35, 42] : [16, 16],
+  });
+}
+
+/** Theo dõi mức zoom để quyết định có hiện nhãn hay không */
+function ZoomWatcher({ onChange }: { onChange: (zoom: number) => void }) {
+  const map = useMapEvents({
+    zoomend: () => onChange(map.getZoom()),
+  });
+  return null;
+}
+
+/** Báo cho Leaflet biết container đổi kích thước, tránh bị nền xám khi layout thay đổi */
+function ResizeFix() {
+  const map = useMap();
+  useEffect(() => {
+    const container = map.getContainer();
+    const observer = new ResizeObserver(() => map.invalidateSize());
+    observer.observe(container);
+    const timer = window.setTimeout(() => map.invalidateSize(), 200);
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(timer);
+    };
+  }, [map]);
+  return null;
 }
 
 function MapControls({ center }: { center: [number, number] }) {
   const map = useMap();
 
   return (
-    <div className="absolute right-4 bottom-5 z-[1000] flex flex-col gap-2">
+    <div className="absolute right-4 bottom-5 z-[500] flex flex-col gap-2">
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.18)]">
         <button aria-label="Zoom in" onClick={() => map.zoomIn()} className="flex h-10 w-10 items-center justify-center border-b border-slate-200 text-slate-600 transition hover:bg-slate-50"><Plus size={18} /></button>
         <button aria-label="Zoom out" onClick={() => map.zoomOut()} className="flex h-10 w-10 items-center justify-center text-slate-600 transition hover:bg-slate-50"><Minus size={18} /></button>
       </div>
-      <button aria-label="Center map" onClick={() => map.setView(center, 19)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.18)] transition hover:bg-slate-50"><LocateFixed size={18} /></button>
+      <button aria-label="Center map" onClick={() => map.setView(center, DEFAULT_ZOOM)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.18)] transition hover:bg-slate-50"><LocateFixed size={18} /></button>
     </div>
   );
 }
@@ -68,6 +116,7 @@ export function InteractiveMap() {
   const { t, lang, selectedPoint, setSelectedPoint, navigate } = useApp();
   const [filters, setFilters] = useState<Set<string>>(new Set(['stall', 'cafe', 'checkin', 'kids', 'exhibition', 'parking']));
   const [search, setSearch] = useState('');
+  const [zoom, setZoom] = useState(DEFAULT_ZOOM);
 
   const toggleFilter = (type: string) => {
     setFilters((prev) => {
@@ -84,6 +133,7 @@ export function InteractiveMap() {
   });
   const selected = mapPoints.find((p) => p.id === selectedPoint) || null;
   const mapCenter = pointToLatLng({ x: 50, y: 50 } as MapPoint);
+  const showLabels = zoom >= LABEL_ZOOM;
 
   const typeLabel = (type: MapPoint['type']) => {
     if (type === 'stall') return t('pointTypeStall');
@@ -133,39 +183,55 @@ export function InteractiveMap() {
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-[0_3px_14px_rgba(15,23,42,0.14)]">
-            <div className="absolute left-4 top-4 z-[1000] hidden h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.18)] sm:flex">
+          {/* isolate + z-0: nhốt toàn bộ z-index của Leaflet lại, không cho trồi lên header */}
+          <div className="relative isolate z-0 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-[0_3px_14px_rgba(15,23,42,0.14)]">
+            <div className="absolute left-4 top-4 z-[500] hidden h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.18)] sm:flex">
               <Layers size={18} />
             </div>
             <MapContainer
               center={mapCenter}
-              zoom={19}
-              maxZoom={20}
+              zoom={DEFAULT_ZOOM}
+              maxZoom={MAX_ZOOM}
               scrollWheelZoom
               zoomControl={false}
               className="h-[600px] w-full"
             >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap" />
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="&copy; OpenStreetMap"
+                maxZoom={MAX_ZOOM}
+                maxNativeZoom={MAX_NATIVE_ZOOM}
+              />
+              <ZoomWatcher onChange={setZoom} />
+              <ResizeFix />
               <MapControls center={mapCenter} />
-              {visiblePoints.map((point) => {
-                const isSelected = selected?.id === point.id;
-                return (
-                  <Marker
-                    key={point.id}
-                    position={pointToLatLng(point)}
-                    icon={buildPinIcon(point.type as keyof typeof pointTypeConfig, point.label, isSelected)}
-                    eventHandlers={{ click: () => setSelectedPoint(point.id) }}
-                  >
-                    <Popup>{point.label}</Popup>
-                  </Marker>
-                );
-              })}
+
+              <MarkerClusterGroup
+                maxClusterRadius={35}
+                disableClusteringAtZoom={LABEL_ZOOM}
+                spiderfyOnMaxZoom
+                showCoverageOnHover={false}
+                chunkedLoading
+              >
+                {visiblePoints.map((point) => {
+                  const isSelected = selected?.id === point.id;
+                  return (
+                    <Marker
+                      key={`${point.id}-${showLabels}-${isSelected}`}
+                      position={pointToLatLng(point)}
+                      icon={buildPinIcon(point.type as keyof typeof pointTypeConfig, point.label, isSelected, showLabels)}
+                      zIndexOffset={isSelected ? 1000 : 0}
+                      eventHandlers={{ click: () => setSelectedPoint(point.id) }}
+                    />
+                  );
+                })}
+              </MarkerClusterGroup>
             </MapContainer>
           </div>
         </div>
 
         <div className="lg:col-span-1">
-          <div className="card sticky top-32 p-6">
+          <div className="card sticky top-24 p-6">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-lg bg-forest-50 flex items-center justify-center">
                 <MapPin size={16} className="text-forest-600" />
