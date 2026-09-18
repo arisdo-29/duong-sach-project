@@ -38,16 +38,18 @@ function buildPinIcon(type: keyof typeof pointTypeConfig, label: string, isSelec
   const cfg = pointTypeConfig[type] || pointTypeConfig.amenity;
   const Icon = cfg.icon;
   const html = renderToStaticMarkup(
-    <div className="flex flex-col items-center gap-0.5">
-      <div className={`w-8 h-8 rounded-full ${cfg.color} flex items-center justify-center shadow-lift ring-2 ${isSelected ? `ring-4 ${cfg.ring} scale-125` : 'ring-white/60'}`}>
+    <div className="flex flex-col items-center">
+      <div className={`w-9 h-9 rounded-full ${cfg.color} flex items-center justify-center shadow-lift ring-2 ${isSelected ? `ring-4 ${cfg.ring} scale-125` : 'ring-white'}`}>
         <Icon size={15} color="white" strokeWidth={1.75} />
       </div>
-      <div className={`px-1.5 py-0.5 rounded-full text-[9px] font-semibold shadow-soft whitespace-nowrap ${isSelected ? 'bg-ink text-white' : 'bg-white/90 text-ink-soft'}`}>
-        {label}
-      </div>
+      {isSelected && (
+        <div className="mt-1 px-2 py-1 rounded-md bg-ink text-white text-[10px] font-bold shadow-soft whitespace-nowrap">
+          {label}
+        </div>
+      )}
     </div>
   );
-  return L.divIcon({ html, className: '', iconSize: [70, 50], iconAnchor: [35, 42] });
+  return L.divIcon({ html, className: '', iconSize: isSelected ? [90, 64] : [40, 40], iconAnchor: isSelected ? [45, 28] : [20, 20] });
 }
 
 export function InteractiveMap() {
@@ -125,6 +127,8 @@ export function InteractiveMap() {
                     key={point.id}
                     position={pointToLatLng(point)}
                     icon={buildPinIcon(point.type as keyof typeof pointTypeConfig, point.label, isSelected)}
+                    zIndexOffset={isSelected ? 1000 : 0}
+                    riseOnHover
                     eventHandlers={{ click: () => setSelectedPoint(point.id) }}
                   >
                     <Popup>{point.label}</Popup>
