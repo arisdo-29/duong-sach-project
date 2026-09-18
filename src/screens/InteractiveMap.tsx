@@ -98,8 +98,14 @@ export function InteractiveMap() {
   };
 
   return (
+<<<<<<< HEAD
     <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 animate-fadeIn">
       <div className="mb-5">
+=======
+    <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+      {/* Title + intro */}
+      <div className="mb-4">
+>>>>>>> dd05dfe358b54d125e3c75d8d0469a6c167e317a
         <h1 className="section-title">{t('mapTitle')}</h1>
         <p className="mt-1 max-w-2xl text-sm leading-relaxed text-ink-soft">{t('mapIntro')}</p>
       </div>

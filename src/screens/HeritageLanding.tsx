@@ -15,14 +15,14 @@ export function HeritageLanding() {
     <section className="relative overflow-hidden bg-forest-800 text-white">
       <img src={heritageImages.hero} alt="Di sản Thành phố Hồ Chí Minh" className="absolute inset-0 w-full h-full object-cover opacity-25" />
       <div className="absolute inset-0 bg-forest-900/70" />
-      <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <div className="relative max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider bg-white/15 rounded-full px-3 py-1.5"><Sparkles size={14} /> BẢN ĐỒ DI SẢN SỐ</span>
         <h1 className="font-serif text-3xl sm:text-5xl font-bold mt-5">Khám phá 27 câu chuyện di sản</h1>
         <p className="mt-4 text-white/85 max-w-2xl leading-relaxed">Mỗi điểm đến có landing page và mã QR riêng: câu chuyện, giá trị, thông tin tham quan và nguồn tư liệu.</p>
         <div className="mt-7 relative max-w-xl"><Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-forest-700" /><input value={query} onChange={(e) => setQuery(e.target.value)} className="w-full py-3.5 pl-11 pr-4 rounded-xl text-ink focus:outline-none" placeholder="Tìm tên di sản hoặc chủ đề..." /></div>
       </div>
     </section>
-    <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <main className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex justify-between gap-3 mb-6"><div><p className="text-forest-600 text-sm font-semibold">BỘ SƯU TẬP</p><h2 className="section-title mt-1">{shown.length} điểm di sản</h2></div><p className="text-sm text-ink-muted">Chọn một điểm để mở hồ sơ chi tiết.</p></div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">{shown.map((site) => <button key={site.id} onClick={() => setSelectedHeritageId(site.id)} className="card-hover text-left overflow-hidden group"><div className="h-40 overflow-hidden relative"><HeritageImage src={site.image} alt={site.nameVi} className="w-full h-full object-cover group-hover:scale-105 transition-transform" /><span className="absolute top-3 left-3 inline-flex items-center justify-center min-w-[2.5rem] rounded-full border border-forest-700/20 bg-gradient-to-br from-forest-600 to-forest-700 px-2.5 py-1 text-[10px] font-black tracking-[0.18em] text-cream-100 shadow-lg shadow-forest-900/20 backdrop-blur-sm">{String(site.id).padStart(2, '0')}</span></div><div className="p-4"><p className="text-xs text-forest-600 font-medium">{site.category}</p><h3 className="font-serif text-base font-semibold mt-1">{lang === 'vi' ? site.nameVi : site.nameEn}</h3><p className="mt-2 text-xs text-ink-muted line-clamp-2">{site.summary}</p><span className="inline-flex mt-3 text-sm font-medium text-forest-600">Xem hồ sơ →</span></div></button>)}</div>
     </main>
@@ -30,9 +30,13 @@ export function HeritageLanding() {
 }
 
 function HeritageDetail({ site, onBack, onFeedback }: { site: HeritageSite; onBack: () => void; onFeedback: () => void }) {
+<<<<<<< HEAD
   const galleryImages = [site.image, ...(site.gallery ?? heritageImages.gallery).filter((image) => image !== site.image)].slice(0, 3);
 
   return <div className="bg-cream-100 animate-fadeIn"><div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+=======
+  return <div className="bg-cream-100 animate-fadeIn"><div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+>>>>>>> dd05dfe358b54d125e3c75d8d0469a6c167e317a
     <button onClick={onBack} className="btn-outline px-4 py-2 text-sm mb-6"><ArrowLeft size={16} />Tất cả di sản</button>
     <section className="relative h-[300px] sm:h-[430px] rounded-2xl overflow-hidden shadow-card"><HeritageImage src={site.image} alt={site.nameVi} className="w-full h-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" /><div className="absolute left-6 bottom-6 sm:left-10 sm:bottom-9 text-white"><div className="flex items-center gap-3"><span className="inline-flex min-w-[3rem] items-center justify-center rounded-full border border-white/40 bg-white/10 px-2.5 py-1 text-sm font-black tracking-[0.18em] text-cream-100 shadow-lg shadow-forest-900/20 backdrop-blur-sm">{String(site.id).padStart(2, '0')}</span><span className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.12em] text-cream-100 backdrop-blur-sm">{site.category}</span></div><h1 className="font-serif text-3xl sm:text-5xl font-bold mt-3">{site.nameVi}</h1><p className="mt-2 flex gap-1.5 text-sm"><MapPin size={15} />{site.address}</p></div></section>
     <div className="grid lg:grid-cols-3 gap-7 mt-8"><div className="lg:col-span-2 space-y-6">

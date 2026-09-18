@@ -32,7 +32,7 @@ export function StallsPage() {
   }, [activeFilter, searchQuery]);
 
   return (
-    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+    <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
       {/* Heading */}
       <div className="mb-6">
         <h1 className="section-title">{t('stallsTitle')}</h1>
