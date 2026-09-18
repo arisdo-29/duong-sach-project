@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum FeedbackStatus {
+  PENDING   // Chờ xử lý
+  REVIEWED  // Đã xem
+  RESOLVED  // Đã xử lý
+}
+
+model Heritage {
+  id          String     @id @default(uuid())
+  slug        String     @unique // Định danh duy nhất, cố định để URL QR code không bao giờ bị gãy
+  name_vi     String     // Tên di sản (Tiếng Việt)
+  name_en     String     // Tên di sản (Tiếng Anh)
+  content_vi  String     // Bài viết giới thiệu (Tiếng Việt)
+  content_en  String     // Bài viết giới thiệu (Tiếng Anh)
+  image_url   String     // Đường dẫn ảnh đại diện
+  source      String     // Nguồn trích dẫn tài liệu đảm bảo tính xác thực
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  feedbacks   Feedback[]
+}
+
+model Feedback {
+  id           String         @id @default(uuid())
+  heritage_id  String         // Khóa ngoại trỏ đến Heritage
+  rating       Int            // Điểm đánh giá (1 - 5 sao)
+  content      String         // Nội dung phản hồi, góp ý
+  status       FeedbackStatus @default(PENDING) // Trạng thái xử lý
+  user_contact String?        // [Privacy by design] Tùy chọn (SĐT/Email), không bắt buộc
+  created_at   DateTime       @default(now()) // Thời gian gửi, dùng thống kê / dashboard
+
+  heritage     Heritage       @relation(fields: [heritage_id], references: [id], onDelete: Cascade)
+
+  @@index([heritage_id])
+  @@index([created_at])
+}

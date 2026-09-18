@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Send, CheckCircle2, AlertCircle, MessageSquare } from 'lucide-react';
+import axios from 'axios';
+import { Send, CheckCircle2, AlertCircle, MessageSquare, RefreshCw } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
 import { QRCode } from '@/components/QRCode';
 import { StarRating } from '@/components/StarRating';
@@ -12,11 +13,32 @@ export function FeedbackForm() {
   const [content, setContent] = useState('');
   const [contact, setContact] = useState('');
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim() || rating === 0) return;
-    setStatus(Math.random() > 0.2 ? 'success' : 'error');
+    setSubmitting(true);
+    setStatus('idle');
+    try {
+      const selectedSite = heritageSites.find((s) => String(s.id) === scope);
+      const scopeName = selectedSite ? selectedSite.nameVi : 'Toàn khu vực Đường Sách';
+      await axios.post('/api/feedbacks', {
+        content: content.trim(),
+        rating,
+        scope: scopeName,
+        contact: contact.trim(),
+      });
+      setStatus('success');
+      setContent('');
+      setRating(0);
+      setContact('');
+    } catch (err) {
+      console.error('Lỗi gửi feedback:', err);
+      setStatus('error');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -97,9 +119,9 @@ export function FeedbackForm() {
           </div>
 
           {/* Submit */}
-          <button type="submit" className="btn-primary w-full">
-            <Send size={18} strokeWidth={1.75} />
-            {t('submitFeedback')}
+          <button type="submit" disabled={submitting} className="btn-primary w-full disabled:opacity-50">
+            {submitting ? <RefreshCw size={18} className="animate-spin" /> : <Send size={18} strokeWidth={1.75} />}
+            {submitting ? 'Đang gửi...' : t('submitFeedback')}
           </button>
         </form>
 

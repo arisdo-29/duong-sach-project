@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from 'react';
-import { Activity, ArrowLeft, BookOpen, CalendarDays, Check, ClipboardList, FileText, LayoutDashboard, LogOut, Menu, Plus, Send, ShieldCheck, Store } from 'lucide-react';
+import { Activity, ArrowLeft, BookOpen, CalendarDays, Check, ClipboardList, FileText, LayoutDashboard, LogOut, Menu, MessageSquare, Plus, QrCode, Send, ShieldCheck, Store } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
+import HeritageQR from '@/components/Admin/HeritageQR';
+import FeedbackTable from '@/components/Admin/FeedbackTable';
 
-type View = 'dashboard' | 'events' | 'content' | 'audit';
+type View = 'dashboard' | 'events' | 'heritage-qr' | 'feedbacks' | 'content' | 'audit';
 type Status = 'pending' | 'approved' | 'published' | 'needs-info' | 'rejected';
 type Proposal = { id: number; date: string; title: string; organizer: string; schedule: string; location: string; equipment: string; status: Status; conflict?: string };
 const initial: Proposal[] = [
@@ -24,8 +26,32 @@ export function AdminPortal() {
   const log = (s: string) => setLogs(x => [`Vừa xong · ${s}`, ...x]);
   const change = (id: number, status: Status, action: string) => { const found = proposals.find(x => x.id === id); setProposals(x => x.map(p => p.id === id ? {...p, status} : p)); if (found) log(`Nguyễn Minh An ${action} “${found.title}”.`); };
   if (!auth) return <Login back={() => navigate('home')} enter={() => {setAuth(true); log('Nguyễn Minh An đăng nhập hệ thống.');}} />;
-  const nav = [{id:'dashboard' as View, text:'Tổng quan', Icon:LayoutDashboard}, {id:'events' as View,text:'Phê duyệt sự kiện',Icon:CalendarDays}, {id:'content' as View,text:'Quản lý nội dung',Icon:FileText}, {id:'audit' as View,text:'Nhật ký hoạt động',Icon:ClipboardList}];
-  return <div className="min-h-screen bg-slate-50"><aside className={`fixed z-50 inset-y-0 left-0 w-72 bg-slate-950 text-slate-200 transition-transform lg:translate-x-0 ${menu?'translate-x-0':'-translate-x-full'}`}><div className="h-20 px-6 flex items-center gap-3 border-b border-white/10"><div className="p-2.5 rounded-xl bg-emerald-500"><BookOpen size={21}/></div><div><b className="text-white">ĐƯỜNG SÁCH</b><p className="text-xs text-slate-400">Cổng quản trị nội bộ</p></div></div><nav className="p-4 space-y-1">{nav.map(({id,text,Icon})=><button key={id} onClick={()=>{setView(id);setMenu(false)}} className={`w-full flex gap-3 items-center p-3 rounded-lg text-sm ${view===id?'bg-emerald-500 text-white':'hover:bg-white/10'}`}><Icon size={18}/>{text}{id==='events'&&pending>0?<span className="ml-auto bg-white/20 rounded-full px-2 text-xs">{pending}</span>:null}</button>)}</nav><button onClick={()=>navigate('home')} className="absolute bottom-4 left-4 right-4 flex gap-3 p-3 text-sm hover:bg-white/10 rounded-lg"><ArrowLeft size={18}/>Về website công khai</button></aside>{menu&&<button className="fixed inset-0 z-40 bg-slate-900/50 lg:hidden" onClick={()=>setMenu(false)}/>}<div className="lg:pl-72"><header className="h-20 bg-white border-b px-4 sm:px-7 flex justify-between items-center"><div className="flex gap-3 items-center"><button className="lg:hidden" onClick={()=>setMenu(true)}><Menu/></button><div><p className="text-xs text-slate-500">Quản trị nội bộ</p><h1 className="font-semibold">{nav.find(x=>x.id===view)?.text}</h1></div></div><div className="flex items-center gap-3"><div className="text-right hidden sm:block"><p className="text-sm font-medium">Nguyễn Minh An</p><p className="text-xs text-slate-500">Admin</p></div><span className="w-9 h-9 grid place-items-center rounded-full bg-emerald-100 text-emerald-700 font-bold">NA</span><button onClick={()=>setAuth(false)} className="text-slate-500"><LogOut size={19}/></button></div></header><main className="p-4 sm:p-7 max-w-[1600px] mx-auto">{view==='dashboard'&&<Dashboard pending={pending} approved={approved} conflicts={conflicts} schedule={monthProposals} events={()=>setView('events')}/>} {view==='events'&&<Review data={proposals} change={change}/>} {view==='content'&&<Content items={items} setItems={setItems} log={log}/>} {view==='audit'&&<Audit logs={logs}/>}</main></div></div>;
+  const nav = [
+    { id: 'dashboard' as View, text: 'Tổng quan', Icon: LayoutDashboard },
+    { id: 'events' as View, text: 'Phê duyệt sự kiện', Icon: CalendarDays },
+    { id: 'heritage-qr' as View, text: 'Mã QR Di sản', Icon: QrCode },
+    { id: 'feedbacks' as View, text: 'Quản lý Góp ý', Icon: MessageSquare },
+    { id: 'content' as View, text: 'Quản lý nội dung', Icon: FileText },
+    { id: 'audit' as View, text: 'Nhật ký hoạt động', Icon: ClipboardList },
+  ];
+  return <div className="min-h-screen bg-slate-50"><aside className={`fixed z-50 inset-y-0 left-0 w-72 bg-slate-950 text-slate-200 transition-transform lg:translate-x-0 ${menu?'translate-x-0':'-translate-x-full'}`}><div className="h-20 px-6 flex items-center gap-3 border-b border-white/10"><div className="p-2.5 rounded-xl bg-emerald-500"><BookOpen size={21}/></div><div><b className="text-white">ĐƯỜNG SÁCH</b><p className="text-xs text-slate-400">Cổng quản trị nội bộ</p></div></div><nav className="p-4 space-y-1">{nav.map(({id,text,Icon})=><button key={id} onClick={()=>{setView(id);setMenu(false)}} className={`w-full flex gap-3 items-center p-3 rounded-lg text-sm ${view===id?'bg-emerald-500 text-white':'hover:bg-white/10'}`}><Icon size={18}/>{text}{id==='events'&&pending>0?<span className="ml-auto bg-white/20 rounded-full px-2 text-xs">{pending}</span>:null}</button>)}</nav><button onClick={()=>navigate('home')} className="absolute bottom-4 left-4 right-4 flex gap-3 p-3 text-sm hover:bg-white/10 rounded-lg"><ArrowLeft size={18}/>Về website công khai</button></aside>{menu&&<button className="fixed inset-0 z-40 bg-slate-900/50 lg:hidden" onClick={()=>setMenu(false)}/>}<div className="lg:pl-72"><header className="h-20 bg-white border-b px-4 sm:px-7 flex justify-between items-center"><div className="flex gap-3 items-center"><button className="lg:hidden" onClick={()=>setMenu(true)}><Menu/></button><div><p className="text-xs text-slate-500">Quản trị nội bộ</p><h1 className="font-semibold">{nav.find(x=>x.id===view)?.text}</h1></div></div><div className="flex items-center gap-3"><div className="text-right hidden sm:block"><p className="text-sm font-medium">Nguyễn Minh An</p><p className="text-xs text-slate-500">Admin</p></div><span className="w-9 h-9 grid place-items-center rounded-full bg-emerald-100 text-emerald-700 font-bold">NA</span><button onClick={()=>setAuth(false)} className="text-slate-500"><LogOut size={19}/></button></div></header><main className="p-4 sm:p-7 max-w-[1600px] mx-auto">
+    {view==='dashboard'&&<Dashboard pending={pending} approved={approved} conflicts={conflicts} schedule={monthProposals} events={()=>setView('events')}/>}
+    {view==='events'&&<Review data={proposals} change={change}/>}
+    {view==='heritage-qr'&&(
+      <div className="space-y-6">
+        <div><h2 className="text-2xl font-bold">Mã QR Di sản</h2><p className="text-slate-500 mt-1">Tạo và tải mã QR check-in dẫn trực tiếp đến landing page di sản đô thị.</p></div>
+        <HeritageQR />
+      </div>
+    )}
+    {view==='feedbacks'&&(
+      <div className="space-y-6">
+        <div><h2 className="text-2xl font-bold">Quản lý Góp ý</h2><p className="text-slate-500 mt-1">Theo dõi, duyệt và cập nhật trạng thái các ý kiến đóng góp từ du khách.</p></div>
+        <FeedbackTable />
+      </div>
+    )}
+    {view==='content'&&<Content items={items} setItems={setItems} log={log}/>}
+    {view==='audit'&&<Audit logs={logs}/>}
+  </main></div></div>;
 }
 function Login({back,enter}:{back:()=>void;enter:()=>void}) { const submit=(e:FormEvent)=>{e.preventDefault();enter()}; return <div className="min-h-screen grid place-items-center bg-slate-950 p-4"><div className="max-w-md w-full bg-white rounded-2xl p-8 shadow-2xl"><button onClick={back} className="flex gap-1 text-sm text-slate-500 mb-8"><ArrowLeft size={16}/>Website công khai</button><div className="w-12 h-12 grid place-items-center bg-emerald-100 text-emerald-700 rounded-xl"><ShieldCheck/></div><h1 className="mt-4 text-2xl font-bold">Đăng nhập quản trị</h1><p className="mt-2 text-sm text-slate-500">Chỉ dành cho Ban quản lý và nhân sự Đường Sách.</p><form onSubmit={submit} className="space-y-4 mt-7"><input type="email" required defaultValue="admin@duongsach.tphcm.gov.vn" className="input-field" aria-label="Email nội bộ"/><input type="password" required defaultValue="password" className="input-field" aria-label="Mật khẩu"/><button className="w-full py-3 bg-emerald-600 text-white rounded-lg">Đăng nhập an toàn</button></form><p className="mt-5 text-xs text-slate-400">Giao diện mẫu; cần kết nối xác thực máy chủ và RBAC trước khi triển khai thực tế.</p></div></div> }
 function Dashboard({ pending, approved, conflicts, schedule, events }: { pending: number; approved: number; conflicts: number; schedule: Proposal[]; events: () => void }) {
