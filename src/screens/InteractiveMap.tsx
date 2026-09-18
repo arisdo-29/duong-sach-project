@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import { MapPin, Store, Landmark, Car, Coffee, ArrowRight, MessageSquare, Info, Camera, Baby, BookOpen, Search, LocateFixed, Layers, Plus, Minus, X } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapPin, Store, Landmark, Car, Coffee, ArrowRight, MessageSquare, Info, Camera, Baby, BookOpen } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
 import { mapPoints, type MapPoint } from '@/data/mockData';
 
@@ -50,24 +50,9 @@ function buildPinIcon(type: keyof typeof pointTypeConfig, label: string, isSelec
   return L.divIcon({ html, className: '', iconSize: [70, 50], iconAnchor: [35, 42] });
 }
 
-function MapControls({ center }: { center: [number, number] }) {
-  const map = useMap();
-
-  return (
-    <div className="absolute right-4 bottom-5 z-[1000] flex flex-col gap-2">
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.18)]">
-        <button aria-label="Zoom in" onClick={() => map.zoomIn()} className="flex h-10 w-10 items-center justify-center border-b border-slate-200 text-slate-600 transition hover:bg-slate-50"><Plus size={18} /></button>
-        <button aria-label="Zoom out" onClick={() => map.zoomOut()} className="flex h-10 w-10 items-center justify-center text-slate-600 transition hover:bg-slate-50"><Minus size={18} /></button>
-      </div>
-      <button aria-label="Center map" onClick={() => map.setView(center, 19)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.18)] transition hover:bg-slate-50"><LocateFixed size={18} /></button>
-    </div>
-  );
-}
-
 export function InteractiveMap() {
   const { t, lang, selectedPoint, setSelectedPoint, navigate } = useApp();
   const [filters, setFilters] = useState<Set<string>>(new Set(['stall', 'cafe', 'checkin', 'kids', 'exhibition', 'parking']));
-  const [search, setSearch] = useState('');
 
   const toggleFilter = (type: string) => {
     setFilters((prev) => {
@@ -78,10 +63,7 @@ export function InteractiveMap() {
     });
   };
 
-  const visiblePoints = mapPoints.filter((p) => {
-    const searchable = `${p.label} ${p.nameVi} ${p.nameEn}`.toLowerCase();
-    return filters.has(p.type) && searchable.includes(search.toLowerCase());
-  });
+  const visiblePoints = mapPoints.filter((p) => filters.has(p.type));
   const selected = mapPoints.find((p) => p.id === selectedPoint) || null;
   const mapCenter = pointToLatLng({ x: 50, y: 50 } as MapPoint);
 
@@ -98,26 +80,14 @@ export function InteractiveMap() {
   };
 
   return (
-<<<<<<< HEAD
-    <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 animate-fadeIn">
-      <div className="mb-5">
-=======
-    <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
-      {/* Title + intro */}
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
       <div className="mb-4">
->>>>>>> dd05dfe358b54d125e3c75d8d0469a6c167e317a
         <h1 className="section-title">{t('mapTitle')}</h1>
-        <p className="mt-1 max-w-2xl text-sm leading-relaxed text-ink-soft">{t('mapIntro')}</p>
+        <p className="text-sm text-ink-soft leading-relaxed mt-2 max-w-2xl">{t('mapIntro')}</p>
       </div>
 
-      <div className="mb-4 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-[0_1px_5px_rgba(0,0,0,0.08)]">
-        <Search size={18} className="shrink-0 text-slate-500" />
-        <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t('searchPlaceholder')} className="min-w-0 flex-1 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400" />
-        {search && <button aria-label="Clear search" onClick={() => setSearch('')} className="text-slate-400 hover:text-slate-700"><X size={17} /></button>}
-      </div>
-
-      <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-1">
-        <span className="mr-1 shrink-0 text-xs font-medium text-ink-muted">{t('filterPointType')}:</span>
+      <div className="flex items-center gap-2 mb-4 flex-wrap">
+        <span className="text-sm text-ink-muted font-medium mr-1">{t('filterPointType')}:</span>
         {filterOrder.map((type) => {
           const cfg = pointTypeConfig[type];
           const Icon = cfg.icon;
@@ -126,8 +96,8 @@ export function InteractiveMap() {
             <button
               key={type}
               onClick={() => toggleFilter(type)}
-              className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
-                active ? 'border-blue-200 bg-blue-50 text-blue-700' : 'border-slate-200 bg-slate-50 text-slate-400'
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full border transition-all ${
+                active ? 'bg-forest-50 border-forest-300 text-forest-700' : 'bg-cream-50 border-cream-300 text-ink-light'
               }`}
             >
               <Icon size={13} />
@@ -137,22 +107,17 @@ export function InteractiveMap() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-[0_3px_14px_rgba(15,23,42,0.14)]">
-            <div className="absolute left-4 top-4 z-[1000] hidden h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.18)] sm:flex">
-              <Layers size={18} />
-            </div>
+          <div className="card p-4 relative">
             <MapContainer
               center={mapCenter}
               zoom={19}
               maxZoom={20}
-              scrollWheelZoom
-              zoomControl={false}
-              className="h-[600px] w-full"
+              scrollWheelZoom={false}
+              className="w-full h-[520px] rounded-lg overflow-hidden"
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap" />
-              <MapControls center={mapCenter} />
               {visiblePoints.map((point) => {
                 const isSelected = selected?.id === point.id;
                 return (
@@ -171,7 +136,7 @@ export function InteractiveMap() {
         </div>
 
         <div className="lg:col-span-1">
-          <div className="card sticky top-32 p-6">
+          <div className="card p-6 sticky top-32">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-lg bg-forest-50 flex items-center justify-center">
                 <MapPin size={16} className="text-forest-600" />
