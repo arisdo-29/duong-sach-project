@@ -39,6 +39,7 @@ model Feedback {
   status       FeedbackStatus @default(PENDING) // Trạng thái xử lý
   user_contact String?        // [Privacy by design] Tùy chọn (SĐT/Email), không bắt buộc
   created_at   DateTime       @default(now()) // Thời gian gửi, dùng thống kê / dashboard
+  updated_at   DateTime       @default(now()) @updatedAt // Thời gian cập nhật trạng thái
 
   heritage     Heritage       @relation(fields: [heritage_id], references: [id], onDelete: Cascade)
 

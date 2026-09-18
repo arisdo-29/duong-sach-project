@@ -6,28 +6,188 @@ import { findHeritage } from '../data/heritages.ts';
 
 const router = express.Router();
 
-// GET /api/admin/heritages - Lấy toàn bộ danh sách di sản từ Database thật
+/**
+ * Hàm Helper: Chuyển tiếng Việt có dấu thành slug không dấu
+ * Hỗ trợ chuyển đổi chính xác cả ký tự 'đ'/'Đ' và chuẩn hóa ký tự đặc biệt
+ */
+export const generateSlug = (text: string): string => {
+  return text
+    .toString()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Bỏ dấu tiếng Việt
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'd')
+    .replace(/[^a-z0-9]+/g, '-') // Thay khoảng trắng và ký tự đặc biệt bằng dấu gạch ngang
+    .replace(/(^-|-$)+/g, ''); // Xóa gạch ngang thừa ở đầu và cuối
+};
+
+// ==========================================
+// MODULE CRUD DI SẢN (HERITAGE)
+// ==========================================
+
+// 1. CREATE - Thêm mới di sản (POST /api/admin/heritages)
+router.post('/heritages', async (req: Request, res: Response) => {
+  try {
+    const { name_vi, name_en, content_vi, content_en, image_url, source } = req.body;
+
+    if (!name_vi) {
+      return res.status(400).json({ error: 'Tên tiếng Việt (name_vi) là bắt buộc' });
+    }
+
+    // Tự động sinh slug từ tên tiếng Việt
+    const baseSlug = generateSlug(name_vi) || `di-san-${Date.now().toString().slice(-4)}`;
+    let slug = baseSlug;
+    let counter = 1;
+
+    // Đảm bảo tính duy nhất của slug trong Database
+    while (await prisma.heritage.findUnique({ where: { slug } })) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
+    }
+
+    const newHeritage = await prisma.heritage.create({
+      data: {
+        slug,
+        name_vi: String(name_vi).trim(),
+        name_en: String(name_en || '').trim(),
+        content_vi: String(content_vi || '').trim(),
+        content_en: String(content_en || '').trim(),
+        image_url: String(image_url || '').trim(),
+        source: String(source || '').trim(),
+      },
+    });
+
+    res.status(201).json(newHeritage);
+  } catch (error) {
+    console.error('Lỗi khi tạo mới di sản:', error);
+    res.status(500).json({ error: 'Lỗi khi tạo mới di sản', details: error });
+  }
+});
+
+// 2. READ ALL - Lấy danh sách di sản (GET /api/admin/heritages)
 router.get('/heritages', async (_req: Request, res: Response) => {
   try {
     const heritages = await prisma.heritage.findMany({
-      orderBy: { created_at: 'asc' },
+      orderBy: { created_at: 'desc' },
+      include: {
+        _count: {
+          select: { feedbacks: true },
+        },
+      },
     });
     res.status(200).json(heritages);
   } catch (error) {
     console.error('Lỗi lấy danh sách di sản từ DB:', error);
-    res.status(500).json({ message: 'Lỗi truy vấn cơ sở dữ liệu', error });
+    res.status(500).json({ error: 'Lỗi lấy danh sách di sản', details: error });
   }
 });
 
-// GET /api/admin/heritages/:id/qr - Sinh mã QR từ dữ liệu Database thật
+// 3. READ ONE - Lấy chi tiết 1 di sản theo ID hoặc Slug (GET /api/admin/heritages/:id)
+router.get('/heritages/:id', async (req: Request<{ id: string }>, res: Response) => {
+  try {
+    const heritageId = req.params.id;
+    let targetSlug = heritageId;
+    const legacySite = findHeritage(heritageId);
+    if (legacySite) {
+      targetSlug = legacySite.slug;
+    }
+
+    const heritage = await prisma.heritage.findFirst({
+      where: {
+        OR: [
+          { id: heritageId },
+          { slug: heritageId },
+          { slug: targetSlug },
+        ],
+      },
+      include: {
+        feedbacks: {
+          orderBy: { created_at: 'desc' },
+        },
+      },
+    });
+
+    if (!heritage) {
+      return res.status(404).json({ error: 'Không tìm thấy di sản' });
+    }
+
+    res.status(200).json(heritage);
+  } catch (error) {
+    console.error('Lỗi lấy thông tin chi tiết di sản:', error);
+    res.status(500).json({ error: 'Lỗi lấy thông tin di sản', details: error });
+  }
+});
+
+// 4. UPDATE - Sửa thông tin di sản (PUT /api/admin/heritages/:id)
+// QUAN TRỌNG: Tuyệt đối KHÔNG cập nhật trường `slug` để bảo đảm mã QR in vật lý không bị gãy link
+router.put('/heritages/:id', async (req: Request<{ id: string }>, res: Response) => {
+  try {
+    const heritageId = req.params.id;
+    const { name_vi, name_en, content_vi, content_en, image_url, source } = req.body;
+
+    // Tìm di sản theo ID hoặc Slug
+    const existing = await prisma.heritage.findFirst({
+      where: {
+        OR: [{ id: heritageId }, { slug: heritageId }],
+      },
+    });
+
+    if (!existing) {
+      return res.status(404).json({ error: 'Không tìm thấy di sản cần cập nhật' });
+    }
+
+    // QUAN TRỌNG: Cố tình loại bỏ trường slug ra khỏi payload cập nhật
+    const updatedHeritage = await prisma.heritage.update({
+      where: { id: existing.id },
+      data: {
+        ...(name_vi !== undefined && { name_vi: String(name_vi).trim() }),
+        ...(name_en !== undefined && { name_en: String(name_en).trim() }),
+        ...(content_vi !== undefined && { content_vi: String(content_vi).trim() }),
+        ...(content_en !== undefined && { content_en: String(content_en).trim() }),
+        ...(image_url !== undefined && { image_url: String(image_url).trim() }),
+        ...(source !== undefined && { source: String(source).trim() }),
+      },
+    });
+
+    res.status(200).json(updatedHeritage);
+  } catch (error) {
+    console.error('Lỗi khi cập nhật di sản:', error);
+    res.status(500).json({ error: 'Lỗi khi cập nhật di sản', details: error });
+  }
+});
+
+// 5. DELETE - Xóa di sản (DELETE /api/admin/heritages/:id)
+router.delete('/heritages/:id', async (req: Request<{ id: string }>, res: Response) => {
+  try {
+    const heritageId = req.params.id;
+
+    const existing = await prisma.heritage.findFirst({
+      where: {
+        OR: [{ id: heritageId }, { slug: heritageId }],
+      },
+    });
+
+    if (!existing) {
+      return res.status(404).json({ error: 'Không tìm thấy di sản cần xóa' });
+    }
+
+    await prisma.heritage.delete({
+      where: { id: existing.id },
+    });
+
+    res.status(200).json({ message: 'Xóa thành công', id: existing.id, slug: existing.slug });
+  } catch (error) {
+    console.error('Lỗi khi xóa di sản:', error);
+    res.status(500).json({ error: 'Lỗi khi xóa di sản', details: error });
+  }
+});
+
+// 6. QR GENERATOR - Sinh mã QR Check-in từ Database thật (GET /api/admin/heritages/:id/qr)
 router.get('/heritages/:id/qr', async (req: Request<{ id: string }>, res: Response) => {
   try {
     const heritageId = req.params.id;
 
-    // Tìm kiếm trong Database:
-    // 1. Theo ID (UUID)
-    // 2. Theo Slug (VD: nha-tho-duc-ba)
-    // 3. Nếu là ID số cũ (VD: 1, 2), phân giải qua slug tương ứng
     let targetSlug = heritageId;
     const legacySite = findHeritage(heritageId);
     if (legacySite) {
@@ -75,6 +235,10 @@ router.get('/heritages/:id/qr', async (req: Request<{ id: string }>, res: Respon
     res.status(500).json({ message: 'Lỗi tạo QR Code', error });
   }
 });
+
+// ==========================================
+// MODULE PHẢN HỒI (FEEDBACK)
+// ==========================================
 
 // GET /api/admin/feedbacks - Lấy danh sách góp ý kèm thông tin di sản từ Database thật
 router.get('/feedbacks', async (_req: Request, res: Response) => {

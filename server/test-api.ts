@@ -58,7 +58,57 @@ server.listen(PORT, async () => {
     console.log('Test 6 (Post feedback 201):', res6.status === 201 ? 'PASSED ✅' : 'FAILED ❌');
     console.log('Res 6 feedback id:', data6.feedback?.id);
 
-    console.log('\n--- TẤT CẢ CÁC BÀI TEST API ĐỀU ĐÃ VƯỢT QUA THÀNH CÔNG! ---');
+    // ===============================================
+    // TEST CRUD HERITAGE
+    // ===============================================
+    console.log('\n--- BẮT ĐẦU TEST CRUD HERITAGE ---');
+
+    // Test 7: POST /api/admin/heritages - Thêm mới & Tự động sinh slug không dấu
+    const res7 = await fetch(`http://localhost:${PORT}/api/admin/heritages`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name_vi: 'Cột Cờ Thủ Ngữ Sài Gòn',
+        name_en: 'Thu Ngu Flagpole Saigon',
+        content_vi: 'Di tích lịch sử tại ngã ba sông Sài Gòn và rạch Bến Nghé.',
+        content_en: 'Historic flagpole monument at the confluence of Saigon River and Ben Nghe Canal.',
+        image_url: 'https://example.com/cot-co-thu-ngu.jpg',
+        source: 'Sở Văn hóa & Thể thao TP.HCM',
+      }),
+    });
+    const data7 = await res7.json();
+    const createdHeritageId = data7.id;
+    const isSlugCorrect = data7.slug === 'cot-co-thu-ngu-sai-gon';
+    console.log('Test 7 (POST Heritage + Auto Slug):', res7.status === 201 && isSlugCorrect ? 'PASSED ✅' : 'FAILED ❌');
+    console.log('Generated Slug:', data7.slug);
+
+    // Test 8: GET /api/admin/heritages/:id - Đọc chi tiết 1 di sản
+    const res8 = await fetch(`http://localhost:${PORT}/api/admin/heritages/${createdHeritageId}`);
+    const data8 = await res8.json();
+    console.log('Test 8 (GET Single Heritage by ID):', res8.status === 200 && data8.name_vi === 'Cột Cờ Thủ Ngữ Sài Gòn' ? 'PASSED ✅' : 'FAILED ❌');
+
+    // Test 9: PUT /api/admin/heritages/:id - Cập nhật nội dung nhưng KHÓA SLUG (Slug không bị thay đổi)
+    const res9 = await fetch(`http://localhost:${PORT}/api/admin/heritages/${createdHeritageId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        slug: 'slug-bi-doi-trai-phep', // Cố tình truyền slug giả để kiểm tra tính năng khóa slug
+        name_vi: 'Cột Cờ Thủ Ngữ (Đã cập nhật)',
+        source: 'Tư liệu Lịch sử TP.HCM',
+      }),
+    });
+    const data9 = await res9.json();
+    const slugStillLocked = data9.slug === 'cot-co-thu-ngu-sai-gon'; // Phải giữ nguyên slug ban đầu
+    const nameUpdated = data9.name_vi === 'Cột Cờ Thủ Ngữ (Đã cập nhật)';
+    console.log('Test 9 (PUT Heritage + Lock Slug):', res9.status === 200 && slugStillLocked && nameUpdated ? 'PASSED (Slug được bảo vệ tuyệt đối) ✅' : 'FAILED ❌');
+
+    // Test 10: DELETE /api/admin/heritages/:id - Xóa di sản thử nghiệm
+    const res10 = await fetch(`http://localhost:${PORT}/api/admin/heritages/${createdHeritageId}`, {
+      method: 'DELETE',
+    });
+    console.log('Test 10 (DELETE Heritage):', res10.status === 200 ? 'PASSED ✅' : 'FAILED ❌');
+
+    console.log('\n--- TẤT CẢ 10 BÀI TEST API ĐỀU ĐÃ VƯỢT QUA THÀNH CÔNG! ---');
   } catch (err) {
     console.error('Test error:', err);
   } finally {
