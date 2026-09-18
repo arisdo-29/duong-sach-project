@@ -747,14 +747,14 @@ export const heritageSites: HeritageSite[] = [
 },]
 
 
-export const heroImage = 'https://images.pexels.com/photos/34149049/pexels-photo-34149049.jpeg?auto=compress&cs=tinysrgb&h=1200&w=1800';
+export const heroImage = '/images/hinh_anh_duong_sach/duong_sach.jpg';
 
-// Reduced from 4 to 2: keep the large bookshelf photo + the two friends reading together
 export const aboutGalleryImages = [
-  'https://images.pexels.com/photos/34149049/pexels-photo-34149049.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+  '/images/hinh_anh_duong_sach/duong-sach-1.jpg',
+  '/images/hinh_anh_duong_sach/duong-sach-2.jpg',
 ];
 
-export const heritagePreviewImage = 'https://images.pexels.com/photos/29820533/pexels-photo-29820533.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
+export const heritagePreviewImage = '/images/hinh_anh_duong_sach/duong-sach-nhin-ra-nha-tho-duc-ba.jpg';
 
 export const visitorExperienceImages = {
   checkin: 'https://images.pexels.com/photos/36236916/pexels-photo-36236916.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
