@@ -30,13 +30,9 @@ export function HeritageLanding() {
 }
 
 function HeritageDetail({ site, onBack, onFeedback }: { site: HeritageSite; onBack: () => void; onFeedback: () => void }) {
-<<<<<<< HEAD
   const galleryImages = [site.image, ...(site.gallery ?? heritageImages.gallery).filter((image) => image !== site.image)].slice(0, 3);
 
   return <div className="bg-cream-100 animate-fadeIn"><div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-=======
-  return <div className="bg-cream-100 animate-fadeIn"><div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
->>>>>>> dd05dfe358b54d125e3c75d8d0469a6c167e317a
     <button onClick={onBack} className="btn-outline px-4 py-2 text-sm mb-6"><ArrowLeft size={16} />Tất cả di sản</button>
     <section className="relative h-[300px] sm:h-[430px] rounded-2xl overflow-hidden shadow-card"><HeritageImage src={site.image} alt={site.nameVi} className="w-full h-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" /><div className="absolute left-6 bottom-6 sm:left-10 sm:bottom-9 text-white"><div className="flex items-center gap-3"><span className="inline-flex min-w-[3rem] items-center justify-center rounded-full border border-white/40 bg-white/10 px-2.5 py-1 text-sm font-black tracking-[0.18em] text-cream-100 shadow-lg shadow-forest-900/20 backdrop-blur-sm">{String(site.id).padStart(2, '0')}</span><span className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.12em] text-cream-100 backdrop-blur-sm">{site.category}</span></div><h1 className="font-serif text-3xl sm:text-5xl font-bold mt-3">{site.nameVi}</h1><p className="mt-2 flex gap-1.5 text-sm"><MapPin size={15} />{site.address}</p></div></section>
     <div className="grid lg:grid-cols-3 gap-7 mt-8"><div className="lg:col-span-2 space-y-6">

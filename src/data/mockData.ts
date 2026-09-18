@@ -747,11 +747,7 @@ export const heritageSites: HeritageSite[] = [
 },]
 
 
-<<<<<<< HEAD
-export const heroImage = 'https://images.pexels.com/photos/34149049/pexels-photo-34149049.jpeg?auto=compress&cs=tinysrgb&h=1200&w=1800';
-=======
 export const heroImage = '/images/hinh_anh_duong_sach/duong_sach.jpg';
->>>>>>> dd05dfe358b54d125e3c75d8d0469a6c167e317a
 
 // Reduced from 4 to 2: keep the large bookshelf photo + the two friends reading together
 export const aboutGalleryImages = [
