@@ -18,8 +18,8 @@ export const translations = {
 
   // Hero
   heroHeadline: {
-    vi: 'ĐƯỜNG SÁCH — NƠI MỖI TRANG SÁCH LÀ MỘT CUỘC DẠO CHƠI',
-    en: 'BOOK STREET — WHERE EVERY PAGE IS A WALK WORTH TAKING',
+    vi: 'ĐƯỜNG SÁCH NƠI MỖI TRANG SÁCH LÀ MỘT CUỘC DẠO CHƠI',
+    en: 'BOOK STREET WHERE EVERY PAGE IS A WALK WORTH TAKING',
   },
   heroSubtext: {
     vi: 'Không gian văn hóa đọc giữa lòng thành phố, nơi sách, cà phê và những câu chuyện gặp nhau mỗi ngày.',

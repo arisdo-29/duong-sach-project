@@ -80,7 +80,7 @@ export const stalls: Stall[] = [
     descEn: 'A leading Vietnamese publisher with 40+ years of history, specializing in quality literature and children\'s books.',
     bookCount: '1.240 đầu sách',
     bookCountEn: '1,240 titles',
-    image: '/images/hinh_anh_cac_gian_hang/cac_nha_sach.jpg',
+    image: 'https://images.pexels.com/photos/27854754/pexels-photo-27854754.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
     id: 'dongtay',
@@ -95,7 +95,7 @@ export const stalls: Stall[] = [
     descEn: 'Specializes in economics, management, and soft-skills books for entrepreneurs and professionals.',
     bookCount: '890 đầu sách',
     bookCountEn: '890 titles',
-    image: '/images/hinh_anh_cac_gian_hang/gian_hang.jpg',
+    image: 'https://images.pexels.com/photos/29614944/pexels-photo-29614944.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
     id: 'alpha',
@@ -110,7 +110,7 @@ export const stalls: Stall[] = [
     descEn: 'A leading source for science, technology, and creative-thinking books for young readers.',
     bookCount: '760 đầu sách',
     bookCountEn: '760 titles',
-    image: '/images/hinh_anh_cac_gian_hang/nha_xuat_ban_tong_hop.jpg',
+    image: 'https://images.pexels.com/photos/3862153/pexels-photo-3862153.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
     id: 'kimdong',
@@ -125,7 +125,7 @@ export const stalls: Stall[] = [
     descEn: 'Beloved children\'s literature and comics familiar to generations of Vietnamese readers.',
     bookCount: '1.050 đầu sách',
     bookCountEn: '1,050 titles',
-    image: '/images/hinh_anh_cac_gian_hang/dong_sach_nghe_thuat_con_meo_nho.jpg',
+    image: 'https://images.pexels.com/photos/34750570/pexels-photo-34750570.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
     id: 'thaiha',
@@ -140,7 +140,7 @@ export const stalls: Stall[] = [
     descEn: 'Known for skills books, Buddhism titles, and many inspirational works.',
     bookCount: '680 đầu sách',
     bookCountEn: '680 titles',
-    image: '/images/hinh_anh_cac_gian_hang/nha_sach_thai_ha.jpg',
+    image: 'https://images.pexels.com/photos/13279386/pexels-photo-13279386.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
     id: 'firstnews',
@@ -155,7 +155,7 @@ export const stalls: Stall[] = [
     descEn: 'Focuses on famous translated works, business books, and the "Soul Seeds" series.',
     bookCount: '920 đầu sách',
     bookCountEn: '920 titles',
-    image: '/images/hinh_anh_cac_gian_hang/nha_xuat_ban_phu_nu.jpg',
+    image: 'https://images.pexels.com/photos/27854757/pexels-photo-27854757.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
     id: 'phuongnam',
@@ -170,7 +170,7 @@ export const stalls: Stall[] = [
     descEn: 'Large-scale, diverse genres from children\'s books and novels to foreign-language titles.',
     bookCount: '1.480 đầu sách',
     bookCountEn: '1,480 titles',
-    image: '/images/hinh_anh_cac_gian_hang/gian_hang_nha_nam.jpg',
+    image: 'https://images.pexels.com/photos/8045884/pexels-photo-8045884.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
     id: 'tonghop',
@@ -185,7 +185,7 @@ export const stalls: Stall[] = [
     descEn: 'Academic books, specialized reference, and cultural–historical publications.',
     bookCount: '540 đầu sách',
     bookCountEn: '540 titles',
-    image: '/images/hinh_anh_cac_gian_hang/nha_xuat_ban_tong_hop.jpg',
+    image: 'https://images.pexels.com/photos/5499564/pexels-photo-5499564.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
   {
     id: 'ngoaiVan',
@@ -200,7 +200,7 @@ export const stalls: Stall[] = [
     descEn: 'English, French, Japanese books and fine art–architecture artbooks, ideal for international visitors and language learners.',
     bookCount: '410 đầu sách',
     bookCountEn: '410 titles',
-    image: '/images/hinh_anh_cac_gian_hang/dong_sach_nghe_thuat_con_meo_nho.jpg',
+    image: 'https://images.pexels.com/photos/11565595/pexels-photo-11565595.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   },
 ];
 
@@ -219,7 +219,7 @@ export const calendarEvents: CalendarEvent[] = [
     descVi: 'Tọa đàm về hành trình phát triển văn học Việt Nam qua các thời kỳ, cùng cơ hội ký tặng sách với các tác giả tham gia. Sự kiện mở cửa cho tất cả độc giả.',
     descEn: 'A talk on the journey of Vietnamese literature through the eras, with a book signing opportunity with participating authors. Open to all readers.',
     priority: 'low',
-    image: '/images/hinh_anh_duong_sach/su_kien.jpg',
+    image: 'https://images.pexels.com/photos/33719415/pexels-photo-33719415.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
     day: 20,
     month: 9,
   },
@@ -237,7 +237,7 @@ export const calendarEvents: CalendarEvent[] = [
     descVi: 'Hội sách cuối tuần với giảm giá lên đến 30% tại tất cả gian hàng. Cơ hội tuyệt vời để sưu tầm những đầu sách yêu thích với mức giá tốt nhất.',
     descEn: 'Weekend book fair with up to 30% off at all stalls. A great opportunity to collect your favorite titles at the best prices.',
     priority: 'medium',
-    image: '/images/hinh_anh_duong_sach/su_kien_2.jpg',
+    image: 'https://images.pexels.com/photos/13919952/pexels-photo-13919952.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
     day: 27,
     month: 9,
   },
@@ -255,7 +255,7 @@ export const calendarEvents: CalendarEvent[] = [
     descVi: 'Đêm nhạc acoustic tưởng nhớ nhạc sĩ Trịnh Công Sơn với các ca khúc bất hủ. Không gian ngoài trời dưới ánh đèn ấm, dành cho những người yêu âm nhạc và sách.',
     descEn: 'An acoustic evening honoring composer Trịnh Công Sơn with timeless songs. An outdoor setting under warm lights, for lovers of music and books.',
     priority: 'high',
-    image: '/images/hinh_anh_duong_sach/su_kien_3.jpg',
+    image: 'https://images.pexels.com/photos/3947517/pexels-photo-3947517.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
     day: 4,
     month: 10,
   },
@@ -747,19 +747,19 @@ export const heritageSites: HeritageSite[] = [
 },]
 
 
-export const heroImage = '/images/hinh_anh_duong_sach/duong_sach.jpg';
+export const heroImage = 'https://images.pexels.com/photos/34149049/pexels-photo-34149049.jpeg?auto=compress&cs=tinysrgb&h=1200&w=1800';
 
 // Reduced from 4 to 2: keep the large bookshelf photo + the two friends reading together
 export const aboutGalleryImages = [
-  '/images/hinh_anh_duong_sach/duong-sach-1.jpg',
+  'https://images.pexels.com/photos/34149049/pexels-photo-34149049.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
 ];
 
 export const heritagePreviewImage = 'https://images.pexels.com/photos/29820533/pexels-photo-29820533.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
 
 export const visitorExperienceImages = {
-  checkin: '/images/hinh_anh_duong_sach/cong_vao.jpg',
-  coffee: '/images/hinh_anh_duong_sach/duong-sach-nhin-ra-nha-tho-duc-ba.jpg',
-  kids: '/images/hinh_anh_duong_sach/duong-sach-6.jpg',
+  checkin: 'https://images.pexels.com/photos/36236916/pexels-photo-36236916.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+  coffee: 'https://images.pexels.com/photos/433113/pexels-photo-433113.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+  kids: 'https://images.pexels.com/photos/19875334/pexels-photo-19875334.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
 };
 
 export const heritageImages = {
@@ -771,4 +771,4 @@ export const heritageImages = {
   ],
 };
 
-export const mapPreviewImage = '/images/hinh_anh_duong_sach/duong-sach-2.jpg';
+export const mapPreviewImage = 'https://images.pexels.com/photos/36425755/pexels-photo-36425755.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
