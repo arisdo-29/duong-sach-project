@@ -1,0 +1,28 @@
+# Tạo nhãn + milestone + issue từ .github/backlog.json.
+# Cách chạy: tab Actions → "Bootstrap backlog" → Run workflow. Chạy lại bao nhiêu lần cũng được.
+name: "🗂️ Bootstrap backlog (nhãn + milestone + issue)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Chạy thử: chỉ in ra log, không tạo gì"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/github-script@v8
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+        with:
+          script: |
+            const run = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/bootstrap-backlog.js`);
+            await run({ github, context, core });

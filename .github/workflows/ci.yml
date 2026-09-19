@@ -1,0 +1,35 @@
+# Kiểm tra mỗi PR: schema Prisma hợp lệ, typecheck backend, build frontend.
+# Không cần database: chỉ kiểm tra code biên dịch được.
+name: "✅ CI"
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      # URL giả chỉ để prisma validate/generate chạy được – không kết nối thật
+      DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
+      DIRECT_URL: "postgresql://ci:ci@localhost:5432/ci"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Prisma schema hợp lệ
+        run: npx prisma validate && npx prisma generate
+      - name: Typecheck backend (sau SETUP-01)
+        run: |
+          if [ -f tsconfig.server.json ]; then npx tsc -p tsconfig.server.json --noEmit; else echo "Chưa có tsconfig.server.json – bỏ qua"; fi
+      - name: Build frontend
+        run: npm run build
+      - name: Test (nếu có)
+        run: npm test --if-present

@@ -1,0 +1,38 @@
+name: "✨ Tính năng / API mới"
+description: Thêm một đầu việc mới (ví dụ phát sinh sau khi mentor góp ý)
+title: "[FR-xx] "
+labels: ["type: feature", "status: todo"]
+body:
+  - type: markdown
+    attributes:
+      value: "Đặt tiêu đề dạng `[FR-09] Mô tả ngắn`. Nếu là việc từ backlog.json thì không cần tạo tay – chạy workflow **Bootstrap backlog**."
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Ưu tiên
+      options: ["P0 – bắt buộc trước deadline", "P1 – nên có", "P2 – có thì tốt", "P3 – để sau"]
+    validations:
+      required: true
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      options: ["core", "booths", "venues", "assets", "events", "proposals", "heritages", "qr", "feedbacks", "frontend", "khác"]
+    validations:
+      required: true
+  - type: textarea
+    id: desc
+    attributes:
+      label: Mô tả & endpoint
+      placeholder: "GET /api/admin/... – làm gì, cho ai dùng, thuộc phần 1/2/3 nào"
+    validations:
+      required: true
+  - type: textarea
+    id: ac
+    attributes:
+      label: Tiêu chí chấp nhận
+      value: |
+        - [ ] 
+        - [ ] 
+    validations:
+      required: true

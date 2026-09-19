@@ -1,0 +1,30 @@
+# Chuẩn hóa xuống dòng: trong git luôn lưu LF, khi checkout mỗi máy dùng kiểu của hệ điều hành.
+# Tránh lỗi "cả file bị đổi" khi người dùng Windows (CRLF) và macOS (LF) cùng sửa một file.
+* text=auto
+
+# Script phải giữ đúng kiểu xuống dòng để chạy được
+*.sh     text eol=lf
+mvnw     text eol=lf
+*.cmd    text eol=crlf
+*.bat    text eol=crlf
+*.ps1    text eol=crlf
+
+# File nhị phân: không bao giờ merge từng dòng
+*.jar    binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.ico    binary
+*.db     binary
+*.pdf    binary
+*.docx   binary
+*.xlsx   binary
+*.xlsm   binary
+*.pptx   binary
+*.zip    binary
+*.rar    binary
+
+# package-lock.json: khi xung đột, đừng sửa tay – xem docs/04 mục Xung đột
+package-lock.json text -diff
