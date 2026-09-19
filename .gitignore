@@ -21,3 +21,32 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# ---- Bổ sung ----
+.vercel
+coverage/
+
+# IDE (mỗi người một IDE → không commit cấu hình cá nhân)
+.idea/
+*.iml
+out/
+.vscode/*
+!.vscode/extensions.json
+.antigravity/
+.classpath
+.project
+.settings/
+.factorypath
+bin/
+
+# Secret & cấu hình cục bộ – KHÔNG BAO GIỜ commit
+.env
+.env.*
+!.env.example
+application-local.yml
+application-local.properties
+*.local.md
+
+# Claude Code: file cá nhân
+.claude/settings.local.json
+CLAUDE.local.md

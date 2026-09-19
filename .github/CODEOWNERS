@@ -1,0 +1,15 @@
+# File dùng chung: cần Khuyên hoặc Tân duyệt. File trong module: tự merge khi CI xanh.
+/prisma/            @arisdo-29 @dwargon73-sketch
+/server/core/       @arisdo-29 @dwargon73-sketch
+/server/app.ts      @arisdo-29 @dwargon73-sketch
+/server/routes.ts   @arisdo-29 @dwargon73-sketch
+/server/db.ts       @arisdo-29 @dwargon73-sketch
+/api/               @arisdo-29 @dwargon73-sketch
+/package.json       @arisdo-29 @dwargon73-sketch
+/package-lock.json  @arisdo-29 @dwargon73-sketch
+/vite.config.ts     @arisdo-29 @dwargon73-sketch
+/vercel.json        @arisdo-29 @dwargon73-sketch
+/AGENTS.md          @arisdo-29 @dwargon73-sketch
+/CLAUDE.md          @arisdo-29 @dwargon73-sketch
+/.github/           @arisdo-29 @dwargon73-sketch
+/.claude/           @arisdo-29 @dwargon73-sketch
