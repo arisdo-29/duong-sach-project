@@ -49,5 +49,14 @@ export default function App() {
 function AppShell() {
   const { screen } = useApp();
   if (screen === 'admin') return <AdminPortal />;
-  return <div className="min-h-screen flex flex-col"><Header /><main className="flex-1 pb-16 lg:pb-0"><ScreenRenderer /></main><Footer /><ChatbotWidget /></div>;
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <ScreenRenderer />
+      </main>
+      <Footer />
+      <ChatbotWidget />
+    </div>
+  );
 }

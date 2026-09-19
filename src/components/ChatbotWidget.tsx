@@ -46,7 +46,7 @@ export function ChatbotWidget() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-20 lg:bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-forest-600 shadow-lift flex items-center justify-center hover:bg-forest-700 transition-all hover:scale-105 active:scale-95"
+          className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 w-14 h-14 rounded-full bg-forest-600 shadow-lift flex items-center justify-center hover:bg-forest-700 transition-all hover:scale-105 active:scale-95"
           aria-label="Chatbot"
         >
           <MessageCircle size={26} className="text-white" strokeWidth={1.5} />
@@ -58,7 +58,7 @@ export function ChatbotWidget() {
 
       {/* Chat window */}
       {open && (
-        <div className="fixed bottom-20 lg:bottom-6 right-6 z-50 w-[calc(100vw-3rem)] sm:w-96 max-h-[600px] flex flex-col rounded-2xl shadow-lift bg-white border border-cream-300 overflow-hidden animate-fadeIn">
+        <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-2.5rem)] sm:w-96 max-h-[600px] flex flex-col rounded-2xl shadow-lift bg-white border border-cream-300 overflow-hidden animate-fadeIn">
           {/* Header */}
           <div className="bg-forest-600 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">

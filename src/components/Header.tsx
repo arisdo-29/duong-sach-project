@@ -121,20 +121,20 @@ export function Header() {
                 <ShieldCheck size={16} strokeWidth={1.75} />
                 Đăng nhập quản trị
               </button>
-              {/* AI Assistant bubble */}
               <button
-                className="lg:hidden text-cream-100 p-1.5"
+                className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-cream-100 hover:bg-forest-700/60 active:bg-forest-700 transition-all focus:outline-none"
                 onClick={() => setMobileOpen(!mobileOpen)}
-                aria-label="Menu"
+                aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
+                aria-expanded={mobileOpen}
               >
-                {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+                {mobileOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
             </div>
           </div>
 
           {/* Mobile menu */}
           {mobileOpen && (
-            <div className="lg:hidden pb-4 animate-fadeIn">
+            <div className="lg:hidden pb-4 pt-2 border-t border-forest-500/30 animate-fadeIn">
               <div className="flex flex-col gap-1">
                 <div className="relative mb-2">
                   <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-light" />
@@ -143,16 +143,21 @@ export function Header() {
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     placeholder={t('searchPlaceholder')}
-                    className="w-full pl-9 pr-4 py-2.5 text-sm bg-forest-700/50 text-cream-100 placeholder:text-forest-200 rounded-lg border border-forest-700/50 focus:outline-none"
+                    className="w-full pl-9 pr-4 py-2.5 text-sm bg-forest-700/50 text-cream-100 placeholder:text-forest-200 rounded-lg border border-forest-700/50 focus:outline-none focus:border-forest-300"
                   />
                 </div>
                 {navItems.map((item) => {
                   const Icon = item.icon;
+                  const isActive = screen === item.id || (item.id === 'events' && screen === 'events-proposal');
                   return (
                     <button
                       key={item.id}
                       onClick={() => handleNav(item.id)}
-                      className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium text-cream-100 hover:bg-forest-700/60 transition-all"
+                      className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                        isActive
+                          ? 'bg-forest-700 text-white font-semibold shadow-sm'
+                          : 'text-cream-100 hover:bg-forest-700/60'
+                      }`}
                     >
                       <Icon size={18} strokeWidth={1.75} />
                       {item.label}
@@ -161,28 +166,34 @@ export function Header() {
                 })}
                 <button
                   onClick={() => handleNav('heritage')}
-                  className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium text-cream-100 hover:bg-forest-700/60 transition-all"
+                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                    screen === 'heritage'
+                      ? 'bg-forest-700 text-white font-semibold shadow-sm'
+                      : 'text-cream-100 hover:bg-forest-700/60'
+                  }`}
                 >
                   <Landmark size={18} strokeWidth={1.75} />
                   {t('navHeritage')}
                 </button>
                 <button
                   onClick={() => handleNav('feedback')}
-                  className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium text-cream-100 hover:bg-forest-700/60 transition-all"
+                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                    screen === 'feedback'
+                      ? 'bg-forest-700 text-white font-semibold shadow-sm'
+                      : 'text-cream-100 hover:bg-forest-700/60'
+                  }`}
                 >
                   <MessageSquare size={18} strokeWidth={1.75} />
                   {t('navFeedback')}
                 </button>
-                <button
-                  onClick={() => handleNav('chatbot')}
-                  className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium text-cream-100 hover:bg-forest-700/60 transition-all"
-                >
-                  <BookOpen size={18} strokeWidth={1.75} />
-                  {t('navAssistant')}
-                </button>
+                <div className="my-1 border-t border-forest-500/30" />
                 <button
                   onClick={() => handleNav('admin')}
-                  className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium text-cream-100 hover:bg-forest-700/60 transition-all"
+                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                    screen === 'admin'
+                      ? 'bg-forest-700 text-white font-semibold shadow-sm'
+                      : 'text-cream-100 hover:bg-forest-700/60'
+                  }`}
                 >
                   <ShieldCheck size={18} strokeWidth={1.75} />
                   Đăng nhập quản trị
@@ -192,33 +203,6 @@ export function Header() {
           )}
         </div>
       </header>
-
-      {/* Mobile bottom quick-action bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-cream-300 shadow-lift">
-        <div className="grid grid-cols-4">
-          {[
-            { id: 'home' as ScreenId, icon: Home, label: t('navHome') },
-            { id: 'events' as ScreenId, icon: Calendar, label: t('navEvents') },
-            { id: 'map' as ScreenId, icon: MapPin, label: t('navMap') },
-            { id: 'feedback' as ScreenId, icon: MessageSquare, label: t('navFeedback') },
-          ].map((item) => {
-            const Icon = item.icon;
-            const isActive = screen === item.id || (item.id === 'events' && screen === 'events-proposal');
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleNav(item.id)}
-                className={`flex flex-col items-center gap-0.5 py-2.5 transition-colors ${
-                  isActive ? 'text-forest-600' : 'text-ink-muted'
-                }`}
-              >
-                <Icon size={20} strokeWidth={1.75} />
-                <span className="text-[10px] font-medium">{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
     </>
   );
 }
