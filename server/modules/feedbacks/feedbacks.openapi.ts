@@ -25,7 +25,14 @@ export const feedbacksPaths: OpenApiPaths = {
     get: {
       tags: ['Góp ý'],
       summary: 'Danh sách góp ý',
-      description: 'TODO FR-09: bổ sung lọc theo di sản, điểm đánh giá và trạng thái.',
+      description: 'Các điều kiện lọc được kết hợp theo AND. `heritageId` nhận UUID, slug hoặc `general` cho góp ý toàn Đường Sách.',
+      parameters: [
+        { name: 'heritageId', in: 'query', schema: { type: 'string' }, description: 'UUID, slug hoặc `general`' },
+        { name: 'status', in: 'query', schema: { type: 'string', enum: [...FEEDBACK_STATUSES] } },
+        { name: 'rating', in: 'query', schema: { type: 'integer', minimum: 1, maximum: 5 } },
+        { name: 'minRating', in: 'query', schema: { type: 'integer', minimum: 1, maximum: 5 } },
+        { name: 'maxRating', in: 'query', schema: { type: 'integer', minimum: 1, maximum: 5 } },
+      ],
       responses: {
         200: {
           description: 'Danh sách góp ý',

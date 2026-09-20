@@ -27,6 +27,32 @@ export const updateStatus = z.object({
   status: feedbackStatus,
 });
 
+/** GET /api/admin/feedbacks – bộ lọc cho màn hình quản trị. */
+export const listFeedbackQuery = z
+  .object({
+    // `general` đại diện cho góp ý không gắn với một di sản cụ thể.
+    heritageId: z.string().trim().min(1, 'heritageId không được để trống').optional(),
+    status: feedbackStatus.optional(),
+    rating: z.coerce.number().int().min(1).max(5).optional(),
+    minRating: z.coerce.number().int().min(1).max(5).optional(),
+    maxRating: z.coerce.number().int().min(1).max(5).optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (
+      data.minRating !== undefined &&
+      data.maxRating !== undefined &&
+      data.minRating > data.maxRating
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['minRating'],
+        message: 'Điểm tối thiểu không được lớn hơn điểm tối đa',
+      });
+    }
+  });
+
+export type ListFeedbackQuery = z.infer<typeof listFeedbackQuery>;
+
 /**
  * POST /api/feedbacks – form góp ý của du khách.
  * `contact` tùy chọn theo nguyên tắc privacy by design: không ép du khách
@@ -41,5 +67,3 @@ export const createFeedback = z.object({
 });
 
 export type CreateFeedbackInput = z.infer<typeof createFeedback>;
-
-// TODO(#16): thêm listFeedbackQuery (heritageId, status, minRating, maxRating) cho FR-09

@@ -1,7 +1,7 @@
-import type { Feedback, Heritage } from '@prisma/client';
+import type { Feedback, Heritage, Prisma } from '@prisma/client';
 import { prisma } from '../../db.js';
 import { BadRequestError, NotFoundError } from '../../core/errors.js';
-import type { CreateFeedbackInput, FeedbackStatus } from './feedbacks.schema.js';
+import type { CreateFeedbackInput, FeedbackStatus, ListFeedbackQuery } from './feedbacks.schema.js';
 
 /** Di sản rút gọn đính kèm mỗi góp ý */
 type HeritageBrief = Pick<Heritage, 'id' | 'slug' | 'name_vi' | 'name_en'>;
@@ -30,11 +30,34 @@ const heritageBriefSelect = {
 } as const;
 
 /**
- * Danh sách góp ý cho màn quản trị.
- * TODO(#16): FR-09 bổ sung lọc theo di sản, điểm đánh giá và trạng thái.
+ * Danh sách góp ý cho màn quản trị. Các điều kiện lọc được kết hợp theo AND.
  */
-export async function list() {
+export async function list(query: ListFeedbackQuery) {
+  const where: Prisma.FeedbackWhereInput = {};
+
+  if (query.status) where.status = query.status;
+  if (query.rating !== undefined) where.rating = query.rating;
+
+  if (query.minRating !== undefined || query.maxRating !== undefined) {
+    where.rating = {
+      ...(query.rating !== undefined ? { equals: query.rating } : {}),
+      ...(query.minRating !== undefined ? { gte: query.minRating } : {}),
+      ...(query.maxRating !== undefined ? { lte: query.maxRating } : {}),
+    };
+  }
+
+  if (query.heritageId === 'general') {
+    where.heritage_id = null;
+  } else if (query.heritageId) {
+    where.heritage = {
+      is: {
+        OR: [{ id: query.heritageId }, { slug: query.heritageId }],
+      },
+    };
+  }
+
   const feedbacks = await prisma.feedback.findMany({
+    where,
     include: { heritage: heritageBriefSelect },
     orderBy: { created_at: 'desc' },
   });
@@ -44,29 +67,19 @@ export async function list() {
 
 /** Cập nhật trạng thái xử lý: PENDING → REVIEWED → RESOLVED */
 export async function updateStatus(id: string, status: FeedbackStatus) {
-  let targetId = id;
-  let existing = await prisma.feedback.findUnique({ where: { id: targetId } });
-
-  // TODO(#16): FR-09 gỡ fallback id test này – nó sửa nhầm bản ghi đầu tiên
-  // khi client gửi id dạng "fb-001" (docs/01 mục 6, lỗi #7).
-  if (!existing && (id.startsWith('fb-') || id === 'test')) {
-    const first = await prisma.feedback.findFirst();
-    if (first) {
-      targetId = first.id;
-      existing = first;
-    }
-  }
+  const existing = await prisma.feedback.findUnique({ where: { id } });
 
   if (!existing) throw new NotFoundError('Không tìm thấy phản hồi cần cập nhật');
 
   const updated = await prisma.feedback.update({
-    where: { id: targetId },
+    where: { id },
     data: { status },
+    include: { heritage: heritageBriefSelect },
   });
 
   return {
     message: `Cập nhật thành công trạng thái thành ${status}`,
-    feedback: updated,
+    feedback: format(updated),
   };
 }
 
