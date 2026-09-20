@@ -1,15 +1,17 @@
-import { ArrowLeft, Calendar, Image as ImageIcon, MapPin, Search, Send, Sparkles } from 'lucide-react';
+import { ArrowLeft, Calendar, Image as ImageIcon, MapPin, Search, SearchX, Send, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { useApp } from '@/i18n/AppContext';
-import { QRCode } from '@/components/QRCode';
+import { HeritageQRCode } from '@/components/HeritageQRCode';
 import { heritageImages, heritageSites, type HeritageSite } from '@/data/mockData';
 
 
 export function HeritageLanding() {
-  const { lang, navigate, selectedHeritageId, setSelectedHeritageId } = useApp();
+  const { lang, navigate, selectedHeritageId, setSelectedHeritageId, heritageNotFoundSlug, clearHeritageNotFound } = useApp();
   const [query, setQuery] = useState('');
   const selected = heritageSites.find((site) => site.id === selectedHeritageId);
   const shown = heritageSites.filter((site) => `${site.nameVi} ${site.category}`.toLowerCase().includes(query.toLowerCase()));
+  // Quét QR cũ hoặc gõ tay sai đường dẫn: báo rõ thay vì im lặng đưa về danh sách
+  if (heritageNotFoundSlug) return <HeritageNotFound slug={heritageNotFoundSlug} onBack={clearHeritageNotFound} />;
   if (selected) return <HeritageDetail site={selected} onBack={() => setSelectedHeritageId(null)} onFeedback={() => navigate('feedback')} />;
   return <div className="bg-cream-100 animate-fadeIn">
     <section className="relative overflow-hidden bg-forest-800 text-white">
@@ -39,10 +41,30 @@ function HeritageDetail({ site, onBack, onFeedback }: { site: HeritageSite; onBa
       <section className="card p-6 sm:p-8"><p className="text-forest-600 font-semibold text-sm">CÂU CHUYỆN DI SẢN</p><h2 className="font-serif text-2xl font-bold mt-2">Giới thiệu & bối cảnh</h2><p className="text-ink-soft leading-relaxed mt-4">{site.summary}</p><div className="grid sm:grid-cols-2 gap-5 mt-7 pt-6 border-t border-cream-300"><Info title="Giá trị" text={site.value} /><Info title="Điểm nhấn" text={site.highlight} /></div></section>
       <section className="card p-6 sm:p-8"><p className="text-forest-600 font-semibold text-sm">HỒ SƠ THAM QUAN</p><h2 className="font-serif text-2xl font-bold mt-2">Thông tin nhanh</h2><div className="grid sm:grid-cols-3 gap-4 mt-5"><Quick label="Loại hình" value={site.category} /><Quick label="Niên đại / giai đoạn" value={site.period} /><Quick label="Khu vực" value={site.address} /></div><div className="mt-7 pt-6 border-t border-cream-300"><h3 className="font-semibold text-forest-700">Gợi ý trải nghiệm có trách nhiệm</h3><ul className="mt-3 space-y-2 text-sm text-ink-soft"><li>• Đọc điểm nhấn trước khi quan sát không gian thực tế.</li><li>• Tôn trọng quy định của điểm đến; không chạm hiện vật hoặc cấu kiện.</li><li>• Quét QR để lưu lại đúng hồ sơ và gửi góp ý cho điểm di sản này.</li></ul></div></section>
       <section className="card p-6"><h2 className="section-title flex items-center gap-2"><ImageIcon size={18} className="text-forest-600" />Góc nhìn di sản</h2><div className="grid grid-cols-3 gap-3 mt-4">{galleryImages.map((image, index) => <HeritageImage key={`${site.id}-${image}`} src={image} alt={`${site.nameVi} ${index + 1}`} className="aspect-square rounded-lg object-cover" />)}</div></section>
-    </div><aside className="space-y-5"><section className="card p-6 text-center"><QRCode label={`Di sản số ${String(site.id).padStart(2, '0')}`} size="lg" /><p className="text-xs text-ink-muted leading-relaxed mt-5 pt-4 border-t border-cream-300">Quét mã để mở đúng landing page của {site.nameVi}.</p></section><section className="card p-5"><div className="flex gap-3"><Calendar className="text-forest-600 shrink-0" size={19} /><div><p className="text-xs text-ink-muted">Niên đại / giai đoạn</p><p className="text-sm font-medium mt-1">{site.period}</p></div></div><a href={site.sourceUrl} target="_blank" rel="noreferrer" className="mt-5 inline-flex text-sm font-medium text-forest-600 hover:underline">Nguồn tư liệu tham khảo ↗</a></section></aside></div>
+    </div><aside className="space-y-5"><section className="card p-6 text-center"><HeritageQRCode slug={site.slug} label={`Di sản số ${String(site.id).padStart(2, '0')}`} size={180} /><p className="text-xs text-ink-muted leading-relaxed mt-5 pt-4 border-t border-cream-300">Quét mã để mở đúng landing page của {site.nameVi}.</p></section><section className="card p-5"><div className="flex gap-3"><Calendar className="text-forest-600 shrink-0" size={19} /><div><p className="text-xs text-ink-muted">Niên đại / giai đoạn</p><p className="text-sm font-medium mt-1">{site.period}</p></div></div><a href={site.sourceUrl} target="_blank" rel="noreferrer" className="mt-5 inline-flex text-sm font-medium text-forest-600 hover:underline">Nguồn tư liệu tham khảo ↗</a></section></aside></div>
     <button onClick={onFeedback} className="w-full mt-8 mb-4 py-4 bg-forest-600 text-white font-medium rounded-lg shadow-soft hover:bg-forest-700 transition-all flex justify-center items-center gap-2"><Send size={18} />Gửi góp ý về điểm di sản này</button>
   </div></div>;
 }
+function HeritageNotFound({ slug, onBack }: { slug: string; onBack: () => void }) {
+  return <div className="bg-cream-100 animate-fadeIn min-h-[60vh]">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="card p-8 sm:p-10 max-w-xl mx-auto text-center">
+        <div className="w-14 h-14 rounded-full bg-cream-200 flex items-center justify-center mx-auto">
+          <SearchX size={26} className="text-forest-700" />
+        </div>
+        <h1 className="section-title mt-5">Không tìm thấy di sản</h1>
+        <p className="text-sm text-ink-soft leading-relaxed mt-3">
+          Đường dẫn <span className="font-mono text-forest-700 break-all">/di-san/{slug}</span> không ứng với di sản nào trong bộ sưu tập.
+          Mã QR có thể đã cũ hoặc đường dẫn bị gõ sai.
+        </p>
+        <button onClick={onBack} className="btn-outline px-5 py-2.5 text-sm mt-7">
+          <ArrowLeft size={16} />Xem tất cả di sản
+        </button>
+      </div>
+    </div>
+  </div>;
+}
+
 function Info({ title, text }: { title: string; text: string }) { return <div><h3 className="font-semibold text-forest-700">{title}</h3><p className="text-sm text-ink-soft leading-relaxed mt-2">{text}</p></div>; }
 function Quick({ label, value }: { label: string; value: string }) { return <div className="rounded-lg bg-cream-200/60 p-4"><p className="text-xs text-ink-muted">{label}</p><p className="text-sm font-medium mt-1">{value}</p></div>; }
 function HeritageImage({ src, alt, className }: { src: string; alt: string; className: string }) { const [image, setImage] = useState(src); return <img src={image} alt={alt} onError={() => setImage('/heritage-fallback.svg')} className={className} />; }
