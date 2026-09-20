@@ -142,7 +142,7 @@ export const stalls: Stall[] = [
     descEn: 'Known for skills books, Buddhism titles, and many inspirational works.',
     bookCount: '680 đầu sách',
     bookCountEn: '680 titles',
-    image: 'https://images.pexels.com/photos/13279386/pexels-photo-13279386.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    image: '/images/duong-sach/nha_sach_thai_ha.webp',
   },
   {
     id: 'firstnews',
@@ -187,7 +187,7 @@ export const stalls: Stall[] = [
     descEn: 'Academic books, specialized reference, and cultural–historical publications.',
     bookCount: '540 đầu sách',
     bookCountEn: '540 titles',
-    image: 'https://images.pexels.com/photos/5499564/pexels-photo-5499564.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    image: '/images/duong-sach/nha_xuat_ban_tong_hop.webp',
   },
   {
     id: 'ngoaiVan',
@@ -776,17 +776,17 @@ export const heritageSites: HeritageSite[] = [
 },]
 
 
-export const heroImage = '/images/hinh_anh_duong_sach/duong_sach.jpg';
+export const heroImage = '/images/duong-sach/duong_sach.webp';
 
 export const aboutGalleryImages = [
-  '/images/hinh_anh_duong_sach/duong-sach-1.jpg',
-  '/images/hinh_anh_duong_sach/duong-sach-2.jpg',
+  '/images/duong-sach/duong-sach-1.webp',
+  '/images/duong-sach/duong-sach-2.webp',
 ];
 
-export const heritagePreviewImage = '/images/hinh_anh_duong_sach/duong-sach-nhin-ra-nha-tho-duc-ba.jpg';
+export const heritagePreviewImage = '/images/duong-sach/duong-sach-nhin-ra-nha-tho-duc-ba.webp';
 
 export const visitorExperienceImages = {
-  checkin: 'https://images.pexels.com/photos/36236916/pexels-photo-36236916.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+  checkin: '/images/duong-sach/cong_vao.webp',
   coffee: 'https://images.pexels.com/photos/433113/pexels-photo-433113.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   kids: 'https://images.pexels.com/photos/19875334/pexels-photo-19875334.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
 };
@@ -800,4 +800,4 @@ export const heritageImages = {
   ],
 };
 
-export const mapPreviewImage = 'https://images.pexels.com/photos/36425755/pexels-photo-36425755.jpeg?auto=compress&cs=tinysrgb&h=650&w=940';
+export const mapPreviewImage = '/images/duong-sach/duong-sach-5.webp';
