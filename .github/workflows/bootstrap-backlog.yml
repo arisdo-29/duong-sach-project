@@ -24,5 +24,5 @@ jobs:
           DRY_RUN: ${{ inputs.dry_run }}
         with:
           script: |
-            const run = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/bootstrap-backlog.js`);
+            const run = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/bootstrap-backlog.cjs`);
             await run({ github, context, core });
