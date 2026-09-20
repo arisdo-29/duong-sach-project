@@ -1,0 +1,16 @@
+### FR-08 Sinh QR di sản – /api/admin/heritages/{id}/qr (issue #15)
+# Chủ module: B.
+
+@host = http://localhost:5173
+
+### QR theo slug (đường dùng khi in vật liệu tại Đường Sách)
+GET {{host}}/api/admin/heritages/nha-tho-duc-ba/qr
+
+### QR cỡ lớn để in
+GET {{host}}/api/admin/heritages/nha-tho-duc-ba/qr?size=600
+
+### Ca lỗi 400 – size ngoài khoảng 100..1000
+GET {{host}}/api/admin/heritages/nha-tho-duc-ba/qr?size=5000
+
+### Ca lỗi 404 – di sản không tồn tại
+GET {{host}}/api/admin/heritages/khong-co-that/qr

@@ -6,8 +6,10 @@ import venuesRoutes from './modules/venues/venues.routes.js';
 import assetsRoutes from './modules/assets/assets.routes.js';
 import eventsRoutes from './modules/events/events.routes.js';
 import proposalsRoutes from './modules/proposals/proposals.routes.js';
-
-import legacyAdminRouter from './routes/admin.js';
+import heritagesRoutes from './modules/heritages/heritages.routes.js';
+import qrRoutes from './modules/qr/qr.routes.js';
+import feedbacksRoutes from './modules/feedbacks/feedbacks.routes.js';
+import publicRoutes from './modules/public/public.routes.js';
 
 /**
  * NƠI DUY NHẤT đăng ký router (vai trò danh sách @RequestMapping gốc).
@@ -34,10 +36,16 @@ admin.use('/assets', assetsRoutes);
 admin.use('/events', eventsRoutes);
 admin.use('/proposals', proposalsRoutes);
 
-// Phần 3 – di sản, QR, feedback (B): còn nằm trong router cũ, sẽ tách ở bước sau
-admin.use(legacyAdminRouter);
+// Phần 3 – di sản, QR, feedback (B)
+// qrRoutes gắn trước heritagesRoutes vì cùng tiền tố /heritages
+admin.use('/heritages', qrRoutes); // GET /api/admin/heritages/:id/qr
+admin.use('/heritages', heritagesRoutes);
+admin.use('/feedbacks', feedbacksRoutes);
 
 router.use('/admin', admin);
+
+// ----- Công khai cho du khách ----------------------------------------
+router.use('/', publicRoutes);
 
 // ----- Tiện ích -------------------------------------------------------
 router.get('/health', (_req: Request, res: Response) => {

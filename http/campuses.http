@@ -1,0 +1,13 @@
+### Cơ sở Đường Sách – /api/admin/campuses (SETUP-01, issue #5)
+# Dữ liệu chỉ đọc, nạp bằng npm run seed.
+
+@host = http://localhost:5173
+
+### Danh sách cơ sở
+GET {{host}}/api/admin/campuses
+
+### Kiểm tra sức khỏe API
+GET {{host}}/api/health
+
+### Tài liệu OpenAPI (Swagger UI đọc file này)
+GET {{host}}/api/openapi.json

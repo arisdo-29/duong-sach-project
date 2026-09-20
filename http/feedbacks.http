@@ -1,0 +1,58 @@
+### FR-09 Quản lý góp ý – /api/admin/feedbacks (issue #16)
+### FR-10 API public gửi góp ý – /api/feedbacks (issue #17)
+# Chủ module: B.
+
+@host = http://localhost:5173
+
+### Danh sách góp ý
+GET {{host}}/api/admin/feedbacks
+
+### Cập nhật trạng thái xử lý
+# Thay <id> bằng id thật lấy từ danh sách ở trên
+PATCH {{host}}/api/admin/feedbacks/<id>/status
+Content-Type: application/json
+
+{
+  "status": "RESOLVED"
+}
+
+### Ca lỗi 400 – trạng thái không hợp lệ
+PATCH {{host}}/api/admin/feedbacks/<id>/status
+Content-Type: application/json
+
+{
+  "status": "DANG_XU_LY"
+}
+
+### Ca lỗi 404 – id không tồn tại
+PATCH {{host}}/api/admin/feedbacks/00000000-0000-0000-0000-000000000000/status
+Content-Type: application/json
+
+{
+  "status": "REVIEWED"
+}
+
+### Du khách gửi góp ý (công khai) – contact để trống là hợp lệ
+POST {{host}}/api/feedbacks
+Content-Type: application/json
+
+{
+  "content": "Cần thêm biển chỉ dẫn tiếng Anh ở cổng phụ.",
+  "rating": 4,
+  "scope": "Nhà thờ Đức Bà Sài Gòn",
+  "contact": ""
+}
+
+### Ca lỗi 400 – rating ngoài 1..5
+POST {{host}}/api/feedbacks
+Content-Type: application/json
+
+{
+  "content": "Thử rating sai",
+  "rating": 9
+}
+
+### Kiểm tra API admin KHÔNG còn lộ ở /api (phải trả 404)
+GET {{host}}/api/feedbacks
+
+# TODO(#16): thêm ca lọc ?heritageId= &status= &minRating= &maxRating=
