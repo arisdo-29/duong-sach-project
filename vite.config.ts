@@ -7,7 +7,7 @@ function expressPlugin(): Plugin {
     name: 'express-plugin',
     async configureServer(server) {
       process.env.VITE_DEV_SERVER = 'true';
-      const { app } = await import('./server/index.ts');
+      const { app } = await import('./server/app.ts');
       server.middlewares.use(app);
     },
   };
