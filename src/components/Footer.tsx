@@ -41,7 +41,7 @@ export function Footer() {
       </div>
 
       <footer className="bg-[#1a2e22] text-cream-100">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="container-page py-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
             {/* Column 1: Logo + tagline + social */}
             <div>
@@ -53,7 +53,7 @@ export function Footer() {
                   ĐƯỜNG SÁCH TP.HCM
                 </span>
               </div>
-              <p className="text-sm text-cream-100/60 leading-relaxed mb-5 max-w-xs">
+              <p className="text-sm text-cream-100/75 leading-relaxed mb-5 max-w-xs">
                 {lang === 'vi'
                   ? 'Không gian văn hóa sách giữa lòng Thành phố Hồ Chí Minh.'
                   : 'A cultural book space in the heart of Ho Chi Minh City.'}
@@ -64,7 +64,7 @@ export function Footer() {
                     key={i}
                     href="#"
                     aria-label={label}
-                    className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-cream-100/70 hover:bg-forest-600 hover:text-white transition-all"
+                    className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-cream-100/70 hover:bg-forest-600 hover:text-white transition-all"
                   >
                     <Icon size={16} strokeWidth={1.75} />
                   </a>
@@ -77,7 +77,7 @@ export function Footer() {
               <h4 className="font-serif font-semibold text-sm text-cream-100 mb-4 tracking-wide">
                 {t('footerColInfo')}
               </h4>
-              <ul className="space-y-3 text-sm text-cream-100/60">
+              <ul className="space-y-3 text-sm text-cream-100/75">
                 <li className="flex items-start gap-2">
                   <MapPin size={15} className="mt-0.5 shrink-0 text-forest-400" />
                   <span>{lang === 'vi' ? 'Đường Nguyễn Văn Bình, Q.1, TP.HCM' : 'Nguyễn Văn Bình St., Dist. 1, HCMC'}</span>
@@ -106,7 +106,7 @@ export function Footer() {
               <h4 className="font-serif font-semibold text-sm text-cream-100 mb-4 tracking-wide">
                 {t('footerColExplore')}
               </h4>
-              <ul className="space-y-2.5 text-sm text-cream-100/60">
+              <ul className="space-y-2.5 text-sm text-cream-100/75">
                 {exploreLinks.map((link, i) => (
                   <li key={i}>
                     <button
@@ -125,7 +125,7 @@ export function Footer() {
               <h4 className="font-serif font-semibold text-sm text-cream-100 mb-4 tracking-wide">
                 {t('footerColCommunity')}
               </h4>
-              <ul className="space-y-2.5 text-sm text-cream-100/60">
+              <ul className="space-y-2.5 text-sm text-cream-100/75">
                 {communityLinks.map((link, i) => (
                   <li key={i}>
                     <button

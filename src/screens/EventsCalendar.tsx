@@ -39,7 +39,7 @@ export function EventsCalendar() {
   };
 
   return (
-    <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+    <div className="container-page py-8 animate-fadeIn">
       {/* Top bar */}
       <div className="flex items-center justify-end mb-6 flex-wrap gap-4">
         <div className="flex flex-col items-end gap-1">
