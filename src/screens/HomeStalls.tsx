@@ -30,12 +30,12 @@ export function HomeStalls() {
   return (
     <div className="animate-fadeIn">
       {/* HERO */}
-      <section className="relative h-[480px] sm:h-[560px] overflow-hidden">
-        <img src={heroImage} alt="Book street" className="absolute inset-0 h-full w-full object-cover object-center" />
-        <div className="absolute inset-0 bg-gradient-to-b from-forest-900/50 via-forest-900/40 to-forest-900/60" />
+      <section className="relative h-[520px] sm:h-[600px] overflow-hidden">
+        <img src={heroImage} alt="Đường Sách TP.HCM giữa khu di sản Sài Gòn" className="absolute inset-0 h-full w-full object-cover object-center" />
+        <div className="absolute inset-0 bg-gradient-to-r from-forest-900/85 via-forest-900/55 to-forest-900/15" />
         <div className="relative container-page h-full flex flex-col justify-center">
           <div className="max-w-2xl">
-            <h1 className="font-serif text-2xl sm:text-4xl font-bold text-white leading-tight mb-4 drop-shadow-lg">
+            <h1 className="font-serif text-3xl sm:text-5xl font-bold text-white leading-tight mb-4 drop-shadow-lg">
               {t('heroHeadline')}
             </h1>
             <p className="text-white/90 text-base sm:text-lg leading-relaxed mb-6 max-w-xl">
@@ -81,7 +81,7 @@ export function HomeStalls() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <h2 className="font-serif text-2xl font-bold text-ink mb-1">{t('aboutTitle')}</h2>
-              <div className="w-12 h-1 bg-forest-500 rounded-full mb-5" />
+              <div className="w-12 h-1 bg-[#B8860B] rounded-full mb-5" />
               <div className="space-y-4">
                 <p className="text-ink-soft leading-relaxed">{t('aboutP1')}</p>
                 <p className="text-ink-soft leading-relaxed">{t('aboutP2')}</p>
@@ -279,9 +279,9 @@ export function HomeStalls() {
       </div>
 
       {/* FEEDBACK CTA */}
-      <section className="py-12">
+      <section className="bg-forest-700 py-14 sm:py-16">
         <div className="container-page">
-          <div className="card p-8 sm:p-10 bg-gradient-to-r from-forest-600 to-forest-700 border-0 text-center">
+          <div className="text-center">
             <MessageSquare size={32} className="text-cream-100 mx-auto mb-3" strokeWidth={1.5} />
             <h2 className="font-serif text-xl sm:text-2xl font-bold text-white mb-2">
               {t('feedbackCtaTitle')}
