@@ -5,7 +5,7 @@ export default {
     extend: {
       colors: {
         forest: {
-          50: '#F0F5F1',
+          50: '#F1F6F1',
           100: '#DCE8DF',
           200: '#B5CFC0',
           300: '#8AB29A',
@@ -18,15 +18,15 @@ export default {
         },
         cream: {
           50: '#FFFFFF',
-          100: '#FAFAF8',
-          200: '#F5F4EF',
-          300: '#EDEAE0',
+          100: '#FBF8F1',
+          200: '#F4EFE3',
+          300: '#E7DFCC',
         },
         ink: {
-          DEFAULT: '#1A1A1A',
-          soft: '#2D2D2D',
-          muted: '#6B6B6B',
-          light: '#9A9A9A',
+          DEFAULT: '#1C1B18',
+          soft: '#2E2C27',
+          muted: '#5F5A50',
+          light: '#8A8578',
         },
         priority: {
           low: '#3C6255',
@@ -38,7 +38,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['"Inter"', '"Noto Sans"', 'system-ui', 'sans-serif'],
+        sans: ['"Be Vietnam Pro"', '"Noto Sans"', 'system-ui', 'sans-serif'],
         serif: ['"Lora"', '"Noto Serif"', 'Georgia', 'serif'],
       },
       borderRadius: {
@@ -47,9 +47,9 @@ export default {
         xl: '16px',
       },
       boxShadow: {
-        soft: '0 2px 8px rgba(0,0,0,0.06)',
-        card: '0 4px 16px rgba(0,0,0,0.08)',
-        lift: '0 8px 24px rgba(0,0,0,0.12)',
+        soft: '0 2px 8px rgba(60,45,20,0.08)',
+        card: '0 4px 16px rgba(60,45,20,0.08)',
+        lift: '0 8px 24px rgba(60,45,20,0.14)',
       },
     },
   },
