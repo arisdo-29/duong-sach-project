@@ -1,16 +1,25 @@
 ### FR-08 Sinh QR di sản – /api/admin/heritages/{id}/qr (issue #15)
-# Chủ module: B.
+# Chủ module: B. Mở bằng REST Client (VS Code) hoặc HTTP Client (IntelliJ).
 
 @host = http://localhost:5173
 
-### QR theo slug (đường dùng khi in vật liệu tại Đường Sách)
+### 1. QR mặc định (size = 300) theo slug
 GET {{host}}/api/admin/heritages/nha-tho-duc-ba/qr
 
-### QR cỡ lớn để in
+### 2. QR cỡ lớn để in vật liệu (size = 600)
 GET {{host}}/api/admin/heritages/nha-tho-duc-ba/qr?size=600
 
-### Ca lỗi 400 – size ngoài khoảng 100..1000
+### 3. Ca lỗi 400 – size nhỏ hơn 100 pixel
+GET {{host}}/api/admin/heritages/nha-tho-duc-ba/qr?size=50
+
+### 4. Ca lỗi 400 – size lớn hơn 1000 pixel
 GET {{host}}/api/admin/heritages/nha-tho-duc-ba/qr?size=5000
 
-### Ca lỗi 404 – di sản không tồn tại
-GET {{host}}/api/admin/heritages/khong-co-that/qr
+### 5. Ca lỗi 400 – size không phải là số nguyên
+GET {{host}}/api/admin/heritages/nha-tho-duc-ba/qr?size=abc
+
+### 6. Ca lỗi 404 – di sản không tồn tại
+GET {{host}}/api/admin/heritages/khong-co-that-12345/qr
+
+### 7. Ca lỗi 404 – di sản đã bị xóa mềm (ví dụ: cho-ben-thanh-mau-test)
+GET {{host}}/api/admin/heritages/cho-ben-thanh-mau-test/qr
