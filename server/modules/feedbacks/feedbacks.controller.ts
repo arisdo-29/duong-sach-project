@@ -1,12 +1,12 @@
 import type { Request, Response } from 'express';
 import * as service from './feedbacks.service.js';
-import type { FeedbackStatus } from './feedbacks.schema.js';
+import type { FeedbackStatus, ListFeedbackQuery } from './feedbacks.schema.js';
 
 type IdRequest = Request<{ id: string }>;
 
 /** GET /api/admin/feedbacks */
-export async function list(_req: Request, res: Response): Promise<void> {
-  res.status(200).json(await service.list());
+export async function list(req: Request, res: Response): Promise<void> {
+  res.status(200).json(await service.list(req.query as ListFeedbackQuery));
 }
 
 /** PATCH /api/admin/feedbacks/:id/status */

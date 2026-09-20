@@ -7,6 +7,18 @@
 ### Danh sách góp ý
 GET {{host}}/api/admin/feedbacks
 
+### Lọc góp ý chung Toàn Đường Sách
+GET {{host}}/api/admin/feedbacks?heritageId=general
+
+### Lọc theo slug di sản, trạng thái và khoảng điểm (các điều kiện là AND)
+GET {{host}}/api/admin/feedbacks?heritageId=nha-tho-duc-ba&status=PENDING&minRating=1&maxRating=2
+
+### Lọc đúng một mức điểm
+GET {{host}}/api/admin/feedbacks?rating=4
+
+### Ca lỗi 400 – điểm tối thiểu lớn hơn điểm tối đa
+GET {{host}}/api/admin/feedbacks?minRating=5&maxRating=2
+
 ### Cập nhật trạng thái xử lý
 # Thay <id> bằng id thật lấy từ danh sách ở trên
 PATCH {{host}}/api/admin/feedbacks/<id>/status
@@ -54,5 +66,3 @@ Content-Type: application/json
 
 ### Kiểm tra API admin KHÔNG còn lộ ở /api (phải trả 404)
 GET {{host}}/api/feedbacks
-
-# TODO(#16): thêm ca lọc ?heritageId= &status= &minRating= &maxRating=
