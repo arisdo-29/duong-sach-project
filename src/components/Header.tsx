@@ -37,7 +37,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-forest-600 shadow-soft">
+      <header className="sticky top-0 z-50 bg-forest-600 shadow-soft border-b-2 border-[#B8860B]">
         <div className="container-page">
           <div className="flex items-center justify-between h-16 gap-3">
             {/* Logo */}
@@ -91,7 +91,7 @@ export function Header() {
               <div className="relative" ref={searchRef}>
                 <button
                   onClick={() => setSearchOpen(!searchOpen)}
-                  className="w-9 h-9 flex items-center justify-center rounded-lg text-cream-100 hover:bg-forest-700/60 transition-all"
+                  className="w-11 h-11 flex items-center justify-center rounded-lg text-cream-100 hover:bg-forest-700/60 transition-all"
                   aria-label="Search"
                 >
                   <Search size={18} strokeWidth={1.75} />
@@ -122,7 +122,7 @@ export function Header() {
                 Đăng nhập quản trị
               </button>
               <button
-                className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-cream-100 hover:bg-forest-700/60 active:bg-forest-700 transition-all focus:outline-none"
+                className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg text-cream-100 hover:bg-forest-700/60 active:bg-forest-700 transition-all focus:outline-none"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
                 aria-expanded={mobileOpen}
@@ -153,7 +153,7 @@ export function Header() {
                     <button
                       key={item.id}
                       onClick={() => handleNav(item.id)}
-                      className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                      className={`flex items-center gap-2.5 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                         isActive
                           ? 'bg-forest-700 text-white font-semibold shadow-sm'
                           : 'text-cream-100 hover:bg-forest-700/60'
@@ -166,7 +166,7 @@ export function Header() {
                 })}
                 <button
                   onClick={() => handleNav('heritage')}
-                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                     screen === 'heritage'
                       ? 'bg-forest-700 text-white font-semibold shadow-sm'
                       : 'text-cream-100 hover:bg-forest-700/60'
@@ -177,7 +177,7 @@ export function Header() {
                 </button>
                 <button
                   onClick={() => handleNav('feedback')}
-                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                     screen === 'feedback'
                       ? 'bg-forest-700 text-white font-semibold shadow-sm'
                       : 'text-cream-100 hover:bg-forest-700/60'
@@ -189,7 +189,7 @@ export function Header() {
                 <div className="my-1 border-t border-forest-500/30" />
                 <button
                   onClick={() => handleNav('admin')}
-                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                     screen === 'admin'
                       ? 'bg-forest-700 text-white font-semibold shadow-sm'
                       : 'text-cream-100 hover:bg-forest-700/60'
