@@ -17,6 +17,8 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:5173',
     viewport: { width: 390, height: 844 },
+    navigationTimeout: 45_000,
+    actionTimeout: 15_000,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -28,7 +30,7 @@ export default defineConfig({
   ],
   // Ảnh ngoài đã bị chặn trong test nên chạy song song vẫn ổn định
   fullyParallel: true,
-  workers: process.env.CI ? 2 : 4,
+  workers: process.env.CI ? 1 : 4,
   retries: process.env.CI ? 1 : 0,
   forbidOnly: !!process.env.CI,
   reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : [['list']],

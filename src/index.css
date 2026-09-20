@@ -20,7 +20,7 @@
 
 @layer components {
   .container-page {
-    @apply max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-[1280px] 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8;
   }
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-forest-600 text-white font-medium rounded-lg shadow-soft transition-all hover:bg-forest-700 hover:shadow-card active:scale-[0.98];

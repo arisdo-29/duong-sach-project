@@ -39,9 +39,9 @@ export function Header() {
     <>
       <header className="sticky top-0 z-50 bg-forest-600 shadow-soft border-b-2 border-[#B8860B]">
         <div className="container-page">
-          <div className="flex items-center justify-between h-16 gap-3">
+          <div className="flex items-center justify-between h-16 gap-1 sm:gap-3">
             {/* Logo */}
-            <button onClick={() => handleNav('home')} className="shrink-0">
+            <button onClick={() => handleNav('home')} className="min-w-0 shrink overflow-hidden">
               <div className="[&_span]:text-cream-100 [&_.text-ink-muted]:text-forest-200">
                 <Logo size="md" />
               </div>
@@ -86,7 +86,7 @@ export function Header() {
             </nav>
 
             {/* Right side */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-0.5 sm:gap-2 shrink-0">
               {/* Search dropdown */}
               <div className="relative" ref={searchRef}>
                 <button
