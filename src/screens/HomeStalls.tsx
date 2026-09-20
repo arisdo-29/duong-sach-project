@@ -33,7 +33,7 @@ export function HomeStalls() {
       <section className="relative h-[480px] sm:h-[560px] overflow-hidden">
         <img src={heroImage} alt="Book street" className="absolute inset-0 h-full w-full object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-b from-forest-900/50 via-forest-900/40 to-forest-900/60" />
-        <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
+        <div className="relative container-page h-full flex flex-col justify-center">
           <div className="max-w-2xl">
             <h1 className="font-serif text-2xl sm:text-4xl font-bold text-white leading-tight mb-4 drop-shadow-lg">
               {t('heroHeadline')}
@@ -58,7 +58,7 @@ export function HomeStalls() {
 
       {/* QUICK INFO STRIP */}
       <section className="bg-white border-b border-cream-300">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="container-page py-5">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {quickInfo.map((item, i) => {
               const Icon = item.icon;
@@ -75,7 +75,7 @@ export function HomeStalls() {
         </div>
       </section>
 
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-page">
         {/* ABOUT SECTION — single photo */}
         <section className="py-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -280,7 +280,7 @@ export function HomeStalls() {
 
       {/* FEEDBACK CTA */}
       <section className="py-12">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container-page">
           <div className="card p-8 sm:p-10 bg-gradient-to-r from-forest-600 to-forest-700 border-0 text-center">
             <MessageSquare size={32} className="text-cream-100 mx-auto mb-3" strokeWidth={1.5} />
             <h2 className="font-serif text-xl sm:text-2xl font-bold text-white mb-2">

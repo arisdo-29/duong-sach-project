@@ -148,7 +148,7 @@ export function InteractiveMap() {
   };
 
   return (
-    <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 animate-fadeIn">
+    <div className="container-page py-6 animate-fadeIn">
       <div className="mb-5">
         <h1 className="section-title">{t('mapTitle')}</h1>
         <p className="mt-1 max-w-2xl text-sm leading-relaxed text-ink-soft">{t('mapIntro')}</p>
