@@ -52,6 +52,8 @@ export interface MapPoint {
 
 export interface HeritageSite {
   id: number;
+  /** Định danh cố định dùng cho URL /di-san/<slug> và mã QR in vật lý */
+  slug: string;
   nameVi: string;
   nameEn: string;
   category: string;
@@ -351,6 +353,7 @@ export const mapPoints: MapPoint[] = [
 export const heritageSites: HeritageSite[] = [
   {
   id: 1,
+  slug: 'buu-dien-trung-tam-sai-gon',
   nameVi: 'Bưu điện Trung tâm Sài Gòn',
   nameEn: 'Saigon Central Post Office',
   category: 'Kiến trúc đô thị',
@@ -369,6 +372,7 @@ export const heritageSites: HeritageSite[] = [
 },
  {
   id: 2,
+  slug: 'nha-tho-duc-ba',
   nameVi: 'Nhà thờ Đức Bà Sài Gòn',
   nameEn: 'Notre-Dame Cathedral Basilica of Saigon',
   category: 'Kiến trúc tôn giáo',
@@ -387,6 +391,7 @@ export const heritageSites: HeritageSite[] = [
 },
  {
   id: 3,
+  slug: 'dinh-doc-lap',
   nameVi: 'Dinh Độc Lập',
   nameEn: 'Independence Palace',
   category: 'Di tích lịch sử',
@@ -405,6 +410,7 @@ export const heritageSites: HeritageSite[] = [
 },
   {
   id: 4,
+  slug: 'ben-nha-rong',
   nameVi: 'Bến Nhà Rồng',
   nameEn: 'Nha Rong Wharf',
   category: 'Di tích lịch sử',
@@ -423,6 +429,7 @@ export const heritageSites: HeritageSite[] = [
 },
   {
   id: 5,
+  slug: 'bao-tang-thanh-pho-ho-chi-minh',
   nameVi: 'Bảo tàng Thành phố Hồ Chí Minh',
   nameEn: 'Ho Chi Minh City Museum',
   category: 'Kiến trúc – bảo tàng',
@@ -441,6 +448,7 @@ export const heritageSites: HeritageSite[] = [
 },
       {
   id: 6,
+  slug: 'bao-tang-lich-su-tphcm',
   nameVi: 'Bảo tàng Lịch sử TP.HCM',
   nameEn: 'Ho Chi Minh City History Museum',
   category: 'Kiến trúc – bảo tàng',
@@ -459,6 +467,7 @@ export const heritageSites: HeritageSite[] = [
 },
  {
     id: 7,
+    slug: 'nha-hat-thanh-pho',
     nameVi: 'Nhà hát Thành phố',
     nameEn: 'Saigon Opera House (Municipal Theatre)',
     category: 'Kiến trúc đô thị',
@@ -477,6 +486,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
     id: 8,
+    slug: 'cho-ben-thanh',
     nameVi: 'Chợ Bến Thành',
     nameEn: 'Ben Thanh Market',
     category: 'Kiến trúc – thương mại',
@@ -495,6 +505,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
     id: 9,
+    slug: 'tru-so-ubnd-thanh-pho',
     nameVi: 'Trụ sở UBND Thành phố',
     nameEn: 'Ho Chi Minh City Hall (Hôtel de Ville)',
     category: 'Kiến trúc hành chính',
@@ -513,6 +524,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
     id: 10,
+    slug: 'bao-tang-my-thuat-tphcm',
     nameVi: 'Bảo tàng Mỹ thuật TP.HCM',
     nameEn: 'Ho Chi Minh City Museum of Fine Arts',
     category: 'Kiến trúc – bảo tàng',
@@ -526,6 +538,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
     id: 11,
+    slug: 'chua-ngoc-hoang',
     nameVi: 'Chùa Ngọc Hoàng',
     nameEn: 'Jade Emperor Pagoda',
     category: 'Kiến trúc tín ngưỡng',
@@ -539,6 +552,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
     id: 12,
+    slug: 'hoi-quan-tue-thanh',
     nameVi: 'Hội quán Tuệ Thành',
     nameEn: 'Tue Thanh Assembly Hall',
     category: 'Kiến trúc – tín ngưỡng người Hoa',
@@ -552,6 +566,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
     id: 13,
+    slug: 'chua-ba-thien-hau',
     nameVi: 'Chùa Bà Thiên Hậu',
     nameEn: 'Thien Hau Temple',
     category: 'Kiến trúc – tín ngưỡng người Hoa',
@@ -565,6 +580,7 @@ export const heritageSites: HeritageSite[] = [
   },
   {
   id: 14,
+  slug: 'lang-ong-ba-chieu',
   nameVi: 'Lăng Ông Bà Chiểu',
   nameEn: 'Le Van Duyet Temple (Lang Ong)',
   category: 'Di tích lịch sử – tín ngưỡng',
@@ -578,6 +594,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 15,
+  slug: 'dinh-thong-tay-hoi',
   nameVi: 'Đình Thông Tây Hội',
   nameEn: 'Thong Tay Hoi Communal House',
   category: 'Kiến trúc – tín ngưỡng',
@@ -591,6 +608,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 16,
+  slug: 'dinh-binh-dong',
   nameVi: 'Đình Bình Đông',
   nameEn: 'Binh Dong Communal House',
   category: 'Di tích lịch sử – tín ngưỡng',
@@ -604,6 +622,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 17,
+  slug: 'lo-gom-co-hung-loi',
   nameVi: 'Lò gốm cổ Hưng Lợi',
   nameEn: 'Hung Loi Ancient Kiln',
   category: 'Di tích khảo cổ học',
@@ -617,6 +636,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 18,
+  slug: 'dia-dao-phu-tho-hoa',
   nameVi: 'Địa đạo Phú Thọ Hòa',
   nameEn: 'Phu Tho Hoa Tunnels',
   category: 'Di tích lịch sử',
@@ -630,6 +650,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 19,
+  slug: 'khu-trai-giam-benh-vien-cho-quan',
   nameVi: 'Khu trại giam Bệnh viện Chợ Quán',
   nameEn: 'Cho Quan Hospital Prison',
   category: 'Di tích lịch sử',
@@ -643,6 +664,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 20,
+  slug: 'nga-ba-giong',
   nameVi: 'Ngã ba Giồng',
   nameEn: 'Nga Ba Giong Memorial',
   category: 'Di tích lịch sử',
@@ -656,6 +678,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 21,
+  slug: 'di-tich-rung-sac',
   nameVi: 'Di tích Rừng Sác',
   nameEn: 'Rung Sac Special Forces Base',
   category: 'Di tích lịch sử',
@@ -669,6 +692,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 22,
+  slug: 'dia-dao-cu-chi',
   nameVi: 'Địa đạo Củ Chi',
   nameEn: 'Cu Chi Tunnels',
   category: 'Di tích lịch sử',
@@ -682,6 +706,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 23,
+  slug: 'ben-binh-dong',
   nameVi: 'Bến Bình Đông',
   nameEn: 'Binh Dong Wharf',
   category: 'Kiến trúc đô thị',
@@ -695,6 +720,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 24,
+  slug: 'cho-lon',
   nameVi: 'Chợ Lớn',
   nameEn: 'Cholon (Chinatown)',
   category: 'Kiến trúc – khu vực đô thị',
@@ -708,6 +734,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 25,
+  slug: 'nha-tho-huyen-si',
   nameVi: 'Nhà thờ Huyện Sĩ',
   nameEn: 'Huyen Sy Church (St. Philippe Church)',
   category: 'Kiến trúc tôn giáo',
@@ -721,6 +748,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 26,
+  slug: 'chua-giac-lam',
   nameVi: 'Chùa Giác Lâm',
   nameEn: 'Giac Lam Pagoda',
   category: 'Kiến trúc tín ngưỡng',
@@ -734,6 +762,7 @@ export const heritageSites: HeritageSite[] = [
 },
 {
   id: 27,
+  slug: 'khu-tuong-niem-cac-vua-hung',
   nameVi: 'Khu tưởng niệm các Vua Hùng',
   nameEn: 'Hung Kings Memorial Temple',
   category: 'Kiến trúc – tín ngưỡng',
