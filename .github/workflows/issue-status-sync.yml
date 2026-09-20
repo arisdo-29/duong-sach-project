@@ -26,5 +26,5 @@ jobs:
       - uses: actions/github-script@v8
         with:
           script: |
-            const run = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/status-sync.js`);
+            const run = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/status-sync.cjs`);
             await run({ github, context, core });
