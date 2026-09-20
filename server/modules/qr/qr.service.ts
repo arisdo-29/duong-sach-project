@@ -1,5 +1,6 @@
 import QRCode from 'qrcode';
 import { config } from '../../core/config.js';
+import { AppError } from '../../core/errors.js';
 import { getByIdOrSlug } from '../heritages/heritages.service.js';
 
 /**
@@ -10,9 +11,15 @@ import { getByIdOrSlug } from '../heritages/heritages.service.js';
  * (PUBLIC_BASE_URL) để bản deploy in ra QR trỏ domain thật chứ không phải localhost.
  */
 export async function generate(idOrSlug: string, size = 300) {
+  // Production bắt buộc phải cấu hình PUBLIC_BASE_URL thật, không âm thầm fallback localhost
+  if (config.isProduction && (!process.env.PUBLIC_BASE_URL || process.env.PUBLIC_BASE_URL.includes('localhost'))) {
+    throw new AppError(500, 'INTERNAL', 'Cấu hình thiếu PUBLIC_BASE_URL trên môi trường production');
+  }
+
   const heritage = await getByIdOrSlug(idOrSlug);
 
-  const targetUrl = `${config.publicBaseUrl}/di-san/${heritage.slug}`;
+  const baseUrl = (config.publicBaseUrl || '').replace(/\/+$/, '');
+  const targetUrl = `${baseUrl}/di-san/${heritage.slug}`;
 
   const qrImageBase64 = await QRCode.toDataURL(targetUrl, {
     width: size,

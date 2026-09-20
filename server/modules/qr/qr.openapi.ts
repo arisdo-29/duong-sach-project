@@ -48,8 +48,12 @@ export const qrPaths: OpenApiPaths = {
             },
           },
         },
+        400: {
+          description: 'Tham số size không hợp lệ (phải là số nguyên từ 100 đến 1000)',
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+        },
         404: {
-          description: 'Không tìm thấy di sản',
+          description: 'Không tìm thấy di sản hoặc di sản đã bị xóa mềm',
           content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
         },
       },
