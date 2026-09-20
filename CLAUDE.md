@@ -8,3 +8,6 @@
 - Xong task: chạy `npm run check`, tóm tắt thay đổi, hướng dẫn test bằng `http/<module>.http` hoặc `/api-docs.html`, đề xuất commit message theo AGENTS.md.
 - Gặp conflict git: giải thích từng khối (phần nào của ai), đề xuất cách giữ, chỉ sửa khi được đồng ý.
 - Khi được nhờ "giải thích để trả lời mentor": đi theo luồng request → routes → validate → controller → service → Prisma → PostgreSQL, nêu lý do thiết kế và so sánh với cách làm trong Spring Boot.
+## Kiểm thử
+- Sau khi sửa UI/routing, dùng Playwright MCP để tự mở trình duyệt và kiểm tra tương tác (click, Back/Forward, render).
+- Với thay đổi về router, viết hoặc cập nhật test trong `e2e/` và chạy `npx playwright test` trước khi báo xong.

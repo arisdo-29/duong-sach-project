@@ -33,3 +33,31 @@ jobs:
         run: npm run build
       - name: Test (nếu có)
         run: npm test --if-present
+
+  e2e:
+    # Kiểm thử giao diện bằng trình duyệt thật: app điều hướng phía client nên
+    # gọi HTTP đơn thuần không phát hiện được lỗi mở sai màn hình (xem FE-01).
+    runs-on: ubuntu-latest
+    env:
+      # URL giả: PrismaClient được khởi tạo khi nạp server nhưng test không chạm DB
+      DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
+      DIRECT_URL: "postgresql://ci:ci@localhost:5432/ci"
+      PUBLIC_BASE_URL: "http://localhost:5173"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Cài trình duyệt cho Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Chạy test giao diện
+        run: npm run test:e2e
+      - name: Lưu báo cáo khi test đỏ
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

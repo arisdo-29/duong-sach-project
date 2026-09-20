@@ -49,3 +49,9 @@ application-local.properties
 # Claude Code: file cá nhân
 .claude/settings.local.json
 CLAUDE.local.md
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
