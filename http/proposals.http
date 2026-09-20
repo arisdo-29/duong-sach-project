@@ -1,0 +1,7 @@
+### FR-05/FR-06 hồ sơ đề xuất – /api/admin/proposals (issue #12)
+# Chủ module: D. Mở bằng REST Client (VS Code) hoặc HTTP Client (IntelliJ).
+# Đổi @host sang domain production khi test bản deploy.
+
+@host = http://localhost:5173
+
+# TODO(#12): thêm request mẫu cho từng endpoint, kèm cả ca lỗi 400 / 404 / 409

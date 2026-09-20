@@ -1,0 +1,47 @@
+### FR-07 CRUD di sản – /api/admin/heritages (issue #14)
+# Chủ module: B. Mở bằng REST Client (VS Code) hoặc HTTP Client (IntelliJ).
+
+@host = http://localhost:5173
+
+### Danh sách di sản (kèm số góp ý)
+GET {{host}}/api/admin/heritages
+
+### Chi tiết theo slug (kèm góp ý)
+GET {{host}}/api/admin/heritages/nha-tho-duc-ba
+
+### Thêm di sản – slug tự sinh từ name_vi
+POST {{host}}/api/admin/heritages
+Content-Type: application/json
+
+{
+  "name_vi": "Chợ Bến Thành",
+  "name_en": "Ben Thanh Market",
+  "content_vi": "Biểu tượng thương mại lâu đời của Sài Gòn.",
+  "content_en": "A long-standing commercial icon of Saigon.",
+  "image_url": "https://example.com/cho-ben-thanh.jpg",
+  "source": "Sở Du lịch TP.HCM"
+}
+
+### Ca lỗi 400 – thiếu name_vi
+POST {{host}}/api/admin/heritages
+Content-Type: application/json
+
+{
+  "name_en": "Missing Vietnamese name"
+}
+
+### Sửa nội dung (slug KHÔNG đổi dù có gửi lên)
+PUT {{host}}/api/admin/heritages/nha-tho-duc-ba
+Content-Type: application/json
+
+{
+  "source": "Hồ sơ Di tích Kiến trúc Nghệ thuật TP.HCM (cập nhật)"
+}
+
+### Ca lỗi 404 – slug không tồn tại
+GET {{host}}/api/admin/heritages/khong-co-that
+
+### Xóa di sản
+# DELETE {{host}}/api/admin/heritages/<uuid>
+
+# TODO(#14): bổ sung ca xóa mềm khi FR-07 chuyển sang deleted_at

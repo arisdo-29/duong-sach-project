@@ -1,48 +1,223 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// =====================================================================
+// SCHEMA MỤC TIÊU – Đường Sách (đủ 3 phần yêu cầu của mentor)
+// Database: PostgreSQL trên Neon (miễn phí). Đã kiểm tra hợp lệ với Prisma 6.4.
+// Trưởng nhóm copy nội dung file này vào prisma/schema.prisma ở task SETUP-01.
+// Sau đó CHỈ trưởng nhóm sửa schema (mọi người khác chỉ đọc).
+//
+// Ghi chú:
+//  - DATABASE_URL: chuỗi kết nối Prisma Client dùng khi chạy API (production dùng chuỗi pooled).
+//  - DIRECT_URL:   chuỗi kết nối trực tiếp, Prisma CLI dùng cho `prisma db push`.
+//  - Trạng thái/mức độ để kiểu String (không dùng enum) → giá trị hợp lệ kiểm tra bằng zod.
+//  - String của PostgreSQL là text UTF-8 → tiếng Việt lưu đúng, không cần khai báo thêm.
+//  - Model Heritage/Feedback giữ tên field snake_case để khớp frontend đang có.
+//    Các model mới dùng camelCase (chuẩn TypeScript).
+// =====================================================================
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-enum FeedbackStatus {
-  PENDING   // Chờ xử lý
-  REVIEWED  // Đã xem
-  RESOLVED  // Đã xử lý
+// ---------------------------------------------------------------------
+// DÙNG CHUNG
+// ---------------------------------------------------------------------
+
+/// Cơ sở Đường Sách: HCM (Nguyễn Văn Bình, Q1) và THU_DUC. Dữ liệu seed, chỉ đọc.
+model Campus {
+  id        String   @id @default(uuid())
+  code      String   @unique @db.VarChar(20)
+  name      String   @db.VarChar(200)
+  address   String?  @db.VarChar(500)
+  createdAt DateTime @default(now())
+
+  booths Booth[]
+  venues Venue[]
+
+  @@map("campuses")
 }
 
+// ---------------------------------------------------------------------
+// PHẦN 1 – GIAN HÀNG & CƠ SỞ VẬT CHẤT
+// ---------------------------------------------------------------------
+
+/// Gian hàng. Xóa mềm bằng deletedAt (yêu cầu mentor).
+model Booth {
+  id          String    @id @default(uuid())
+  name        String    @db.VarChar(200)
+  campusId    String
+  owner       String?   @db.VarChar(200) // đơn vị: NXB Trẻ, Nhã Nam...
+  location    String?   @db.VarChar(100) // mã/vị trí: "Gian 12"
+  description String?
+  bookCount   Int?      // số đầu sách (chờ khách chốt đầu sách hay số bản)
+  imageUrl    String?   @db.VarChar(1000)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  campus Campus @relation(fields: [campusId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([campusId])
+  @@index([name])
+  @@map("booths")
+}
+
+/// Địa điểm tổ chức sự kiện (sân khấu, khu trưng bày...). Đang được dùng thì không cho xóa (409).
+model Venue {
+  id          String   @id @default(uuid())
+  name        String   @db.VarChar(200)
+  campusId    String
+  capacity    Int
+  description String?  @db.VarChar(1000)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  campus    Campus          @relation(fields: [campusId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  events    Event[]
+  proposals EventProposal[]
+
+  @@index([campusId])
+  @@map("venues")
+}
+
+/// Thiết bị (loa, bàn, ghế, máy chiếu...). Đang được hồ sơ tham chiếu thì không cho xóa (409).
+model Asset {
+  id            String   @id @default(uuid())
+  name          String   @db.VarChar(200)
+  totalQuantity Int
+  unit          String?  @db.VarChar(50)
+  description   String?  @db.VarChar(1000)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  requests ProposalAsset[]
+
+  @@map("assets")
+}
+
+// ---------------------------------------------------------------------
+// PHẦN 2 – SỰ KIỆN & HỒ SƠ ĐỀ XUẤT
+// ---------------------------------------------------------------------
+
+/// Sự kiện đã công bố. importance: NORMAL (Thường) | PRIORITY (Ưu tiên) | KEY (Trọng điểm)
+model Event {
+  id          String   @id @default(uuid())
+  name        String   @db.VarChar(300)
+  startTime   DateTime
+  endTime     DateTime
+  venueId     String
+  description String?
+  importance  String   @default("NORMAL") @db.VarChar(20)
+  proposalId  String?  @unique // sự kiện sinh ra từ hồ sơ được duyệt (nếu có)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  venue    Venue          @relation(fields: [venueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  proposal EventProposal? @relation(fields: [proposalId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([venueId, startTime])
+  @@index([startTime])
+  @@map("events")
+}
+
+/// Hồ sơ đề xuất tổ chức hoạt động (đăng ký tổ chức, KHÔNG phải vé tham dự).
+/// status: PENDING (chờ duyệt) | NEEDS_SUPPLEMENT (trả bổ sung) | APPROVED | REJECTED
+model EventProposal {
+  id                String    @id @default(uuid())
+  title             String    @db.VarChar(300)
+  organizerName     String    @db.VarChar(200)
+  organizerContact  String    @db.VarChar(200)
+  description       String
+  startTime         DateTime
+  endTime           DateTime
+  venueId           String
+  expectedAttendees Int?
+  status            String    @default("PENDING") @db.VarChar(20)
+  reviewNote        String?   @db.VarChar(1000)
+  reviewedAt        DateTime?
+  submittedAt       DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  venue      Venue               @relation(fields: [venueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  assets     ProposalAsset[]
+  reviewLogs ProposalReviewLog[]
+  event      Event?
+
+  @@index([status, submittedAt])
+  @@index([startTime])
+  @@map("event_proposals")
+}
+
+/// Nhu cầu thiết bị của một hồ sơ.
+model ProposalAsset {
+  proposalId String
+  assetId    String
+  quantity   Int
+
+  proposal EventProposal @relation(fields: [proposalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  asset    Asset         @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([proposalId, assetId])
+  @@map("proposal_assets")
+}
+
+/// Lịch sử duyệt (lưu vết ai làm gì, ghi chú gì). action: APPROVE | REQUEST_SUPPLEMENT | REJECT
+model ProposalReviewLog {
+  id         String   @id @default(uuid())
+  proposalId String
+  action     String   @db.VarChar(30)
+  fromStatus String   @db.VarChar(20)
+  toStatus   String   @db.VarChar(20)
+  note       String?  @db.VarChar(1000)
+  createdAt  DateTime @default(now())
+
+  proposal EventProposal @relation(fields: [proposalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([proposalId])
+  @@map("proposal_review_logs")
+}
+
+// ---------------------------------------------------------------------
+// PHẦN 3 – DI SẢN & FEEDBACK (giữ tên field cũ để frontend không phải sửa)
+// ---------------------------------------------------------------------
+
+/// Di sản. slug cố định (QR đã in). Xóa mềm bằng deleted_at.
 model Heritage {
-  id          String     @id @default(uuid())
-  slug        String     @unique // Định danh duy nhất, cố định để URL QR code không bao giờ bị gãy
-  name_vi     String     // Tên di sản (Tiếng Việt)
-  name_en     String     // Tên di sản (Tiếng Anh)
-  content_vi  String     // Bài viết giới thiệu (Tiếng Việt)
-  content_en  String     // Bài viết giới thiệu (Tiếng Anh)
-  image_url   String     // Đường dẫn ảnh đại diện
-  source      String     // Nguồn trích dẫn tài liệu đảm bảo tính xác thực
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  id         String    @id @default(uuid())
+  slug       String    @unique @db.VarChar(200)
+  name_vi    String    @db.VarChar(300)
+  name_en    String    @default("") @db.VarChar(300)
+  content_vi String
+  content_en String    @default("")
+  image_url  String    @default("") @db.VarChar(1000)
+  source     String    @default("") @db.VarChar(500)
+  deleted_at DateTime?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
 
-  feedbacks   Feedback[]
+  feedbacks Feedback[]
+
+  @@map("heritages")
 }
 
+/// Góp ý. heritage_id NULL = "Toàn Đường Sách". status: PENDING | REVIEWED | RESOLVED
 model Feedback {
-  id           String         @id @default(uuid())
-  heritage_id  String         // Khóa ngoại trỏ đến Heritage
-  rating       Int            // Điểm đánh giá (1 - 5 sao)
-  content      String         // Nội dung phản hồi, góp ý
-  status       FeedbackStatus @default(PENDING) // Trạng thái xử lý
-  user_contact String?        // [Privacy by design] Tùy chọn (SĐT/Email), không bắt buộc
-  created_at   DateTime       @default(now()) // Thời gian gửi, dùng thống kê / dashboard
-  updated_at   DateTime       @default(now()) @updatedAt // Thời gian cập nhật trạng thái
+  id           String   @id @default(uuid())
+  heritage_id  String?
+  rating       Int
+  content      String   @db.VarChar(2000)
+  status       String   @default("PENDING") @db.VarChar(20)
+  user_contact String?  @db.VarChar(200)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 
-  heritage     Heritage       @relation(fields: [heritage_id], references: [id], onDelete: Cascade)
+  heritage Heritage? @relation(fields: [heritage_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 
   @@index([heritage_id])
-  @@index([created_at])
+  @@index([status, created_at])
+  @@map("feedbacks")
 }

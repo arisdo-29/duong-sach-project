@@ -9,7 +9,11 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
-    "server": "tsx server/index.ts"
+    "typecheck:server": "tsc --noEmit -p tsconfig.server.json",
+    "check": "tsc --noEmit -p tsconfig.server.json && vite build",
+    "server": "tsx server/index.ts",
+    "seed": "tsx prisma/seed.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.4.0",
@@ -24,7 +28,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-leaflet": "^4.2.1",
-    "react-leaflet-cluster": "^3.1.1"
+    "react-leaflet-cluster": "^3.1.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
