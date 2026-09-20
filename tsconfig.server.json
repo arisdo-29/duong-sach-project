@@ -1,0 +1,21 @@
+{
+  /* Cấu hình TypeScript cho backend (server/, api/, prisma/seed.ts).
+     Tách khỏi tsconfig.app.json vì frontend chạy theo "bundler mode" của Vite,
+     còn backend chạy bằng Node thật (tsx / Vercel Function) nên phải dùng NodeNext.
+     NodeNext bắt import tương đối kết thúc bằng .js – xem AGENTS.md mục 3. */
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": false
+  },
+  "include": ["server/**/*.ts", "api/**/*.ts", "prisma/seed.ts"]
+}
