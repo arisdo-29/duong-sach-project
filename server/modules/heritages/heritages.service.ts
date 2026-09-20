@@ -1,11 +1,12 @@
 import { prisma } from '../../db.js';
-import { NotFoundError } from '../../core/errors.js';
+import { BadRequestError, NotFoundError } from '../../core/errors.js';
 import { uniqueSlug } from '../../core/slug.js';
 import type { CreateHeritageInput, UpdateHeritageInput } from './heritages.schema.js';
 
-/** Danh sách di sản, kèm số lượng góp ý để hiện trên bảng quản trị */
+/** Danh sách di sản (chưa xóa mềm), kèm số lượng góp ý để hiện trên bảng quản trị */
 export async function list() {
   return prisma.heritage.findMany({
+    where: { deleted_at: null },
     orderBy: { created_at: 'desc' },
     include: {
       _count: { select: { feedbacks: true } },
@@ -13,24 +14,30 @@ export async function list() {
   });
 }
 
-/** Tìm theo UUID hoặc slug – mã QR in vật lý dùng slug */
-export async function findByIdOrSlug(idOrSlug: string) {
+/** Tìm theo UUID hoặc slug (mặc định chỉ tìm bản ghi chưa bị xóa mềm) */
+export async function findByIdOrSlug(idOrSlug: string, includeDeleted = false) {
   return prisma.heritage.findFirst({
-    where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
+    where: {
+      OR: [{ id: idOrSlug }, { slug: idOrSlug }],
+      ...(includeDeleted ? {} : { deleted_at: null }),
+    },
   });
 }
 
-/** Như findByIdOrSlug nhưng không thấy thì ném 404 */
+/** Như findByIdOrSlug nhưng không thấy hoặc đã xóa mềm thì ném 404 */
 export async function getByIdOrSlug(idOrSlug: string) {
   const heritage = await findByIdOrSlug(idOrSlug);
   if (!heritage) throw new NotFoundError('Không tìm thấy di sản');
   return heritage;
 }
 
-/** Chi tiết kèm toàn bộ góp ý của di sản đó */
+/** Chi tiết kèm toàn bộ góp ý của di sản đó (chỉ di sản chưa xóa mềm) */
 export async function getDetail(idOrSlug: string) {
   const heritage = await prisma.heritage.findFirst({
-    where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
+    where: {
+      OR: [{ id: idOrSlug }, { slug: idOrSlug }],
+      deleted_at: null,
+    },
     include: {
       feedbacks: { orderBy: { created_at: 'desc' } },
     },
@@ -43,7 +50,7 @@ export async function getDetail(idOrSlug: string) {
 /** Tạo mới: slug sinh tự động từ name_vi và cố định từ đó về sau */
 export async function create(input: CreateHeritageInput) {
   const slug = await uniqueSlug(input.name_vi, async (candidate) => {
-    const existing = await prisma.heritage.findUnique({ where: { slug: candidate } });
+    const existing = await prisma.heritage.findFirst({ where: { slug: candidate } });
     return existing !== null;
   });
 
@@ -52,7 +59,7 @@ export async function create(input: CreateHeritageInput) {
       slug,
       name_vi: input.name_vi,
       name_en: input.name_en ?? '',
-      content_vi: input.content_vi ?? '',
+      content_vi: input.content_vi,
       content_en: input.content_en ?? '',
       image_url: input.image_url ?? '',
       source: input.source ?? '',
@@ -60,9 +67,16 @@ export async function create(input: CreateHeritageInput) {
   });
 }
 
-/** Cập nhật nội dung. Chủ ý KHÔNG đụng tới slug để mã QR đã in không gãy link. */
+/**
+ * Cập nhật nội dung.
+ * Nếu client gửi slug khác với slug hiện tại → trả lỗi 400 "Slug không được thay đổi".
+ */
 export async function update(idOrSlug: string, input: UpdateHeritageInput) {
   const existing = await getByIdOrSlug(idOrSlug);
+
+  if (input.slug !== undefined && input.slug !== existing.slug) {
+    throw new BadRequestError('Slug không được thay đổi');
+  }
 
   return prisma.heritage.update({
     where: { id: existing.id },
@@ -78,13 +92,14 @@ export async function update(idOrSlug: string, input: UpdateHeritageInput) {
 }
 
 /**
- * Xóa di sản.
- * TODO(#14): schema đã có cột deleted_at, FR-07 sẽ đổi sang xóa mềm.
- * Hiện giữ nguyên hành vi cũ là xóa cứng; góp ý liên quan không mất theo
- * vì khóa ngoại đặt onDelete: SetNull (heritage_id thành null).
+ * Xóa di sản: XÓA MỀM bằng cách gán deleted_at = now().
+ * Không xóa góp ý liên quan; di sản đã xóa không hiện trong danh sách/QR/public.
  */
 export async function remove(idOrSlug: string) {
   const existing = await getByIdOrSlug(idOrSlug);
-  await prisma.heritage.delete({ where: { id: existing.id } });
-  return { message: 'Xóa thành công', id: existing.id, slug: existing.slug };
+  await prisma.heritage.update({
+    where: { id: existing.id },
+    data: { deleted_at: new Date() },
+  });
+  return { message: 'Đã xóa di sản', id: existing.id, slug: existing.slug };
 }

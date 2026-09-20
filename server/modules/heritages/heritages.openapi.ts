@@ -52,7 +52,7 @@ export const heritagesPaths: OpenApiPaths = {
           'application/json': {
             schema: {
               type: 'object',
-              required: ['name_vi'],
+              required: ['name_vi', 'content_vi'],
               properties: {
                 name_vi: { type: 'string' },
                 name_en: { type: 'string' },
@@ -88,7 +88,7 @@ export const heritagesPaths: OpenApiPaths = {
     put: {
       tags: ['Di sản'],
       summary: 'Sửa nội dung di sản',
-      description: 'Không nhận `slug`: slug cố định để mã QR đã in không bị gãy link.',
+      description: 'Không cho phép đổi `slug`: slug cố định để mã QR đã in không bị gãy link. Nếu gửi slug khác với slug hiện tại sẽ trả lỗi 400.',
       parameters: [refParam],
       requestBody: {
         required: true,
@@ -96,16 +96,21 @@ export const heritagesPaths: OpenApiPaths = {
       },
       responses: {
         200: { description: 'Đã cập nhật', content: { 'application/json': { schema: heritageSchema } } },
+        400: {
+          description: 'Dữ liệu không hợp lệ hoặc cố tình thay đổi slug',
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+        },
         404: notFound,
       },
     },
     delete: {
       tags: ['Di sản'],
-      summary: 'Xóa di sản',
+      summary: 'Xóa mềm di sản',
+      description: 'Đánh dấu `deleted_at`, không xóa các góp ý liên quan. Di sản đã xóa sẽ không xuất hiện trong danh sách, QR hoặc API public.',
       parameters: [refParam],
       responses: {
         200: {
-          description: 'Đã xóa',
+          description: 'Đã xóa mềm',
           content: {
             'application/json': {
               schema: {

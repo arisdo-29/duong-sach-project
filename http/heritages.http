@@ -3,34 +3,54 @@
 
 @host = http://localhost:5173
 
-### Danh sách di sản (kèm số góp ý)
+### 1. Danh sách di sản (chỉ bản ghi chưa xóa mềm, kèm số góp ý)
 GET {{host}}/api/admin/heritages
 
-### Chi tiết theo slug (kèm góp ý)
+### 2. Chi tiết theo slug (kèm góp ý)
 GET {{host}}/api/admin/heritages/nha-tho-duc-ba
 
-### Thêm di sản – slug tự sinh từ name_vi
+### 3. Thêm di sản hợp lệ – slug tự sinh từ name_vi
 POST {{host}}/api/admin/heritages
 Content-Type: application/json
 
 {
-  "name_vi": "Chợ Bến Thành",
-  "name_en": "Ben Thanh Market",
-  "content_vi": "Biểu tượng thương mại lâu đời của Sài Gòn.",
-  "content_en": "A long-standing commercial icon of Saigon.",
-  "image_url": "https://example.com/cho-ben-thanh.jpg",
+  "name_vi": "Chợ Bến Thành Mẫu",
+  "name_en": "Ben Thanh Market Sample",
+  "content_vi": "Biểu tượng thương mại và văn hóa lâu đời của Sài Gòn.",
+  "content_en": "A long-standing commercial and cultural icon of Saigon.",
+  "image_url": "https://images.unsplash.com/photo-1583417319070-4a69db38a482",
   "source": "Sở Du lịch TP.HCM"
 }
 
-### Ca lỗi 400 – thiếu name_vi
+### 4. Ca lỗi 400 – thiếu name_vi
 POST {{host}}/api/admin/heritages
 Content-Type: application/json
 
 {
-  "name_en": "Missing Vietnamese name"
+  "name_en": "Missing Vietnamese name",
+  "content_vi": "Nội dung tiếng Việt có nhưng thiếu tên"
 }
 
-### Sửa nội dung (slug KHÔNG đổi dù có gửi lên)
+### 5. Ca lỗi 400 – thiếu content_vi (bắt buộc theo FR-07)
+POST {{host}}/api/admin/heritages
+Content-Type: application/json
+
+{
+  "name_vi": "Di sản thiếu nội dung",
+  "name_en": "Heritage without content"
+}
+
+### 6. Ca lỗi 400 – image_url không phải định dạng URL http/https hợp lệ
+POST {{host}}/api/admin/heritages
+Content-Type: application/json
+
+{
+  "name_vi": "Di sản link ảnh lỗi",
+  "content_vi": "Nội dung mô tả di sản",
+  "image_url": "duong-dan-anh-khong-hop-le"
+}
+
+### 7. Sửa nội dung thành công (giữ nguyên slug)
 PUT {{host}}/api/admin/heritages/nha-tho-duc-ba
 Content-Type: application/json
 
@@ -38,10 +58,21 @@ Content-Type: application/json
   "source": "Hồ sơ Di tích Kiến trúc Nghệ thuật TP.HCM (cập nhật)"
 }
 
-### Ca lỗi 404 – slug không tồn tại
-GET {{host}}/api/admin/heritages/khong-co-that
+### 8. Ca lỗi 400 – cố tình đổi slug khi PUT
+PUT {{host}}/api/admin/heritages/nha-tho-duc-ba
+Content-Type: application/json
 
-### Xóa di sản
-# DELETE {{host}}/api/admin/heritages/<uuid>
+{
+  "slug": "slug-moi-khong-cho-phep",
+  "name_vi": "Nhà thờ Đức Bà Sài Gòn Cập Nhật"
+}
 
-# TODO(#14): bổ sung ca xóa mềm khi FR-07 chuyển sang deleted_at
+### 9. Ca lỗi 404 – slug hoặc ID không tồn tại
+GET {{host}}/api/admin/heritages/khong-co-that-12345
+
+### 10. Xóa mềm di sản mẫu vừa tạo
+# Thay :id bằng UUID hoặc slug di sản cần xóa mềm (ví dụ: cho-ben-thanh-mau)
+DELETE {{host}}/api/admin/heritages/cho-ben-thanh-mau
+
+### 11. Kiểm tra lại sau khi xóa mềm → Phải trả về 404
+GET {{host}}/api/admin/heritages/cho-ben-thanh-mau

@@ -12,22 +12,28 @@ export const heritageRefParam = z.object({
 });
 
 export const createHeritage = z.object({
-  name_vi: z.string().trim().min(1, 'Tên tiếng Việt (name_vi) là bắt buộc'),
+  name_vi: z.string({ required_error: 'Tên tiếng Việt (name_vi) là bắt buộc' }).trim().min(1, 'Tên tiếng Việt (name_vi) là bắt buộc'),
   name_en: z.string().trim().optional(),
-  content_vi: z.string().trim().optional(),
+  content_vi: z.string({ required_error: 'Nội dung tiếng Việt (content_vi) là bắt buộc' }).trim().min(1, 'Nội dung tiếng Việt (content_vi) là bắt buộc'),
   content_en: z.string().trim().optional(),
-  image_url: z.string().trim().optional(),
+  image_url: z.string().trim().url('Đường dẫn ảnh phải là URL hợp lệ (http/https)').or(z.literal('')).optional(),
   source: z.string().trim().optional(),
 });
 
 /**
  * Cập nhật: mọi field đều tùy chọn.
- * KHÔNG có `slug` ở đây – slug là cố định vì mã QR đã in trên vật liệu tại
- * Đường Sách trỏ theo slug, đổi slug là gãy toàn bộ QR đã in.
- * TODO(#14): docs/02 yêu cầu trả 400 "Slug không được thay đổi" nếu client
- * vẫn gửi slug; hiện tại giữ hành vi cũ là im lặng bỏ qua.
+ * Cho phép nhận trường `slug` để service kiểm tra nếu client cố tình thay đổi slug
+ * thì trả về lỗi 400 "Slug không được thay đổi" (theo hợp đồng docs/02).
  */
-export const updateHeritage = createHeritage.partial();
+export const updateHeritage = z.object({
+  name_vi: z.string().trim().min(1, 'Tên tiếng Việt không được để trống').optional(),
+  name_en: z.string().trim().optional(),
+  content_vi: z.string().trim().min(1, 'Nội dung tiếng Việt không được để trống').optional(),
+  content_en: z.string().trim().optional(),
+  image_url: z.string().trim().url('Đường dẫn ảnh phải là URL hợp lệ (http/https)').or(z.literal('')).optional(),
+  source: z.string().trim().optional(),
+  slug: z.string().trim().optional(),
+});
 
 export type CreateHeritageInput = z.infer<typeof createHeritage>;
 export type UpdateHeritageInput = z.infer<typeof updateHeritage>;
