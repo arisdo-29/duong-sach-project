@@ -12,4 +12,6 @@
 /AGENTS.md          @arisdo-29 @dwargon73-sketch
 /CLAUDE.md          @arisdo-29 @dwargon73-sketch
 /.github/           @arisdo-29 @dwargon73-sketch
-/.claude/           @arisdo-29 @dwargon73-sketch
+/.claude/           @arisdo-29 @dwargon73-sketch/.env.example       @arisdo-29 @dwargon73-sketch
+/.agents/           @arisdo-29 @dwargon73-sketch
+/docs/schema-muc-tieu.prisma @arisdo-29

@@ -1,5 +1,7 @@
 # Kiểm tra mỗi PR: schema Prisma hợp lệ, typecheck backend, build frontend.
 # Không cần database: chỉ kiểm tra code biên dịch được.
+# URL giả được chọn theo provider trong prisma/schema.prisma (bước "Chọn DATABASE_URL giả"),
+# nên CI chạy được cả trước lẫn sau DB-01 (postgresql → sqlserver).
 name: "✅ CI"
 
 on:
@@ -13,12 +15,16 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    env:
-      # URL giả chỉ để prisma validate/generate chạy được – không kết nối thật
-      DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
-      DIRECT_URL: "postgresql://ci:ci@localhost:5432/ci"
     steps:
       - uses: actions/checkout@v5
+      - name: Chọn DATABASE_URL giả theo provider (không kết nối thật)
+        run: |
+          if grep -Eq 'provider[[:space:]]*=[[:space:]]*"sqlserver"' prisma/schema.prisma; then
+            echo 'DATABASE_URL=sqlserver://localhost:1433;database=ci;user=sa;password=Ci@123456;encrypt=true;trustServerCertificate=true' >> "$GITHUB_ENV"
+          else
+            echo 'DATABASE_URL=postgresql://ci:ci@localhost:5432/ci' >> "$GITHUB_ENV"
+            echo 'DIRECT_URL=postgresql://ci:ci@localhost:5432/ci' >> "$GITHUB_ENV"
+          fi
       - uses: actions/setup-node@v5
         with:
           node-version: 22
@@ -39,12 +45,18 @@ jobs:
     # gọi HTTP đơn thuần không phát hiện được lỗi mở sai màn hình (xem FE-01).
     runs-on: ubuntu-latest
     env:
-      # URL giả: PrismaClient được khởi tạo khi nạp server nhưng test không chạm DB
-      DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
-      DIRECT_URL: "postgresql://ci:ci@localhost:5432/ci"
       PUBLIC_BASE_URL: "http://localhost:5173"
     steps:
       - uses: actions/checkout@v5
+      # URL giả: PrismaClient được khởi tạo khi nạp server nhưng test không chạm DB
+      - name: Chọn DATABASE_URL giả theo provider (không kết nối thật)
+        run: |
+          if grep -Eq 'provider[[:space:]]*=[[:space:]]*"sqlserver"' prisma/schema.prisma; then
+            echo 'DATABASE_URL=sqlserver://localhost:1433;database=ci;user=sa;password=Ci@123456;encrypt=true;trustServerCertificate=true' >> "$GITHUB_ENV"
+          else
+            echo 'DATABASE_URL=postgresql://ci:ci@localhost:5432/ci' >> "$GITHUB_ENV"
+            echo 'DIRECT_URL=postgresql://ci:ci@localhost:5432/ci' >> "$GITHUB_ENV"
+          fi
       - uses: actions/setup-node@v5
         with:
           node-version: 22

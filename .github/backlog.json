@@ -1,43 +1,43 @@
 {
-  "_readme": "Nguồn dữ liệu duy nhất để tạo issue. Sửa file này rồi chạy lại workflow 'Bootstrap backlog' – issue đã có (cùng mã [ID]) sẽ được bỏ qua.",
+  "_readme": "Nguồn dữ liệu duy nhất để tạo issue (đợt hướng đi SQL Server 21/09/2026). Sửa file này rồi chạy workflow 'Bootstrap backlog'. Issue đã có cùng mã [ID] TRONG milestone hiện tại sẽ được bỏ qua. 'replaces' = mã issue đợt cũ bị thay thế (dùng khi chạy với close_legacy). 'stretch' = chỉ tạo khi include_stretch.",
   "team": {
-    "_comment": "Điền GitHub username cho từng vai trò trước khi chạy workflow. Để trống = không gán. Username thấy trong lịch sử commit: arisdo-29, kopslngbtram2110.",
+    "_comment": "GitHub username cho từng vai trò. Để trống = không gán.",
     "A": "arisdo-29",
     "B": "dwargon73-sketch",
     "C": "Nguyentri2531",
     "D": "kopslngbtram2110"
   },
   "roles": {
-    "A": "Trưởng nhóm – core, schema, deploy (gợi ý: Khuyên)",
-    "B": "Phần 3 – heritages, qr, feedbacks (gợi ý: Tân)",
-    "C": "Phần 1+2 – booths, venues, events (gợi ý: Trí)",
-    "D": "Phần 1+2 – assets, proposals (gợi ý: Trâm)"
+    "A": "Trưởng nhóm – schema, core, seed, tài liệu DB, deploy (Khuyên)",
+    "B": "Phần 3 – heritages, qr, feedbacks, CKEditor (Tân)",
+    "C": "booths, venues, events (Trí)",
+    "D": "assets, proposals (Trâm)"
   },
   "milestone": {
-    "title": "Demo mentor – 19:00 20/09/2026",
-    "due_on": "2026-09-20T12:00:00Z",
-    "description": "Đủ API admin của cả 3 phần trong file yêu cầu mentor, chạy trên bản deploy, giải thích được code."
+    "title": "Demo mentor – 19:30 22/09/2026",
+    "due_on": "2026-09-22T12:30:00Z",
+    "description": "SQL Server theo khuôn mentor; tối thiểu 3 API demo (FR-07, FR-08, FR-09) trên Swagger, chạy local; làm tiếp đủ 9 API; CKEditor cho trường mô tả."
   },
   "labels": [
     {
       "name": "priority: P0",
       "color": "b60205",
-      "description": "Bắt buộc trước 19:00 20/09 (mentor chấm)"
+      "description": "Đường găng demo 19:30 22/09 (SQL Server + 3 API demo)"
     },
     {
       "name": "priority: P1",
       "color": "d93f0b",
-      "description": "Nên có – làm ngay sau P0"
+      "description": "6 API còn lại, CKEditor, test – song song, không chặn demo"
     },
     {
       "name": "priority: P2",
       "color": "fbca04",
-      "description": "Điểm cộng – chỉ làm khi P0/P1 đã xanh"
+      "description": "Deploy, API public – chỉ khi P0 đã merge"
     },
     {
       "name": "priority: P3",
       "color": "c5def5",
-      "description": "Để sau deadline"
+      "description": "Để sau buổi demo 22/09"
     },
     {
       "name": "status: todo",
@@ -97,7 +97,7 @@
     {
       "name": "area: backend",
       "color": "7057ff",
-      "description": "server/, api/, prisma/"
+      "description": "server/, api/"
     },
     {
       "name": "area: frontend",
@@ -123,161 +123,96 @@
       "name": "part: 3-di-san-feedback",
       "color": "d4c5f9",
       "description": "Phần 3: di sản, QR, feedback"
+    },
+    {
+      "name": "area: database",
+      "color": "5319e7",
+      "description": "prisma/, SQL Server, seed"
     }
   ],
   "items": [
     {
-      "id": "SETUP-01",
+      "id": "SETUP-03",
+      "priority": "P0",
+      "owner": "ALL",
+      "estimate": "1h",
+      "labels": [
+        "type: chore",
+        "area: database"
+      ],
+      "title": "Cài SQL Server local + công cụ xem DB, chạy được dự án theo docs/05",
+      "depends_on": [],
+      "replaces": [
+        "SETUP-02"
+      ],
+      "body": "**Làm ngay tối 21/09.** Mỗi người comment \"xong\" + ảnh chụp Swagger chạy trên máy mình dưới issue này.\n\n- [ ] Cài SQL Server theo **docs/05 mục 2** (Docker, hoặc Developer/Express trên Windows); SQL Server authentication, cổng 1433\n- [ ] Cài SSMS (Windows) hoặc VS Code extension *SQL Server (mssql)* / DBeaver (macOS); kết nối được `localhost,1433`\n- [ ] Tạo database `DuongSach` với collation **`Vietnamese_CI_AI`** (docs/05 mục 3)\n- [ ] Tạo `.env` từ `.env.example` với `DATABASE_URL` dạng `sqlserver://…` (docs/05 mục 4) – **không commit**\n- [ ] Sau khi DB-01 merge: `git pull` → `npm install` → `npx prisma db push` → `npm run seed` → `npm run dev` → mở `/api-docs.html`, gọi được `GET /api/admin/heritages`\n- [ ] Tiếng Việt đúng dấu khi xem bảng trong SSMS / `npx prisma studio`\n- [ ] Đã đọc lại `AGENTS.md` (mục 3 – quy tắc SQL Server), `docs/01` mục 4, `docs/04` mục 6 (nhánh tích hợp)\n- [ ] Cài/cập nhật Claude Code, `gh auth login`\n\nKẹt → dùng prompt \"SETUP-03 – gỡ lỗi\" ở docs/06 mục 7, rồi nhắn A."
+    },
+    {
+      "id": "DB-01",
+      "priority": "P0",
+      "owner": "A",
+      "estimate": "1h",
+      "labels": [
+        "type: chore",
+        "area: database",
+        "part: core"
+      ],
+      "title": "Chuyển Prisma sang SQL Server với schema cũ (bản dự phòng chạy được)",
+      "depends_on": [],
+      "replaces": [],
+      "body": "**Mục đích:** có một bản `main` chạy được trên SQL Server trước khi áp cấu trúc mới (thứ tự an toàn – hướng đi mục 9). Nếu port phần 3 sang schema mới trễ, **demo bằng bản này**.\nPrompt: docs/06 mục 4.1. Nhánh `chore/<số>-sql-server`.\n\n**Phạm vi**\n- `prisma/schema.prisma`: `provider = \"sqlserver\"`, bỏ `directUrl`; `@db.VarChar` → `@db.NVarChar`; id/khóa ngoại `@db.NVarChar(36)`; nội dung dài `@db.NVarChar(Max)`; `Event.proposalId` bỏ `@unique` (quan hệ 1-n). **Giữ tên model/field cũ.**\n- `feedbacks.service.ts`: bỏ `mode: 'insensitive'` (B đồng ý).\n- `.env.example` sang chuỗi `sqlserver://`; `ci.yml` đã tự chọn URL giả theo provider (bộ kit) – chỉ kiểm tra lại.\n- Xóa `prisma/dev.db`.\n\n**Tiêu chí chấp nhận**\n- [ ] `npx prisma validate`, `npx prisma db push`, `npm run seed` chạy trên SQL Server local; tiếng Việt đúng dấu trong SSMS\n- [ ] `npm run check` xanh; CI xanh\n- [ ] `/api-docs.html`: heritages, qr, feedbacks chạy như trước; màn admin di sản/QR/feedback hoạt động\n- [ ] Không còn nhắc tới Neon/`DIRECT_URL` trong code và cấu hình"
+    },
+    {
+      "id": "DB-02",
       "priority": "P0",
       "owner": "A",
       "estimate": "2h",
       "labels": [
-        "type: chore",
+        "type: feature",
+        "area: database",
+        "part: core"
+      ],
+      "title": "Schema mới theo khuôn mentor (Items/Attributes/Pictures/WebsiteAttributes + bảng nghiệp vụ) + seed",
+      "depends_on": [
+        "DB-01"
+      ],
+      "replaces": [],
+      "body": "**Đường găng.** Push schema + seed lên nhánh tích hợp **trước 09:30 22/09** để B, C, D bắt đầu.\nPrompt: docs/06 mục 4.2. **Nhánh tích hợp** `chore/<số>-schema-moi` (docs/04 mục 6): B commit FR-07/08/09 lên nhánh này; C, D tạo nhánh từ đây.\n\n**Phạm vi**\n- Copy `docs/schema-muc-tieu.prisma` → `prisma/schema.prisma`, xóa file nháp (một nguồn schema duy nhất).\n- Viết lại `prisma/seed.ts`: Campuses, ItemCategories (`di-san`, `gian-hang`, `tien-ich`, `gioi-thieu`), ItemAttributes (`SOURCE`, `OWNER`, `LOCATION`, `TOPIC`, `BOOK_TITLE_COUNT`, `LAT`, `LNG`), WebsiteAttributes (`QR_BASE_URL`, `OPENING_HOURS`, `HOTLINE`, các giới hạn đơn để rỗng), 10 di sản (giữ slug cũ), 7 gian hàng, 3 địa điểm, 5 thiết bị, 3 sự kiện đủ 3 mức, 5 hồ sơ đủ 4 loại đơn vị (doanh nghiệp có `TaxCode`; có 1 trùng lịch, 1 chưa xác nhận email), 8 góp ý (2 góp ý chung).\n- Module `campuses` theo tên cột mới, JSON giữ nguyên.\n\n**Tiêu chí chấp nhận**\n- [ ] `npx prisma db push --force-reset` + `npm run seed` chạy trên SQL Server local, chạy lại seed nhiều lần vẫn đúng\n- [ ] Tên bảng/cột đúng khuôn (docs/01 mục 4.2); tiếng Việt đúng dấu\n- [ ] SSMS vẽ được Database Diagram đủ **14 bảng** (không có Organizers/ProposalReviewLogs – docs/01 ADR-7)\n- [ ] Đã push nhánh tích hợp và nhắn nhóm (kèm danh sách lỗi typecheck còn lại ở module B)"
+    },
+    {
+      "id": "CORE-01",
+      "priority": "P0",
+      "owner": "A",
+      "estimate": "1h",
+      "labels": [
+        "type: feature",
         "area: backend",
         "part: core"
       ],
-      "title": "Chuẩn hóa backend TypeScript: schema PostgreSQL + cấu trúc module + core",
-      "depends_on": [],
-      "body": "**Task chặn mọi task khác → merge trước 09:30 ngày 20/09.** Prompt: docs/06 mục SETUP-01.\n\n**Phạm vi**\n- Copy `docs/schema-muc-tieu.prisma` → `prisma/schema.prisma` (provider `postgresql`, có `directUrl`). Giữ Prisma **6.x**, không nâng lên 7.\n- Cấu trúc `server/` theo docs/02 mục Quy ước: `app.ts`, `core/` (errors, error-handler, validate (zod), async-handler, config, slug, openapi), `modules/<module>/`.\n- Đăng ký sẵn router **rỗng** cho cả 9 module + campuses trong `server/routes.ts` → sau đó không ai phải sửa file này.\n- Tách code cũ `server/routes/admin.ts` sang `modules/heritages`, `modules/qr`, `modules/feedbacks`, **giữ nguyên hành vi** (status là chuỗi thay vì enum), xóa `admin.ts`.\n- `GET /api/admin/campuses` (chỉ đọc) + `GET /api/health`.\n- `prisma/seed.ts`: dữ liệu mẫu mọi bảng (2 cơ sở, ~7 gian hàng lấy từ mockData, 3 địa điểm, 5 thiết bị, 3 sự kiện đủ 3 mức, 4 hồ sơ trong đó 1 hồ sơ trùng lịch, 10 di sản, 6 góp ý).\n- `api/index.ts` (entry Vercel), `vercel.json` (rewrite `/api/*` → function, SPA fallback, `\"regions\": [\"sin1\"]` cho gần DB Singapore), `public/api-docs.html` (Swagger UI qua CDN đọc `/api/openapi.json`).\n- `tsconfig.server.json`, script `npm run check` (typecheck server + build), `.env.example` (`DATABASE_URL`, `DIRECT_URL`, `PUBLIC_BASE_URL`).\n\n**Tiêu chí chấp nhận**\n- [ ] `npx prisma db push` + `npm run seed` chạy được trên nhánh Neon dev của trưởng nhóm; tiếng Việt đúng dấu trong `npx prisma studio`\n- [ ] `npm run dev` → frontend + API cùng chạy; `/api-docs.html` hiện đủ nhóm endpoint\n- [ ] Màn admin di sản/QR/feedback cũ vẫn hoạt động như trước\n- [ ] Workflow **CI** xanh trên PR\n"
-    },
-    {
-      "id": "SETUP-02",
-      "priority": "P0",
-      "owner": "ALL",
-      "estimate": "0.5h",
-      "labels": [
-        "type: chore"
-      ],
-      "title": "Chuẩn bị môi trường dev cho từng thành viên",
-      "depends_on": [],
-      "body": "Mỗi người comment \"xong\" dưới issue.\n- [ ] Node.js 20 LTS trở lên, Git; `git config --global user.name` / `user.email` (email trùng GitHub)\n- [ ] Clone repo, `npm install`\n- [ ] Nhận riêng từ trưởng nhóm chuỗi kết nối nhánh Neon của mình (không cần cài database trên máy), dán vào `.env` – **không commit**\n- [ ] Tạo `.env` từ `.env.example`, `npx prisma db push`, `npm run seed`, `npm run dev` chạy được\n- [ ] Cài Claude Code (terminal hoặc extension IDE), đăng nhập\n- [ ] Đọc AGENTS.md + docs/04-git-workflow.md\n"
-    },
-    {
-      "id": "DEVOPS-01",
-      "priority": "P0",
-      "owner": "A",
-      "estimate": "1.5h",
-      "labels": [
-        "type: devops",
-        "area: backend"
-      ],
-      "title": "Deploy: Neon PostgreSQL (free) + API chạy trên Vercel Functions",
+      "title": "Helper dùng chung: WebsiteAttributes, thuộc tính/ảnh Item, sanitize HTML + cài thư viện CKEditor",
       "depends_on": [
-        "SETUP-01"
+        "DB-02"
       ],
-      "body": "Làm theo docs/05.\n- [ ] Tạo 2 project Neon vùng Singapore: `duongsach-prod` (nhánh `main`) và `duongsach-dev` (nhánh cho từng người) – docs/05 mục 2–3\n- [ ] Gửi riêng cho từng thành viên chuỗi kết nối nhánh dev của họ\n- [ ] `npx prisma db push` + `npm run seed` lên `duongsach-prod` (chạy từ máy trưởng nhóm, dùng chuỗi direct)\n- [ ] Vercel env: `DATABASE_URL` (pooled + `pgbouncer=true`), `DIRECT_URL` (direct), `PUBLIC_BASE_URL=https://duong-sach-project.vercel.app`\n- [ ] `https://duong-sach-project.vercel.app/api/health` và `/api-docs.html` chạy từ máy bất kỳ\n- [ ] Không mật khẩu nào nằm trong git\n"
-    },
-    {
-      "id": "FR-01",
-      "priority": "P0",
-      "owner": "C",
-      "estimate": "2h",
-      "labels": [
-        "type: feature",
-        "area: backend",
-        "part: 1-gian-hang-csvc"
-      ],
-      "title": "CRUD gian hàng /api/admin/booths (xóa mềm, tìm theo tên, lọc theo cơ sở)",
-      "depends_on": [
-        "SETUP-01"
-      ],
-      "body": "**Yêu cầu mentor:** thêm, sửa, xóa mềm, xem danh sách có tìm theo tên và lọc theo cơ sở.\n\n**Endpoint:** `GET /api/admin/booths?q=&campusId=` · `GET /{id}` · `POST` · `PUT /{id}` · `DELETE /{id}`\n\n**Tiêu chí chấp nhận**\n- [ ] `name` (1–200 ký tự) và `campusId` bắt buộc; campus không tồn tại → 400\n- [ ] `DELETE` chỉ gán `deletedAt`; gian hàng đã xóa không hiện trong danh sách, `GET /{id}` → 404\n- [ ] `q` tìm trong tên, không phân biệt hoa thường (`contains` + `mode: 'insensitive'`); `campusId` nhận id **hoặc** code (`HCM`, `THU_DUC`); kết hợp được cả hai\n- [ ] Danh sách kèm `campus: { id, code, name }`, sắp xếp theo tên\n- [ ] Điểm cộng: `POST /{id}/restore`; tìm không dấu (\"nha nam\" ra \"Nhã Nam\")\n\n**Thư mục:** `server/modules/booths/`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
-    },
-    {
-      "id": "FR-02",
-      "priority": "P0",
-      "owner": "C",
-      "estimate": "1h",
-      "labels": [
-        "type: feature",
-        "area: backend",
-        "part: 1-gian-hang-csvc"
-      ],
-      "title": "CRUD địa điểm tổ chức /api/admin/venues (tên, cơ sở, sức chứa)",
-      "depends_on": [
-        "SETUP-01"
-      ],
-      "body": "**Endpoint:** `GET /api/admin/venues?campusId=` · `GET /{id}` · `POST` · `PUT /{id}` · `DELETE /{id}`\n\n**Tiêu chí chấp nhận**\n- [ ] `name`, `campusId` bắt buộc; `capacity` là số nguyên > 0\n- [ ] Xóa địa điểm đang có sự kiện/hồ sơ tham chiếu → **409** kèm thông báo rõ\n- [ ] Không tồn tại → 404\n\n**Thư mục:** `server/modules/venues/`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
-    },
-    {
-      "id": "FR-03",
-      "priority": "P0",
-      "owner": "D",
-      "estimate": "1h",
-      "labels": [
-        "type: feature",
-        "area: backend",
-        "part: 1-gian-hang-csvc"
-      ],
-      "title": "CRUD thiết bị /api/admin/assets (tên, tổng số lượng)",
-      "depends_on": [
-        "SETUP-01"
-      ],
-      "body": "**Endpoint:** `GET /api/admin/assets?q=` · `GET /{id}` · `POST` · `PUT /{id}` · `DELETE /{id}`\n\n**Tiêu chí chấp nhận**\n- [ ] `name` bắt buộc; `totalQuantity` số nguyên ≥ 0; `unit` tùy chọn\n- [ ] Xóa thiết bị đang được hồ sơ yêu cầu → 409\n- [ ] Không tồn tại → 404\n\n**Thư mục:** `server/modules/assets/`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
-    },
-    {
-      "id": "FR-04",
-      "priority": "P0",
-      "owner": "C",
-      "estimate": "1.5h",
-      "labels": [
-        "type: feature",
-        "area: backend",
-        "part: 2-su-kien-ho-so"
-      ],
-      "title": "CRUD sự kiện /api/admin/events (tên, thời gian, địa điểm, mô tả, mức quan trọng)",
-      "depends_on": [
-        "SETUP-01"
-      ],
-      "body": "**Endpoint:** `GET /api/admin/events?from=&to=&importance=&venueId=` · `GET /{id}` · `POST` · `PUT /{id}` · `DELETE /{id}`\n\n**Tiêu chí chấp nhận**\n- [ ] `name`, `startTime`, `endTime` (ISO-8601), `venueId` bắt buộc; `endTime` phải sau `startTime` → sai thì 400\n- [ ] `importance` ∈ `NORMAL | PRIORITY | KEY`; response kèm `importanceLabel` (\"Thường\" / \"Ưu tiên\" / \"Trọng điểm\")\n- [ ] Venue không tồn tại → 400; sự kiện không tồn tại → 404\n- [ ] Danh sách kèm `venue { id, name, campus }`, sắp xếp theo `startTime`\n- [ ] Điểm cộng: tạo/sửa trùng giờ cùng địa điểm → 409 kèm danh sách sự kiện bị trùng\n\n**Thư mục:** `server/modules/events/`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
-    },
-    {
-      "id": "FR-05",
-      "priority": "P0",
-      "owner": "D",
-      "estimate": "1.5h",
-      "labels": [
-        "type: feature",
-        "area: backend",
-        "part: 2-su-kien-ho-so"
-      ],
-      "title": "Xem hồ sơ đề xuất GET /api/admin/proposals, /{id} (lọc trạng thái, ngày)",
-      "depends_on": [
-        "SETUP-01"
-      ],
-      "body": "**Endpoint:** `GET /api/admin/proposals?status=&from=&to=&dateField=startTime|submittedAt` · `GET /api/admin/proposals/{id}`\n\n**Tiêu chí chấp nhận**\n- [ ] `status` ∈ `PENDING | NEEDS_SUPPLEMENT | APPROVED | REJECTED` (sai → 400); `from`/`to` dạng `YYYY-MM-DD`, lọc theo `dateField` (mặc định `startTime` = ngày tổ chức)\n- [ ] Danh sách: mới gửi trước, kèm `venue.name`, `statusLabel` tiếng Việt\n- [ ] Chi tiết kèm `venue`, `assets: [{ assetId, name, quantity, totalQuantity }]`, `reviewLogs`\n- [ ] Không tồn tại → 404\n\n**Thư mục:** `server/modules/proposals/`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
-    },
-    {
-      "id": "FR-06",
-      "priority": "P0",
-      "owner": "D",
-      "estimate": "2h",
-      "labels": [
-        "type: feature",
-        "area: backend",
-        "part: 2-su-kien-ho-so"
-      ],
-      "title": "Duyệt hồ sơ: POST /api/admin/proposals/{id}/approve | request-supplement | reject",
-      "depends_on": [
-        "FR-05"
-      ],
-      "body": "**Yêu cầu mentor:** đổi trạng thái; trả bổ sung hoặc từ chối thì **bắt buộc có ghi chú**.\n\n**Tiêu chí chấp nhận**\n- [ ] Body `{ note }`: bắt buộc (≥ 5 ký tự) với `request-supplement` và `reject`, tùy chọn với `approve` → thiếu thì 400\n- [ ] Máy trạng thái: `PENDING → APPROVED | NEEDS_SUPPLEMENT | REJECTED`; `NEEDS_SUPPLEMENT → REJECTED`; `APPROVED` và `REJECTED` là trạng thái cuối → thao tác tiếp trả **409**\n- [ ] Cập nhật `status`, `reviewNote`, `reviewedAt` và ghi 1 dòng `ProposalReviewLog` **trong cùng transaction**\n- [ ] Trả về hồ sơ sau cập nhật\n- [ ] File .http có đủ ca: duyệt OK, từ chối thiếu ghi chú → 400, duyệt lại hồ sơ đã duyệt → 409\n\n**Thư mục:** `server/modules/proposals/`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
+      "replaces": [],
+      "body": "Làm trên nhánh tích hợp của DB-02. Prompt: docs/06 mục 4.3.\n\n**Phạm vi**\n- `server/core/settings.ts`: `getSetting`, `getNumberSetting`, `getPublicSettings` (không cache).\n- `server/core/items.ts`: `getItemCategoryId`, `itemDetailInclude`, `readAttributes`, `mainPictureUrl`, `setAttributes`, `setMainPicture` (dùng được trong transaction).\n- `server/core/html.ts`: `sanitizeHtml` (allowlist khớp CKEditor 5), `htmlToText`.\n- Cài `sanitize-html`, `@types/sanitize-html`, `ckeditor5`, `@ckeditor/ckeditor5-react` (một lần cho cả nhóm).\n\n**Tiêu chí chấp nhận**\n- [ ] File core mới không lỗi typecheck; có JSDoc tiếng Việt\n- [ ] `sanitizeHtml('<p>a</p><script>x</script>')` trả `<p>a</p>`\n- [ ] Sửa `QR_BASE_URL` trong DB thì `getSetting` trả giá trị mới ngay\n- [ ] Không nâng Prisma, không đổi thư viện khác"
     },
     {
       "id": "FR-07",
       "priority": "P0",
       "owner": "B",
-      "estimate": "1h",
+      "estimate": "1.5h",
       "labels": [
         "type: feature",
         "area: backend",
         "part: 3-di-san-feedback"
       ],
-      "title": "CRUD di sản /api/admin/heritages (slug cố định, VI/EN, ảnh, nguồn)",
+      "title": "CRUD di sản /api/admin/heritages trên Items (giữ hợp đồng JSON)",
       "depends_on": [
-        "SETUP-01"
+        "DB-02",
+        "CORE-01"
       ],
-      "body": "Code đã có (Tân viết), việc còn lại là **vá lỗ hổng** theo docs/01 mục Vấn đề.\n\n**Tiêu chí chấp nhận**\n- [ ] `name_vi`, `content_vi` bắt buộc (zod); `image_url` nếu có phải là URL http/https\n- [ ] Slug tự sinh, trùng thêm `-2`, `-3`; PUT gửi `slug` khác → **400** \"Slug không được thay đổi\"\n- [ ] `DELETE` = xóa mềm (`deleted_at`), **không** xóa feedback; di sản đã xóa không hiện ở danh sách/QR/API public\n- [ ] Lỗi trả JSON chuẩn, không trả nguyên object lỗi ra client\n- [ ] Giữ nguyên tên field để `HeritageManager.tsx` chạy như cũ\n\n**Thư mục:** `server/modules/heritages/`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
+      "replaces": [],
+      "body": "**API demo #1.** Làm trên **nhánh tích hợp** `chore/<số DB-02>-schema-moi` (không tạo nhánh riêng). Prompt: docs/06 mục 5.1.\n\n**Yêu cầu mentor:** slug cố định, nội dung VI/EN, ảnh, nguồn. Nội dung dùng CKEditor (HTML).\n**Ánh xạ:** Items (loại `di-san`) + ItemPictureMappings (ảnh chính) + thuộc tính `SOURCE` – docs/01 mục 4.5.\n\n**Tiêu chí chấp nhận**\n- [ ] JSON **giữ nguyên** snake_case (`name_vi`, `content_en`, `image_url`, `source`, `created_at`, `_count.feedbacks`…) – `HeritageManager.tsx`, `HeritageQR.tsx` không phải sửa\n- [ ] Slug sinh từ tên, duy nhất trên toàn `Items`; `PUT` gửi slug khác → 400 \"Slug không được thay đổi\"\n- [ ] `content_vi`/`content_en` được sanitize; tạo/sửa Item + thuộc tính + ảnh trong một transaction\n- [ ] `DELETE` = `Deleted = true`; không hiện trong danh sách, QR, public; góp ý giữ nguyên\n- [ ] `{id}` nhận Id hoặc slug; không tồn tại → 404\n\n**Thư mục:** `server/modules/heritages/`, `http/heritages.http`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Code đúng thư mục module, theo lớp routes → controller → service; service có `toDto()` (PascalCase → JSON hợp đồng)\n- [ ] Body/query/params kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Không `mode: 'insensitive'`; trường HTML đã `sanitizeHtml()`; tra loại/thuộc tính/cấu hình bằng `Slug`/`Code`/`Name` khóa, không hard-code Id\n- [ ] Có mô tả trong `<module>.openapi.ts` (hiện trên `/api-docs.html`) và request mẫu trong `http/<module>.http` (kèm ca lỗi)\n- [ ] `npm run check` xanh; đã test trên SQL Server local sau `npm run seed`\n- [ ] PR có `Closes #<số-issue>`; người làm tự giải thích được luồng request và ánh xạ JSON ↔ bảng\n"
     },
     {
       "id": "FR-08",
@@ -289,93 +224,129 @@
         "area: backend",
         "part: 3-di-san-feedback"
       ],
-      "title": "Sinh QR di sản GET /api/admin/heritages/{id}/qr (domain từ cấu hình)",
+      "title": "Sinh QR di sản: domain đọc từ WebsiteAttributes (dự phòng PUBLIC_BASE_URL)",
       "depends_on": [
-        "SETUP-01"
+        "FR-07"
       ],
-      "body": "**Tiêu chí chấp nhận**\n- [ ] URL = `PUBLIC_BASE_URL` + `/di-san/` + slug (bỏ `/` thừa), đọc qua `core/config.ts`\n- [ ] Production thiếu `PUBLIC_BASE_URL` → báo lỗi rõ (không âm thầm dùng localhost)\n- [ ] `?size=` 100–1000 (mặc định 300), sai → 400; di sản không tồn tại/đã xóa → 404\n- [ ] Response giữ `{ url, qrCode, heritage }` cho `HeritageQR.tsx`\n\n**Thư mục:** `server/modules/qr/`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
+      "replaces": [],
+      "body": "**API demo #2.** Nhánh tích hợp. Prompt: docs/06 mục 5.2.\n\n**Yêu cầu mentor:** tạo QR từ URL theo slug, domain lấy từ cấu hình.\n\n**Tiêu chí chấp nhận**\n- [ ] URL = `<QR_BASE_URL>/di-san/<slug>`; `QR_BASE_URL` rỗng → `PUBLIC_BASE_URL`; production mà domain là localhost → 500\n- [ ] Sửa `QR_BASE_URL` trong bảng `WebsiteAttributes` → gọi lại thấy URL mới (không restart server)\n- [ ] JSON giữ nguyên `{ url, qrCode, heritage }`; `{id}` nhận Id hoặc slug; di sản đã xóa mềm → 404\n- [ ] Quét ảnh QR bằng điện thoại ra đúng URL\n\n**Thư mục:** `server/modules/qr/`, `http/qr.http`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Code đúng thư mục module, theo lớp routes → controller → service; service có `toDto()` (PascalCase → JSON hợp đồng)\n- [ ] Body/query/params kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Không `mode: 'insensitive'`; trường HTML đã `sanitizeHtml()`; tra loại/thuộc tính/cấu hình bằng `Slug`/`Code`/`Name` khóa, không hard-code Id\n- [ ] Có mô tả trong `<module>.openapi.ts` (hiện trên `/api-docs.html`) và request mẫu trong `http/<module>.http` (kèm ca lỗi)\n- [ ] `npm run check` xanh; đã test trên SQL Server local sau `npm run seed`\n- [ ] PR có `Closes #<số-issue>`; người làm tự giải thích được luồng request và ánh xạ JSON ↔ bảng\n"
     },
     {
       "id": "FR-09",
       "priority": "P0",
       "owner": "B",
-      "estimate": "1.5h",
-      "labels": [
-        "type: feature",
-        "area: backend",
-        "part: 3-di-san-feedback"
-      ],
-      "title": "Quản lý feedback: lọc theo di sản, điểm, trạng thái + PATCH /{id}/status",
-      "depends_on": [
-        "SETUP-01"
-      ],
-      "body": "**Endpoint:** `GET /api/admin/feedbacks?heritageId=&status=&rating=&minRating=&maxRating=` · `PATCH /api/admin/feedbacks/{id}/status`\n\n**Tiêu chí chấp nhận**\n- [ ] `heritageId` nhận id, slug hoặc `general` (góp ý Toàn Đường Sách); các điều kiện kết hợp AND\n- [ ] `status` ∈ `PENDING | REVIEWED | RESOLVED`; `rating` 1–5; sai định dạng → 400\n- [ ] PATCH id không tồn tại → 404 (**bỏ** \"fallback id test\" của code cũ)\n- [ ] Giữ các field `FeedbackTable.tsx` đang dùng (`createdAt`, `scope`, `contact`...)\n\n**Thư mục:** `server/modules/feedbacks/`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
-    },
-    {
-      "id": "FR-10",
-      "priority": "P1",
-      "owner": "B",
       "estimate": "1h",
       "labels": [
         "type: feature",
         "area: backend",
         "part: 3-di-san-feedback"
       ],
-      "title": "API public cho du khách: GET /api/heritages/{slug}, POST /api/feedbacks",
+      "title": "Quản lý feedback trên bảng Feedbacks mới + POST /api/feedbacks (góp ý chung → ItemId NULL)",
       "depends_on": [
-        "FR-07",
-        "FR-09"
+        "FR-07"
       ],
-      "body": "- [ ] `GET /api/heritages` (rút gọn) và `GET /api/heritages/{slug}` (không kèm feedback/liên hệ)\n- [ ] `POST /api/feedbacks`: không chọn di sản → `heritage_id = null` (**không** gán vào di sản đầu tiên như code cũ); content 1–2000, rating 1–5, contact ≤ 100\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
+      "replaces": [],
+      "body": "**API demo #3.** Nhánh tích hợp. Prompt: docs/06 mục 5.3. Xong issue này thì báo A mở **PR tích hợp**.\n\n**Yêu cầu mentor:** lọc theo di sản, điểm, trạng thái; cập nhật trạng thái xử lý.\n\n**Tiêu chí chấp nhận**\n- [ ] `GET /api/admin/feedbacks`: `heritageId` = `general` (ItemId NULL) | Id | slug; `rating`, `minRating`, `maxRating`, `status` kết hợp AND; `minRating > maxRating` → 400\n- [ ] `PATCH /{id}/status` với `PENDING | REVIEWED | RESOLVED`; sai giá trị → 400; không tồn tại → 404\n- [ ] `POST /api/feedbacks` (public): không khớp di sản → lưu `ItemId = NULL`, **bỏ hẳn** việc gán vào di sản đầu tiên\n- [ ] JSON giữ nguyên cho `FeedbackTable.tsx`, `FeedbackForm.tsx`; `scope` = tên di sản hoặc \"Toàn Đường Sách\"\n- [ ] `npm run check` xanh cho **toàn bộ** nhánh tích hợp\n\n**Thư mục:** `server/modules/feedbacks/`, `server/modules/public/`, `http/feedbacks.http`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Code đúng thư mục module, theo lớp routes → controller → service; service có `toDto()` (PascalCase → JSON hợp đồng)\n- [ ] Body/query/params kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Không `mode: 'insensitive'`; trường HTML đã `sanitizeHtml()`; tra loại/thuộc tính/cấu hình bằng `Slug`/`Code`/`Name` khóa, không hard-code Id\n- [ ] Có mô tả trong `<module>.openapi.ts` (hiện trên `/api-docs.html`) và request mẫu trong `http/<module>.http` (kèm ca lỗi)\n- [ ] `npm run check` xanh; đã test trên SQL Server local sau `npm run seed`\n- [ ] PR có `Closes #<số-issue>`; người làm tự giải thích được luồng request và ánh xạ JSON ↔ bảng\n"
     },
     {
-      "id": "FR-11",
-      "priority": "P1",
-      "owner": "D",
-      "estimate": "0.5h",
-      "labels": [
-        "type: feature",
-        "area: backend",
-        "part: 2-su-kien-ho-so"
-      ],
-      "title": "API public gửi hồ sơ đề xuất POST /api/proposals",
-      "depends_on": [
-        "FR-05"
-      ],
-      "body": "Form đăng ký tổ chức (RQ04), kèm nhu cầu thiết bị.\n- [ ] Body: title, organizerName, organizerContact, description, startTime, endTime, venueId, expectedAttendees?, assets: [{ assetId, quantity }]\n- [ ] `quantity` ≤ `totalQuantity`; trạng thái mặc định `PENDING`; tạo hồ sơ + thiết bị trong 1 transaction\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
-    },
-    {
-      "id": "QA-01",
-      "priority": "P1",
-      "owner": "A",
-      "estimate": "1h",
-      "labels": [
-        "type: test",
-        "area: backend"
-      ],
-      "title": "Test E2E toàn bộ API trên bản deploy",
-      "depends_on": [
-        "DEVOPS-01"
-      ],
-      "body": "- [ ] Chạy tất cả file `http/*.http` với `@host` = URL Vercel, ghi pass/fail vào comment\n- [ ] Mỗi lỗi → mở issue `type: bug`, gán đúng chủ module\n"
-    },
-    {
-      "id": "DOC-01",
-      "priority": "P1",
+      "id": "DEMO-01",
+      "priority": "P0",
       "owner": "A",
       "estimate": "1h",
       "labels": [
         "type: docs"
       ],
-      "title": "Kịch bản demo + báo cáo công việc + luyện Q&A",
+      "title": "Kịch bản demo Swagger + Database Diagram SSMS + luyện Q&A",
       "depends_on": [
-        "DEVOPS-01"
+        "FR-07",
+        "FR-08",
+        "FR-09"
       ],
-      "body": "- [ ] Kịch bản demo 7–10 phút theo docs/03 mục Demo (đi qua đủ 3 phần)\n- [ ] Điền sheet báo cáo tuần của nhóm\n- [ ] Mỗi người tự giải thích phần mình trong 3 phút (dùng bảng đối chiếu Spring ↔ Express ở docs/02)\n- [ ] 18:30 gọi `/api/health` để đánh thức Neon trước giờ demo\n"
+      "replaces": [
+        "DOC-01"
+      ],
+      "body": "Prompt: docs/06 mục 4.5. Kịch bản khung: docs/03 mục 6–7.\n\n- [ ] `http/demo.http` theo đúng thứ tự demo, dữ liệu seed thật\n- [ ] `docs/08-kich-ban-demo.md`: lời thoại ≤ 10 phút, câu SQL để chỉ dữ liệu trong SSMS, Q&A cho từng người\n- [ ] 2 Database Diagram trong SSMS trên máy demo (docs/05 mục 6)\n- [ ] Chạy thử kịch bản trọn vẹn một lần lúc 18:00; checklist máy demo docs/05 mục 9\n- [ ] Ghi câu hỏi mở: mentor (Item hay Product), khách (giới hạn đơn, cá nhân được đề xuất, số đầu sách)\n- [ ] Điền sheet báo cáo công việc của nhóm"
     },
     {
-      "id": "FR-12",
-      "priority": "P2",
+      "id": "FR-01",
+      "priority": "P1",
+      "owner": "C",
+      "estimate": "2h",
+      "labels": [
+        "type: feature",
+        "area: backend",
+        "part: 1-gian-hang-csvc"
+      ],
+      "title": "CRUD gian hàng /api/admin/booths trên Items (xóa mềm, tìm theo tên, lọc theo cơ sở)",
+      "depends_on": [
+        "DB-02",
+        "CORE-01"
+      ],
+      "replaces": [
+        "FR-01"
+      ],
+      "body": "Prompt: docs/06 mục 6.1 + ghi chú FR-01 ở mục 6.2. Nhánh `feat/<số>-booths-crud` tạo từ nhánh tích hợp (trước khi PR tích hợp merge) hoặc từ `main`.\n\n**Yêu cầu mentor:** thêm, sửa, xóa mềm, xem danh sách có tìm theo tên và lọc theo cơ sở.\n**Ánh xạ:** Items (loại `gian-hang`) + thuộc tính `OWNER`, `LOCATION`, `TOPIC`, `BOOK_TITLE_COUNT` + ảnh chính. **Không có bảng Booths.**\n\n**Endpoint:** `GET /api/admin/booths?q=&campusId=` · `GET /{id}` · `POST` · `PUT /{id}` · `DELETE /{id}`\n\n**Tiêu chí chấp nhận**\n- [ ] `name` (1–300 ký tự) và `campusId` bắt buộc; `campusId` nhận Id **hoặc** code `HCM`/`THU_DUC`; không tồn tại → 400\n- [ ] `DELETE` chỉ đặt `Deleted = true`; bản đã xóa không hiện trong danh sách, `GET /{id}` → 404\n- [ ] `q` tìm trong tên – \"nha nam\" ra \"Nhã Nam\" nhờ collation `Vietnamese_CI_AI` (không dùng `mode: 'insensitive'`); kết hợp được với `campusId`\n- [ ] `bookCount` = **số đầu sách** (số nguyên ≥ 0); `description` là HTML đã sanitize\n- [ ] Danh sách kèm `campus: { id, code, name }`, sắp xếp theo tên\n- [ ] Điểm cộng: `POST /{id}/restore`\n\n**Thư mục:** `server/modules/booths/`, `http/booths.http`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Code đúng thư mục module, theo lớp routes → controller → service; service có `toDto()` (PascalCase → JSON hợp đồng)\n- [ ] Body/query/params kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Không `mode: 'insensitive'`; trường HTML đã `sanitizeHtml()`; tra loại/thuộc tính/cấu hình bằng `Slug`/`Code`/`Name` khóa, không hard-code Id\n- [ ] Có mô tả trong `<module>.openapi.ts` (hiện trên `/api-docs.html`) và request mẫu trong `http/<module>.http` (kèm ca lỗi)\n- [ ] `npm run check` xanh; đã test trên SQL Server local sau `npm run seed`\n- [ ] PR có `Closes #<số-issue>`; người làm tự giải thích được luồng request và ánh xạ JSON ↔ bảng\n"
+    },
+    {
+      "id": "FR-02",
+      "priority": "P1",
+      "owner": "C",
+      "estimate": "1h",
+      "labels": [
+        "type: feature",
+        "area: backend",
+        "part: 1-gian-hang-csvc"
+      ],
+      "title": "CRUD địa điểm tổ chức /api/admin/venues (tên, cơ sở, sức chứa)",
+      "depends_on": [
+        "DB-02"
+      ],
+      "replaces": [
+        "FR-02"
+      ],
+      "body": "Prompt: docs/06 mục 6.1 + ghi chú FR-02/FR-03.\n\n**Tiêu chí chấp nhận**\n- [ ] `name`, `campusId` (Id hoặc code), `capacity` (số nguyên > 0) bắt buộc\n- [ ] Lọc `campusId`, tìm `q` theo tên\n- [ ] Xóa địa điểm đang được sự kiện/hồ sơ dùng → 409 \"đang được sử dụng\" (khóa ngoại NoAction)\n- [ ] JSON camelCase theo docs/02, kèm `campus`\n\n**Thư mục:** `server/modules/venues/`, `http/venues.http`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Code đúng thư mục module, theo lớp routes → controller → service; service có `toDto()` (PascalCase → JSON hợp đồng)\n- [ ] Body/query/params kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Không `mode: 'insensitive'`; trường HTML đã `sanitizeHtml()`; tra loại/thuộc tính/cấu hình bằng `Slug`/`Code`/`Name` khóa, không hard-code Id\n- [ ] Có mô tả trong `<module>.openapi.ts` (hiện trên `/api-docs.html`) và request mẫu trong `http/<module>.http` (kèm ca lỗi)\n- [ ] `npm run check` xanh; đã test trên SQL Server local sau `npm run seed`\n- [ ] PR có `Closes #<số-issue>`; người làm tự giải thích được luồng request và ánh xạ JSON ↔ bảng\n"
+    },
+    {
+      "id": "FR-04",
+      "priority": "P1",
+      "owner": "C",
+      "estimate": "1.5h",
+      "labels": [
+        "type: feature",
+        "area: backend",
+        "part: 2-su-kien-ho-so"
+      ],
+      "title": "CRUD sự kiện /api/admin/events (tên, thời gian, địa điểm, mô tả, mức quan trọng)",
+      "depends_on": [
+        "DB-02"
+      ],
+      "replaces": [
+        "FR-04"
+      ],
+      "body": "Prompt: docs/06 mục 6.1 + ghi chú FR-04.\n\n**Tiêu chí chấp nhận**\n- [ ] `importance` ∈ `NORMAL` (Thường) | `PRIORITY` (Ưu tiên) | `KEY` (Trọng điểm), trả kèm `importanceLabel`\n- [ ] `endTime` > `startTime` (400); `venueId` không tồn tại → 400\n- [ ] `description` là HTML (CKEditor) đã sanitize\n- [ ] Lọc `from`/`to` (giờ VN) theo thời gian bắt đầu, `venueId`, `importance`\n- [ ] JSON kèm `venue: { id, name, campus }`\n\n**Thư mục:** `server/modules/events/`, `http/events.http`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Code đúng thư mục module, theo lớp routes → controller → service; service có `toDto()` (PascalCase → JSON hợp đồng)\n- [ ] Body/query/params kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Không `mode: 'insensitive'`; trường HTML đã `sanitizeHtml()`; tra loại/thuộc tính/cấu hình bằng `Slug`/`Code`/`Name` khóa, không hard-code Id\n- [ ] Có mô tả trong `<module>.openapi.ts` (hiện trên `/api-docs.html`) và request mẫu trong `http/<module>.http` (kèm ca lỗi)\n- [ ] `npm run check` xanh; đã test trên SQL Server local sau `npm run seed`\n- [ ] PR có `Closes #<số-issue>`; người làm tự giải thích được luồng request và ánh xạ JSON ↔ bảng\n"
+    },
+    {
+      "id": "FR-03",
+      "priority": "P1",
+      "owner": "D",
+      "estimate": "1h",
+      "labels": [
+        "type: feature",
+        "area: backend",
+        "part: 1-gian-hang-csvc"
+      ],
+      "title": "CRUD thiết bị /api/admin/assets (tên, tổng số lượng)",
+      "depends_on": [
+        "DB-02"
+      ],
+      "replaces": [
+        "FR-03"
+      ],
+      "body": "Prompt: docs/06 mục 6.1 + ghi chú FR-02/FR-03.\n\n**Tiêu chí chấp nhận**\n- [ ] `name`, `totalQuantity` (số nguyên ≥ 0) bắt buộc; `unit`, `description` tùy chọn\n- [ ] Tìm `q` theo tên\n- [ ] Xóa thiết bị đang được hồ sơ xin mượn → 409\n- [ ] JSON camelCase theo docs/02\n\n**Thư mục:** `server/modules/assets/`, `http/assets.http`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Code đúng thư mục module, theo lớp routes → controller → service; service có `toDto()` (PascalCase → JSON hợp đồng)\n- [ ] Body/query/params kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Không `mode: 'insensitive'`; trường HTML đã `sanitizeHtml()`; tra loại/thuộc tính/cấu hình bằng `Slug`/`Code`/`Name` khóa, không hard-code Id\n- [ ] Có mô tả trong `<module>.openapi.ts` (hiện trên `/api-docs.html`) và request mẫu trong `http/<module>.http` (kèm ca lỗi)\n- [ ] `npm run check` xanh; đã test trên SQL Server local sau `npm run seed`\n- [ ] PR có `Closes #<số-issue>`; người làm tự giải thích được luồng request và ánh xạ JSON ↔ bảng\n"
+    },
+    {
+      "id": "FR-05",
+      "priority": "P1",
       "owner": "D",
       "estimate": "1.5h",
       "labels": [
@@ -383,48 +354,37 @@
         "area: backend",
         "part: 2-su-kien-ho-so"
       ],
-      "title": "Duyệt hồ sơ → tự tạo sự kiện + cảnh báo trùng lịch / thiếu thiết bị",
+      "title": "Xem hồ sơ đề xuất GET /api/admin/proposals, /{id} (lọc trạng thái, ngày)",
       "depends_on": [
-        "FR-06",
-        "FR-04"
+        "DB-02"
       ],
-      "body": "RQ05: BQL kiểm tra lịch, bố trí CSVC, công bố sự kiện.\n- [ ] `approve` kiểm tra trùng giờ cùng địa điểm và tổng thiết bị → 409 kèm chi tiết; `?force=true` vẫn duyệt\n- [ ] Duyệt xong tạo `Event` (importance NORMAL, gắn `proposalId`)\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
+      "replaces": [
+        "FR-05"
+      ],
+      "body": "Prompt: docs/06 mục 6.1 + ghi chú FR-05.\n**Ánh xạ:** Proposals (≈ Orders) + ProposalItems (≈ OrderItems) + Venues + Assets. Thông tin người nộp là cột trên `Proposals` (`OrganizerType`, `OrganizerName`, `Email`, `Phone`, `TaxCode`…).\n\n**Tiêu chí chấp nhận**\n- [ ] Chỉ trả hồ sơ đã xác nhận email (`EmailVerifiedAt` khác NULL); hồ sơ chưa xác nhận → 404 ở `/{id}`\n- [ ] Lọc `status`, `from`/`to` (giờ VN) theo `dateField` = `startTime` | `submittedAt`\n- [ ] Danh sách có `code`, `organizerName`, `organizerType`, `statusLabel`, `venue`, `submittedAt`\n- [ ] Chi tiết có `description`, `organizerContact`, `expectedAttendees`, `representativeName`, `taxCode`, `reviewNote`/`reviewedAt`/`reviewedBy`, `assets[]` (kèm `totalQuantity`)\n\n**Thư mục:** `server/modules/proposals/`, `http/proposals.http`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Code đúng thư mục module, theo lớp routes → controller → service; service có `toDto()` (PascalCase → JSON hợp đồng)\n- [ ] Body/query/params kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Không `mode: 'insensitive'`; trường HTML đã `sanitizeHtml()`; tra loại/thuộc tính/cấu hình bằng `Slug`/`Code`/`Name` khóa, không hard-code Id\n- [ ] Có mô tả trong `<module>.openapi.ts` (hiện trên `/api-docs.html`) và request mẫu trong `http/<module>.http` (kèm ca lỗi)\n- [ ] `npm run check` xanh; đã test trên SQL Server local sau `npm run seed`\n- [ ] PR có `Closes #<số-issue>`; người làm tự giải thích được luồng request và ánh xạ JSON ↔ bảng\n"
     },
     {
-      "id": "FR-13",
-      "priority": "P2",
-      "owner": "B",
-      "estimate": "1h",
+      "id": "FR-06",
+      "priority": "P1",
+      "owner": "D",
+      "estimate": "2h",
       "labels": [
         "type: feature",
         "area: backend",
-        "part: 3-di-san-feedback"
+        "part: 2-su-kien-ho-so"
       ],
-      "title": "Thống kê feedback GET /api/admin/feedbacks/stats",
+      "title": "Duyệt hồ sơ: POST /api/admin/proposals/{id}/approve | request-supplement | reject",
       "depends_on": [
-        "FR-09"
+        "FR-05"
       ],
-      "body": "- [ ] `{ total, averageRating, byStatus, byRating, byHeritage[] }` bằng `groupBy`/aggregate, không tải hết bản ghi\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
+      "replaces": [
+        "FR-06"
+      ],
+      "body": "Prompt: docs/06 mục 6.1 + ghi chú FR-06.\n\n**Yêu cầu mentor:** đổi trạng thái; trả bổ sung hoặc từ chối bắt buộc có ghi chú.\n\n**Tiêu chí chấp nhận**\n- [ ] `request-supplement`, `reject` thiếu `note` → 400\n- [ ] Máy trạng thái AGENTS.md mục 5; thao tác trên `APPROVED`/`REJECTED` → 409\n- [ ] Đổi `Status`, `ReviewNote`, `ReviewedAt`, `ReviewedBy` bằng `updateMany` có điều kiện trạng thái hiện tại (hai người duyệt cùng lúc → 409)\n- [ ] Trả hồ sơ chi tiết như FR-05\n\n**Thư mục:** `server/modules/proposals/`, `http/proposals.http`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Code đúng thư mục module, theo lớp routes → controller → service; service có `toDto()` (PascalCase → JSON hợp đồng)\n- [ ] Body/query/params kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Không `mode: 'insensitive'`; trường HTML đã `sanitizeHtml()`; tra loại/thuộc tính/cấu hình bằng `Slug`/`Code`/`Name` khóa, không hard-code Id\n- [ ] Có mô tả trong `<module>.openapi.ts` (hiện trên `/api-docs.html`) và request mẫu trong `http/<module>.http` (kèm ca lỗi)\n- [ ] `npm run check` xanh; đã test trên SQL Server local sau `npm run seed`\n- [ ] PR có `Closes #<số-issue>`; người làm tự giải thích được luồng request và ánh xạ JSON ↔ bảng\n"
     },
     {
-      "id": "FR-14",
-      "priority": "P2",
-      "owner": "B",
-      "estimate": "1h",
-      "labels": [
-        "type: feature",
-        "area: backend",
-        "part: 3-di-san-feedback"
-      ],
-      "title": "Tải QR PNG / ZIP QR tất cả di sản (phục vụ in 27 QR)",
-      "depends_on": [
-        "FR-08"
-      ],
-      "body": "- [ ] `GET /api/admin/heritages/{id}/qr.png` và `GET /api/admin/heritages/qr.zip`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
-    },
-    {
-      "id": "FE-01",
-      "priority": "P2",
+      "id": "FE-03",
+      "priority": "P1",
       "owner": "B",
       "estimate": "1.5h",
       "labels": [
@@ -432,20 +392,169 @@
         "area: frontend",
         "part: 3-di-san-feedback"
       ],
-      "title": "Frontend: quét QR mở đúng trang /di-san/{slug}",
+      "title": "CKEditor 5 cho trường nội dung ở màn admin di sản (component dùng chung)",
       "depends_on": [
+        "CORE-01",
+        "FR-07"
+      ],
+      "replaces": [],
+      "body": "Làm sau khi PR tích hợp đã merge. Prompt: docs/06 mục 5.4. Thư viện đã cài ở CORE-01 (không sửa `package.json`).\n\n**Yêu cầu mentor:** các trường mô tả dùng CKEditor 5.\n\n- [ ] `src/components/Admin/RichTextEditor.tsx` (ClassicEditor, `licenseKey: 'GPL'`), dùng lại được cho gian hàng/sự kiện/hồ sơ\n- [ ] `HeritageManager.tsx`: `content_vi`, `content_en` dùng editor; lưu và mở lại giữ định dạng\n- [ ] Dán `<script>` → bị loại sau khi lưu (sanitize ở server)\n- [ ] Kiểm tra bằng Playwright; `npm run check` xanh"
+    },
+    {
+      "id": "QA-02",
+      "priority": "P1",
+      "owner": "A",
+      "estimate": "1h",
+      "labels": [
+        "type: test"
+      ],
+      "title": "Rà http/*.http + e2e sau đổi schema; chạy thử toàn bộ trên máy demo",
+      "depends_on": [
+        "FR-07",
+        "FR-08",
+        "FR-09"
+      ],
+      "replaces": [
+        "QA-01"
+      ],
+      "body": "Prompt: docs/06 mục 4.6.\n\n- [ ] Mọi `http/*.http` dùng id/slug của seed mới, có biến `@host`\n- [ ] `npx playwright test` xanh (slug trong `mockData.ts` khớp seed)\n- [ ] Bảng pass/fail toàn bộ API trên máy demo sau `db push --force-reset` + seed; lỗi → issue `type: bug` gán chủ module"
+    },
+    {
+      "id": "DEVOPS-02",
+      "priority": "P2",
+      "owner": "A",
+      "estimate": "2h",
+      "labels": [
+        "type: devops",
+        "area: database"
+      ],
+      "title": "Deploy: SQL Server trên cloud + Vercel (chỉ khi 3 API demo đã ổn local)",
+      "depends_on": [
+        "DEMO-01"
+      ],
+      "replaces": [
+        "DEVOPS-01"
+      ],
+      "body": "**Chỉ bắt đầu khi 3 API demo đã chạy ổn local.** Không kịp thì demo local, deploy sau. Làm theo docs/05 mục 8, prompt docs/06 mục 4.7.\n\n- [ ] Chọn nơi đặt SQL Server (ưu tiên vùng Singapore), DB `DuongSach` collation `Vietnamese_CI_AI`\n- [ ] Firewall cho Vercel; login riêng, mật khẩu mạnh\n- [ ] `db push` + seed lên cloud; `QR_BASE_URL` = domain production\n- [ ] Vercel env: `DATABASE_URL`, `PUBLIC_BASE_URL`; xóa `DIRECT_URL`\n- [ ] `/api/health`, `/api-docs.html` và 3 API demo chạy trên bản deploy; bản local vẫn là dự phòng"
+    },
+    {
+      "id": "FR-10",
+      "priority": "P2",
+      "owner": "B",
+      "estimate": "0.5h",
+      "labels": [
+        "type: feature",
+        "area: backend",
+        "part: 3-di-san-feedback"
+      ],
+      "title": "API public GET /api/heritages/{slug} cho trang du khách",
+      "depends_on": [
+        "FR-07"
+      ],
+      "replaces": [
         "FR-10"
       ],
-      "body": "- [ ] Khi app khởi động đọc `location.pathname`; khớp `/di-san/:slug` → màn di sản + gọi `GET /api/heritages/{slug}`\n- [ ] Slug sai → thông báo + nút về trang chủ\n"
+      "body": "- [ ] Trả di sản chưa xóa theo slug (JSON như admin, bỏ `_count`); không có → 404\n- [ ] Đăng ký trong `public.routes.ts` + `public.openapi.ts`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Code đúng thư mục module, theo lớp routes → controller → service; service có `toDto()` (PascalCase → JSON hợp đồng)\n- [ ] Body/query/params kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Không `mode: 'insensitive'`; trường HTML đã `sanitizeHtml()`; tra loại/thuộc tính/cấu hình bằng `Slug`/`Code`/`Name` khóa, không hard-code Id\n- [ ] Có mô tả trong `<module>.openapi.ts` (hiện trên `/api-docs.html`) và request mẫu trong `http/<module>.http` (kèm ca lỗi)\n- [ ] `npm run check` xanh; đã test trên SQL Server local sau `npm run seed`\n- [ ] PR có `Closes #<số-issue>`; người làm tự giải thích được luồng request và ánh xạ JSON ↔ bảng\n"
+    },
+    {
+      "id": "FR-11",
+      "priority": "P2",
+      "owner": "D",
+      "estimate": "3h",
+      "labels": [
+        "type: feature",
+        "area: backend",
+        "part: 2-su-kien-ho-so"
+      ],
+      "title": "Đăng ký tổ chức không đăng nhập: form, xác nhận email, mã hồ sơ, giới hạn từ WebsiteAttributes",
+      "depends_on": [
+        "FR-05"
+      ],
+      "replaces": [
+        "FR-11"
+      ],
+      "body": "Không bắt buộc cho demo 22/09. Prompt: docs/06 mục 6.3. Phương án: hướng đi mục 5, docs/01 ADR-5.\n\n- [ ] `POST /api/proposals`: chọn loại đơn vị trước (zod `discriminatedUnion`, `taxCode` bắt buộc với doanh nghiệp), ghi thẳng vào cột của `Proposals`; **cá nhân được phép** (tạm thời); chỉ thu email + SĐT, không CCCD\n- [ ] Sinh `Code` tra cứu + token/OTP, **chỉ lưu hash**; hồ sơ chỉ vào hàng đợi BQL sau khi xác nhận email\n- [ ] Giới hạn số đơn theo email/IP đọc từ `WebsiteAttributes`; giá trị rỗng = không giới hạn; **không hard-code**\n- [ ] `POST /api/proposals/verify-email`, `GET /api/proposals/{code}?token=`\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Code đúng thư mục module, theo lớp routes → controller → service; service có `toDto()` (PascalCase → JSON hợp đồng)\n- [ ] Body/query/params kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Không `mode: 'insensitive'`; trường HTML đã `sanitizeHtml()`; tra loại/thuộc tính/cấu hình bằng `Slug`/`Code`/`Name` khóa, không hard-code Id\n- [ ] Có mô tả trong `<module>.openapi.ts` (hiện trên `/api-docs.html`) và request mẫu trong `http/<module>.http` (kèm ca lỗi)\n- [ ] `npm run check` xanh; đã test trên SQL Server local sau `npm run seed`\n- [ ] PR có `Closes #<số-issue>`; người làm tự giải thích được luồng request và ánh xạ JSON ↔ bảng\n"
+    },
+    {
+      "id": "CLEAN-02",
+      "priority": "P2",
+      "owner": "A",
+      "estimate": "0.5h",
+      "labels": [
+        "type: chore"
+      ],
+      "title": "Dọn dẹp: @supabase/supabase-js, thư mục .bolt, nhánh cũ",
+      "depends_on": [],
+      "replaces": [
+        "CLEAN-01"
+      ],
+      "body": "- [ ] Rà: không có code dùng `@supabase/supabase-js` → gỡ khỏi `package.json`\n- [ ] Thư mục `.bolt/` (cấu hình bolt.new) không dùng → xóa\n- [ ] Xóa nhánh đã merge (docs/04 mục 2); hỏi chủ nhánh `connect_gemini_github` trước khi xóa"
+    },
+    {
+      "id": "FR-12",
+      "priority": "P3",
+      "owner": "D",
+      "estimate": "-",
+      "labels": [
+        "type: feature",
+        "part: 2-su-kien-ho-so"
+      ],
+      "title": "Duyệt hồ sơ → tự tạo sự kiện + cảnh báo trùng lịch / thiếu thiết bị",
+      "depends_on": [
+        "FR-06",
+        "FR-04"
+      ],
+      "replaces": [
+        "FR-12"
+      ],
+      "stretch": true,
+      "body": "Để sau buổi demo 22/09. Chỉ tạo issue khi chạy workflow với `include_stretch = true`."
+    },
+    {
+      "id": "FR-13",
+      "priority": "P3",
+      "owner": "B",
+      "estimate": "-",
+      "labels": [
+        "type: feature",
+        "part: 3-di-san-feedback"
+      ],
+      "title": "Thống kê feedback GET /api/admin/feedbacks/stats",
+      "depends_on": [
+        "FR-09"
+      ],
+      "replaces": [
+        "FR-13"
+      ],
+      "stretch": true,
+      "body": "Để sau buổi demo 22/09. Chỉ tạo issue khi chạy workflow với `include_stretch = true`."
+    },
+    {
+      "id": "FR-14",
+      "priority": "P3",
+      "owner": "B",
+      "estimate": "-",
+      "labels": [
+        "type: feature",
+        "part: 3-di-san-feedback"
+      ],
+      "title": "Tải QR PNG / ZIP QR tất cả di sản (phục vụ in 27 QR)",
+      "depends_on": [
+        "FR-08"
+      ],
+      "replaces": [
+        "FR-14"
+      ],
+      "stretch": true,
+      "body": "Để sau buổi demo 22/09. Chỉ tạo issue khi chạy workflow với `include_stretch = true`."
     },
     {
       "id": "FE-02",
-      "priority": "P2",
-      "owner": "",
-      "estimate": "2h",
+      "priority": "P3",
+      "owner": null,
+      "estimate": "-",
       "labels": [
-        "type: feature",
-        "area: frontend"
+        "type: feature"
       ],
       "title": "Frontend: nối màn admin gian hàng / sự kiện / hồ sơ với API thật",
       "depends_on": [
@@ -453,35 +562,28 @@
         "FR-04",
         "FR-05"
       ],
-      "body": "Ai xong sớm thì nhận. Các màn này trong `AdminPortal.tsx` đang dùng mockData.\n"
+      "replaces": [
+        "FE-02"
+      ],
+      "stretch": true,
+      "body": "Để sau buổi demo 22/09. Chỉ tạo issue khi chạy workflow với `include_stretch = true`."
     },
     {
       "id": "NFR-01",
       "priority": "P3",
       "owner": "A",
-      "estimate": "1h",
+      "estimate": "-",
       "labels": [
         "type: feature",
-        "area: backend",
         "part: core"
       ],
-      "title": "Bảo vệ /api/admin/** bằng header X-Admin-Key (tùy chọn)",
-      "depends_on": [
-        "DEVOPS-01"
-      ],
-      "body": "Mentor không tính login; làm sau deadline. Env `ADMIN_API_KEY` trống → tắt kiểm tra.\n\n---\n**Definition of Done (mọi task API)**\n- [ ] Nhánh riêng `feat/<số-issue>-...`, PR có `Closes #<số-issue>`\n- [ ] Code nằm đúng thư mục module, theo lớp routes → controller → service (docs/02 mục Quy ước)\n- [ ] Body/query kiểm tra bằng zod; lỗi trả JSON chuẩn `{ error, code, details? }`\n- [ ] Có request mẫu trong `http/<module>.http` và mô tả endpoint trong `<module>.openapi.ts`\n- [ ] `npm run check` xanh; đã tự test bằng file .http hoặc trang `/api-docs.html`\n- [ ] Người làm tự giải thích được luồng request và lý do thiết kế\n"
-    },
-    {
-      "id": "CLEAN-01",
-      "priority": "P3",
-      "owner": "A",
-      "estimate": "0.5h",
-      "labels": [
-        "type: chore"
-      ],
-      "title": "Dọn dẹp sau demo: dev.db, dependency thừa, nhánh cũ",
+      "title": "Bảo vệ /api/admin/** (X-Admin-Key hoặc đăng nhập)",
       "depends_on": [],
-      "body": "- [ ] `git rm --cached prisma/dev.db`, bỏ dependency không dùng (`@supabase/supabase-js`...)\n- [ ] Xóa nhánh `webadmin`, `agents/*` sau khi xác nhận không cần\n- [ ] Chuyển từ `prisma db push` sang `prisma migrate`\n"
+      "replaces": [
+        "NFR-01"
+      ],
+      "stretch": true,
+      "body": "Để sau buổi demo 22/09. Chỉ tạo issue khi chạy workflow với `include_stretch = true`."
     }
   ]
 }

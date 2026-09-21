@@ -17,7 +17,7 @@ body:
     id: module
     attributes:
       label: Module
-      options: ["core", "booths", "venues", "assets", "events", "proposals", "heritages", "qr", "feedbacks", "frontend", "khác"]
+      options: ["core", "database (prisma/schema)", "booths", "venues", "assets", "events", "proposals", "heritages", "qr", "feedbacks", "organizers (đăng ký tổ chức)", "frontend", "khác"]
     validations:
       required: true
   - type: textarea
