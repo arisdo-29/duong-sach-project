@@ -11,11 +11,10 @@ git clone https://github.com/arisdo-29/duong-sach-project.git
 ```
 Repo có `.gitattributes` để thống nhất kiểu xuống dòng → hết lỗi "cả file bị đổi" khi Windows và macOS cùng sửa.
 
-## 2. Dọn repo trước khi bắt đầu (trưởng nhóm, 15 phút)
-1. PR đang mở từ nhánh `webadmin` (1 commit sửa `mockData.ts`, nhánh này từng merge rồi revert): hỏi người viết còn cần không → cần thì mở PR mới từ `main`, không thì **Close**.
-2. Nhánh `agents/update-og-image-metadata` là nhánh do AI agent tạo, đã nằm trong `main` → xóa.
-3. **Settings → Branches → Add rule** cho `main`: *Require a pull request before merging* (1 approval), *Require status checks: CI*. Từ đây không ai push thẳng `main` được.
-4. **Settings → General → Pull Requests**: chỉ bật *Allow squash merging*, bật *Automatically delete head branches*.
+## 2. Dọn repo (trưởng nhóm, đã làm 19/09 – kiểm tra lại)
+1. **Settings → Branches** cho `main`: *Require a pull request before merging*, *Require status checks: CI*. Không ai push thẳng `main`.
+2. **Settings → General → Pull Requests**: bật *Allow squash merging*, bật *Automatically delete head branches*.
+3. Nhánh cũ đã merge (`chore/5-setup-core`, `feat/14-…`, `feat/15-…`, `feat/16-…`, `feat/29-…`, `feat/30-…`, `chore/playwright-e2e-setup`) và `connect_gemini_github`: hỏi chủ nhánh rồi xóa (CLEAN-02).
 
 ## 3. Mô hình nhánh: GitHub Flow
 
@@ -36,7 +35,7 @@ gitGraph
   merge feat/12-proposals-view id: "squash #12"
 ```
 
-- `main` luôn chạy được và **tự deploy lên Vercel**.
+- `main` luôn chạy được (`npm run check` xanh, `db push` + `seed` chạy được trên SQL Server local).
 - Mỗi issue = một nhánh ngắn (vài giờ), tách từ `main` mới nhất.
 - Tên nhánh `<loại>/<số-issue>-<mô-tả-ngắn>`: `feat/7-booths-crud`, `fix/15-feedback-filter`, `chore/1-setup`, `docs/20-demo`. Có số issue ở đầu → nhãn trạng thái của issue tự cập nhật.
 
@@ -66,7 +65,7 @@ Commit nhỏ, mỗi commit một ý, commit **sau khi** `npm run check` xanh.
 | 6. Mở PR | `gh pr create --fill` hoặc trên web | GitHub → Create Pull Request | Extension GitHub Pull Requests |
 | 7. Sau review | Trưởng nhóm bấm **Squash and merge** | | |
 
-Luôn **xem lại danh sách file trước khi commit**: không có `.env`, `node_modules/`, `dist/`, `prisma/dev.db`, file của module khác.
+Luôn **xem lại danh sách file trước khi commit**: không có `.env`, `node_modules/`, `dist/`, file `.db`/`.mdf`/`.bak`, file của module khác.
 
 ## 6. Cập nhật nhánh khi `main` đã thay đổi
 Làm mỗi khi có PR khác vừa merge và **bắt buộc trước khi mở PR**:
@@ -75,13 +74,48 @@ git fetch origin
 git merge origin/main        # không dùng rebase, không force push
 npm install                  # nếu package.json vừa đổi
 npx prisma generate          # nếu schema.prisma vừa đổi
+npx prisma db push           # nếu schema.prisma vừa đổi (đổi lớn: --force-reset rồi npm run seed)
 npm run check
 git push
 ```
 
+### Nhánh tích hợp đợt 22/09 (chỉ dùng một lần)
+Đổi schema sang khuôn mentor làm code phần 3 cũ không biên dịch được, nên **DB-02, CORE-01, FR-07, FR-08, FR-09 dùng chung một nhánh** và vào `main` bằng **một PR**:
+
+```mermaid
+gitGraph
+  commit id: "main (DB-01)"
+  branch chore/N-schema-moi
+  commit id: "A: schema + seed (DB-02)"
+  commit id: "A: helper (CORE-01)"
+  branch feat/9-venues
+  commit id: "C: venues"
+  checkout chore/N-schema-moi
+  commit id: "B: FR-07"
+  commit id: "B: FR-08, FR-09"
+  checkout main
+  merge chore/N-schema-moi id: "squash PR tích hợp"
+  checkout feat/9-venues
+  merge main id: "C: merge origin/main"
+  checkout main
+  merge feat/9-venues id: "squash FR-02"
+```
+
+1. **A** tạo nhánh `chore/<số DB-02>-schema-moi` từ `main`, push commit schema + seed, rồi commit helper (CORE-01).
+2. **B** không tạo nhánh riêng: `git fetch && git switch chore/<số>-schema-moi`, commit FR-07/08/09 lên chính nhánh này. A và B sửa **file khác nhau** (A: `prisma/`, `server/core/`, `campuses`, `package*.json`; B: `heritages`, `qr`, `feedbacks`, `public`, `http/` của B) nên không đụng nhau. Trước mỗi lần push: `git pull`.
+3. **C, D** tạo nhánh việc của mình **từ nhánh tích hợp**: `git switch chore/<số>-schema-moi && git pull && git switch -c feat/<số>-venues-crud`. Khi nhánh tích hợp có commit mới cần dùng: `git merge origin/chore/<số>-schema-moi`.
+4. A mở **một PR** từ nhánh tích hợp vào `main`, mô tả ghi `Closes #DB-02 Closes #CORE-01 Closes #FR-07 Closes #FR-08 Closes #FR-09` (thay bằng số thật). Squash merge.
+5. Sau khi PR tích hợp merge, **C, D** chạy `git fetch && git merge origin/main`. Nếu conflict ở file **không phải của mình** (`prisma/`, `server/core/`, `package*.json`, module của B): lấy bản của `main`:
+   ```bash
+   git checkout --theirs prisma/schema.prisma server/core/ package.json package-lock.json
+   npm install && npx prisma generate
+   git add . && git commit
+   ```
+   Rồi mở PR vào `main` như bình thường (PR chỉ còn file module của mình).
+
 ## 7. Tránh xung đột
 1. **Mỗi người chỉ sửa thư mục module của mình** (bảng chủ sở hữu trong AGENTS.md).
-2. **File dùng chung chỉ trưởng nhóm sửa:** `prisma/schema.prisma`, `server/routes.ts`, `server/core/*`, `server/app.ts`, `package.json`, `package-lock.json`, `vite.config.ts`, `vercel.json`, `AGENTS.md`. Cần đổi → nhắn A.
+2. **File dùng chung chỉ trưởng nhóm sửa:** `prisma/schema.prisma`, `prisma/seed.ts`, `server/routes.ts`, `server/core/*`, `server/app.ts`, `package.json`, `package-lock.json`, `vite.config.ts`, `vercel.json`, `.env.example`, `AGENTS.md`, `CLAUDE.md`, `docs/`. Cần đổi → nhắn A.
 3. **Không cài thư viện riêng lẻ.** `npm install xyz` đổi `package-lock.json` → xung đột khó gỡ. Cần thư viện → A cài một lần cho cả nhóm.
 4. PR nhỏ, merge thường xuyên (mỗi 2–3 giờ). Nhánh sống càng lâu càng dễ xung đột.
 5. Không format lại cả file (tắt "Reformat code" khi commit trong IntelliJ) → chỉ đổi đúng dòng cần đổi.
@@ -106,7 +140,7 @@ Git đánh dấu trong file:
 |---|---|
 | Lỡ commit trên `main` (chưa push) | `git switch -c feat/x-ten` (commit đi theo nhánh mới) → `git branch -f main origin/main` (đưa `main` về như trên GitHub) |
 | Muốn bỏ commit cuối (chưa push) | `git reset --soft HEAD~1` (giữ nguyên code) |
-| Lỡ commit file không nên (`.env`) | `git rm --cached .env` → commit. Nếu **đã push mật khẩu**: reset mật khẩu DB ngay trên Neon (Roles → Reset password) |
+| Lỡ commit file không nên (`.env`) | `git rm --cached .env` → commit. Nếu **đã push mật khẩu**: đổi mật khẩu login SQL Server ngay (`ALTER LOGIN sa WITH PASSWORD = '...'`) và báo trưởng nhóm |
 | Sửa lung tung muốn về trạng thái commit gần nhất | `git restore .` (mất thay đổi chưa commit!) |
 | Push bị từ chối (non-fast-forward) | `git pull` rồi push lại. **Không** `--force` |
 

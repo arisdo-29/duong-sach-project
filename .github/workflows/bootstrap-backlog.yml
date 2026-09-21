@@ -1,12 +1,21 @@
-# Tạo nhãn + milestone + issue từ .github/backlog.json.
+# Tạo nhãn + milestone + issue từ .github/backlog.json; tùy chọn đóng issue đợt cũ bị thay thế.
 # Cách chạy: tab Actions → "Bootstrap backlog" → Run workflow. Chạy lại bao nhiêu lần cũng được.
+# Lần đầu nên bật dry_run để xem log trước (xem docs/07-huong-dan-nhom-truong.md, bước 2).
 name: "🗂️ Bootstrap backlog (nhãn + milestone + issue)"
 
 on:
   workflow_dispatch:
     inputs:
       dry_run:
-        description: "Chạy thử: chỉ in ra log, không tạo gì"
+        description: "Chạy thử: chỉ in ra log, không tạo/đóng gì"
+        type: boolean
+        default: true
+      close_legacy:
+        description: "Đóng issue đợt cũ bị thay thế (trường replaces), kèm comment trỏ sang issue mới"
+        type: boolean
+        default: false
+      include_stretch:
+        description: "Tạo cả việc P3 (stretch): FR-12, FR-13, FR-14, FE-02, NFR-01"
         type: boolean
         default: false
 
@@ -22,6 +31,8 @@ jobs:
       - uses: actions/github-script@v8
         env:
           DRY_RUN: ${{ inputs.dry_run }}
+          CLOSE_LEGACY: ${{ inputs.close_legacy }}
+          INCLUDE_STRETCH: ${{ inputs.include_stretch }}
         with:
           script: |
             const run = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/bootstrap-backlog.cjs`);
