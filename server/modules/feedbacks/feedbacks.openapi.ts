@@ -1,6 +1,17 @@
 import type { OpenApiPaths } from '../../core/openapi.js';
 import { FEEDBACK_STATUSES } from './feedbacks.schema.js';
 
+const heritageBriefSchema = {
+  type: 'object',
+  nullable: true,
+  properties: {
+    id: { type: 'string', format: 'uuid' },
+    slug: { type: 'string' },
+    name_vi: { type: 'string' },
+    name_en: { type: 'string' },
+  },
+};
+
 const feedbackSchema = {
   type: 'object',
   properties: {
@@ -11,7 +22,8 @@ const feedbackSchema = {
     createdAt: { type: 'string', example: '2026-09-19 14:30' },
     scope: { type: 'string', example: 'Nhà thờ Đức Bà Sài Gòn' },
     contact: { type: 'string', description: 'Rỗng nếu du khách không để lại liên hệ' },
-    heritage_id: { type: 'string', nullable: true },
+    heritage_id: { type: 'string', nullable: true, description: 'NULL nếu là góp ý chung "Toàn Đường Sách"' },
+    heritage: heritageBriefSchema,
   },
 };
 

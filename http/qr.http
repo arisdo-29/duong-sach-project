@@ -23,3 +23,10 @@ GET {{host}}/api/admin/heritages/khong-co-that-12345/qr
 
 ### 7. Ca lỗi 404 – di sản đã bị xóa mềm (ví dụ: cho-ben-thanh-mau-test)
 GET {{host}}/api/admin/heritages/cho-ben-thanh-mau-test/qr
+
+### 8. Test đổi domain không cần restart server (thủ công)
+# Mở Prisma Studio (npx prisma studio) hoặc SSMS, sửa Value của bản ghi
+# WebsiteAttributes.Name = 'QR_BASE_URL' (ví dụ đổi thành http://192.168.1.10:5173),
+# rồi gọi lại request #1 ngay lập tức (không restart server) -> "url" phải đổi theo
+# domain mới. Đổi Value về rỗng -> "url" quay lại dùng PUBLIC_BASE_URL.
+GET {{host}}/api/admin/heritages/nha-tho-duc-ba/qr

@@ -45,7 +45,17 @@ export const publicPaths: OpenApiPaths = {
                       createdAt: { type: 'string', example: '2026-09-20 09:15' },
                       scope: { type: 'string' },
                       contact: { type: 'string' },
-                      heritage_id: { type: 'string', nullable: true },
+                      heritage_id: { type: 'string', nullable: true, description: 'NULL nếu là góp ý chung "Toàn Đường Sách"' },
+                      heritage: {
+                        type: 'object',
+                        nullable: true,
+                        properties: {
+                          id: { type: 'string', format: 'uuid' },
+                          slug: { type: 'string' },
+                          name_vi: { type: 'string' },
+                          name_en: { type: 'string' },
+                        },
+                      },
                     },
                   },
                 },
