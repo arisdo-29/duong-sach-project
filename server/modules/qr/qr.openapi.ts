@@ -6,8 +6,9 @@ export const qrPaths: OpenApiPaths = {
       tags: ['Di sản'],
       summary: 'Sinh mã QR check-in của di sản',
       description:
-        'Ảnh PNG dạng Base64. URL trong QR dựng theo **slug** và domain lấy từ cấu hình ' +
-        '`PUBLIC_BASE_URL`, nên QR in ra không bao giờ gãy link.',
+        'Ảnh PNG dạng Base64. URL trong QR dựng theo **slug** và domain đọc từ ' +
+        '`WebsiteAttributes.QR_BASE_URL` (đổi qua SSMS thấy hiệu lực ngay, không cần deploy lại); ' +
+        'rỗng thì dự phòng biến môi trường `PUBLIC_BASE_URL`, nên QR in ra không bao giờ gãy link.',
       parameters: [
         {
           name: 'id',
