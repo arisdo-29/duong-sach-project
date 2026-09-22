@@ -103,8 +103,8 @@ export async function create(input: CreateFeedbackInput) {
     const found = await prisma.heritage.findFirst({
       where: {
         OR: [
-          { name_vi: { contains: input.scope, mode: 'insensitive' } },
-          { name_en: { contains: input.scope, mode: 'insensitive' } },
+          { name_vi: { contains: input.scope } },
+          { name_en: { contains: input.scope } },
           { slug: input.scope },
         ],
       },
