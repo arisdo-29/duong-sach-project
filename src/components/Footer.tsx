@@ -141,7 +141,7 @@ export function Footer() {
           </div>
 
           <div className="mt-10 pt-6 border-t border-white/10">
-            <div className="flex justify-center gap-3 text-xs text-cream-100/40"><p>{t('footerRights')}</p><button onClick={() => navigate('admin')} className="hover:text-cream-100 underline">Cổng quản trị</button></div>
+            <div className="flex justify-center gap-3 text-xs text-cream-100/40"><p>{t('footerRights')}</p><button onClick={() => navigate('admin')} className="hover:text-cream-100 underline">{t('footerAdminPortal')}</button></div>
           </div>
         </div>
       </footer>

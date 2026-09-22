@@ -28,3 +28,13 @@ export async function update(req: RefRequest, res: Response): Promise<void> {
 export async function remove(req: RefRequest, res: Response): Promise<void> {
   res.status(200).json(await service.remove(req.params.id));
 }
+
+/** GET /api/heritages – công khai, bản rút gọn không kèm _count.feedbacks (FR-10) */
+export async function listPublic(_req: Request, res: Response): Promise<void> {
+  res.status(200).json(await service.listPublic());
+}
+
+/** GET /api/heritages/:id – công khai, id là UUID hoặc slug (FR-10) */
+export async function getPublic(req: RefRequest, res: Response): Promise<void> {
+  res.status(200).json(await service.getByIdOrSlug(req.params.id));
+}

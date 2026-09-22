@@ -1,9 +1,23 @@
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import axios from 'axios';
 import type { Lang } from './translations';
 import { t as translate, type TranslationKey } from './translations';
-import { heritageSites } from '@/data/mockData';
 
 export type ScreenId = 'home' | 'stalls' | 'events' | 'events-proposal' | 'admin' | 'map' | 'heritage' | 'feedback' | 'chatbot';
+
+/** Khớp đúng DTO của GET /api/heritages (server/modules/heritages/heritages.service.ts → format()) */
+export interface HeritageSummary {
+  id: string;
+  slug: string;
+  name_vi: string;
+  name_en: string;
+  content_vi: string;
+  content_en: string;
+  image_url: string;
+  source: string;
+  created_at: string;
+  updated_at: string;
+}
 
 interface AppContextValue {
   lang: Lang;
@@ -14,11 +28,16 @@ interface AppContextValue {
   navigate: (screen: ScreenId) => void;
   selectedPoint: number | null;
   setSelectedPoint: (id: number | null) => void;
-  selectedHeritageId: number | null;
-  setSelectedHeritageId: (id: number | null) => void;
+  selectedHeritageSlug: string | null;
+  setSelectedHeritageSlug: (slug: string | null) => void;
   /** Slug trên URL không khớp di sản nào – màn di sản hiện thông báo không tìm thấy */
   heritageNotFoundSlug: string | null;
   clearHeritageNotFound: () => void;
+  /** Nguồn dữ liệu di sản dùng chung cho HeritageLanding.tsx và FeedbackForm.tsx (GET /api/heritages) */
+  heritages: HeritageSummary[];
+  heritagesLoading: boolean;
+  heritagesError: boolean;
+  reloadHeritages: () => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -36,38 +55,29 @@ const HERITAGE_PATH = '/di-san';
 
 interface RouteState {
   screen: ScreenId;
-  heritageId: number | null;
-  notFoundSlug: string | null;
+  /**
+   * Slug đọc thẳng từ URL, chưa chắc đã khớp di sản nào (dữ liệu đang tải hoặc slug sai).
+   * Việc xác nhận "không tìm thấy" chờ heritages tải xong (xem effect bên dưới).
+   */
+  heritageSlug: string | null;
 }
 
-/** Đọc URL hiện tại ra trạng thái màn hình */
+/** Đọc URL hiện tại ra trạng thái màn hình. Không tra cứu dữ liệu ở đây vì heritages tải bất đồng bộ. */
 function readRoute(pathname: string): RouteState {
   const segments = pathname.split('/').filter(Boolean);
 
   if (segments[0] !== 'di-san') {
-    return { screen: 'home', heritageId: null, notFoundSlug: null };
+    return { screen: 'home', heritageSlug: null };
   }
 
   const slug = segments[1];
-
-  // /di-san hoặc /di-san/ → danh sách di sản
-  if (!slug) {
-    return { screen: 'heritage', heritageId: null, notFoundSlug: null };
-  }
-
-  const site = heritageSites.find((item) => item.slug === decodeURIComponent(slug));
-
-  return site
-    ? { screen: 'heritage', heritageId: site.id, notFoundSlug: null }
-    : { screen: 'heritage', heritageId: null, notFoundSlug: decodeURIComponent(slug) };
+  return { screen: 'heritage', heritageSlug: slug ? decodeURIComponent(slug) : null };
 }
 
 /** Dựng URL tương ứng với màn hình – nguồn sự thật duy nhất cho đường dẫn */
-function pathFor(screen: ScreenId, heritageId: number | null): string {
+function pathFor(screen: ScreenId, heritageSlug: string | null): string {
   if (screen !== 'heritage') return '/';
-
-  const site = heritageSites.find((item) => item.id === heritageId);
-  return site ? `${HERITAGE_PATH}/${site.slug}` : HERITAGE_PATH;
+  return heritageSlug ? `${HERITAGE_PATH}/${heritageSlug}` : HERITAGE_PATH;
 }
 
 /** Chỉ đẩy vào history khi đường dẫn thật sự đổi, tránh sinh mục trùng */
@@ -84,8 +94,40 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>('vi');
   const [screen, setScreen] = useState<ScreenId>(initialRoute.screen);
   const [selectedPoint, setSelectedPoint] = useState<number | null>(null);
-  const [selectedHeritageId, setSelectedHeritageIdState] = useState<number | null>(initialRoute.heritageId);
-  const [heritageNotFoundSlug, setHeritageNotFoundSlug] = useState<string | null>(initialRoute.notFoundSlug);
+  const [selectedHeritageSlug, setSelectedHeritageSlugState] = useState<string | null>(initialRoute.heritageSlug);
+  const [heritageNotFoundSlug, setHeritageNotFoundSlug] = useState<string | null>(null);
+
+  const [heritages, setHeritages] = useState<HeritageSummary[]>([]);
+  const [heritagesLoading, setHeritagesLoading] = useState(true);
+  const [heritagesError, setHeritagesError] = useState(false);
+
+  const reloadHeritages = useCallback(() => {
+    setHeritagesLoading(true);
+    setHeritagesError(false);
+    axios
+      .get<HeritageSummary[]>('/api/heritages')
+      .then((res) => setHeritages(res.data))
+      .catch((err) => {
+        console.error('Không tải được danh sách di sản:', err);
+        setHeritagesError(true);
+      })
+      .finally(() => setHeritagesLoading(false));
+  }, []);
+
+  useEffect(() => {
+    reloadHeritages();
+  }, [reloadHeritages]);
+
+  // Sau khi heritages tải xong: nếu slug trên URL không khớp di sản nào → báo "không tìm thấy".
+  // Khi lỗi mạng thì không kết luận "không tìm thấy" để tránh báo sai.
+  useEffect(() => {
+    if (heritagesLoading || heritagesError || !selectedHeritageSlug) return;
+    const exists = heritages.some((item) => item.slug === selectedHeritageSlug);
+    if (!exists) {
+      setSelectedHeritageSlugState(null);
+      setHeritageNotFoundSlug(selectedHeritageSlug);
+    }
+  }, [heritages, heritagesLoading, heritagesError, selectedHeritageSlug]);
 
   const toggleLang = () => setLang((prev) => (prev === 'vi' ? 'en' : 'vi'));
   const t = (key: TranslationKey) => translate(key, lang);
@@ -94,21 +136,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setScreen(target);
     setHeritageNotFoundSlug(null);
     // Rời màn di sản thì bỏ chọn để lần sau quay lại là danh sách
-    const heritageId = target === 'heritage' ? selectedHeritageId : null;
-    if (target !== 'heritage') setSelectedHeritageIdState(null);
-    pushPath(pathFor(target, heritageId));
+    const heritageSlug = target === 'heritage' ? selectedHeritageSlug : null;
+    if (target !== 'heritage') setSelectedHeritageSlugState(null);
+    pushPath(pathFor(target, heritageSlug));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const setSelectedHeritageId = (id: number | null) => {
-    setSelectedHeritageIdState(id);
+  const setSelectedHeritageSlug = (slug: string | null) => {
+    setSelectedHeritageSlugState(slug);
     setHeritageNotFoundSlug(null);
-    pushPath(pathFor('heritage', id));
+    pushPath(pathFor('heritage', slug));
   };
 
   const clearHeritageNotFound = () => {
     setHeritageNotFoundSlug(null);
-    setSelectedHeritageIdState(null);
+    setSelectedHeritageSlugState(null);
     pushPath(HERITAGE_PATH);
   };
 
@@ -117,8 +159,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const handlePopState = () => {
       const route = readRoute(window.location.pathname);
       setScreen(route.screen);
-      setSelectedHeritageIdState(route.heritageId);
-      setHeritageNotFoundSlug(route.notFoundSlug);
+      setSelectedHeritageSlugState(route.heritageSlug);
+      setHeritageNotFoundSlug(null);
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -136,10 +178,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
         navigate,
         selectedPoint,
         setSelectedPoint,
-        selectedHeritageId,
-        setSelectedHeritageId,
+        selectedHeritageSlug,
+        setSelectedHeritageSlug,
         heritageNotFoundSlug,
         clearHeritageNotFound,
+        heritages,
+        heritagesLoading,
+        heritagesError,
+        reloadHeritages,
       }}
     >
       {children}

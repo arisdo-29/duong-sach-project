@@ -15,29 +15,43 @@ import { PNG } from 'pngjs';
  * Kịch bản h (giải mã ảnh QR) là quan trọng nhất: trước đây khối QR chỉ là
  * họa tiết CSS, quét không ra gì. Test này đọc ảnh QR render trên trang rồi
  * giải mã, nên nếu ai đó lỡ thay lại bằng ảnh giả thì test sẽ đỏ.
+ *
+ * Từ khi HeritageLanding.tsx đọc dữ liệu qua GET /api/heritages (thay vì
+ * src/data/mockData.ts), danh sách/số lượng di sản để so sánh trong test này
+ * cũng phải lấy từ API thật, không còn parse mockData.ts. Vì test.describe
+ * bên dưới dựng cây test một cách đồng bộ (không đợi được hook bất đồng bộ),
+ * e2e/global-setup.ts đã gọi GET /api/heritages trước và ghi kết quả ra file
+ * JSON tạm — ở đây chỉ đọc lại đồng bộ. Cần SQL Server local đã seed
+ * (`npx prisma db push && npm run seed`, xem docs/05) thì file này mới có dữ liệu.
  */
 
 const DI_SAN = '/di-san';
 
-/** Đọc slug và tên thật từ mockData để test bám nguồn dữ liệu, không chép cứng */
-function docHeritageSites(): { id: number; slug: string; nameVi: string }[] {
-  const duongDan = fileURLToPath(new URL('../src/data/mockData.ts', import.meta.url));
-  const noiDung = readFileSync(duongDan, 'utf8');
-  const doan = noiDung.slice(noiDung.indexOf('export const heritageSites'));
+interface HeritageSummary {
+  id: string;
+  slug: string;
+  name_vi: string;
+}
 
-  return [...doan.matchAll(/id: (\d+),\s*[\r\n]+\s*slug: '([^']+)',\s*[\r\n]+\s*nameVi: '([^']+)'/g)].map(
-    (m) => ({ id: Number(m[1]), slug: m[2], nameVi: m[3] })
-  );
+/** Đọc danh sách di sản thật do e2e/global-setup.ts ghi sẵn ra file cache */
+function docHeritageSites(): HeritageSummary[] {
+  const duongDan = fileURLToPath(new URL('./.heritages-cache.json', import.meta.url));
+  const noiDung = readFileSync(duongDan, 'utf8');
+  return JSON.parse(noiDung);
 }
 
 const heritageSites = docHeritageSites();
 const TONG_SO_DI_SAN = heritageSites.length;
 
-/** Ba di sản đại diện cho ba tình huống khác nhau */
+/** Ba di sản đại diện: đầu, giữa và cuối danh sách thật từ API */
 const DI_SAN_KIEM_TRA = [
-  { slug: 'nha-tho-duc-ba', ten: 'Nhà thờ Đức Bà', ghiChu: 'có trong prisma/seed.ts' },
-  { slug: 'chua-ngoc-hoang', ten: 'Chùa Ngọc Hoàng', ghiChu: 'chỉ có trong mockData' },
-  { slug: heritageSites[heritageSites.length - 1].slug, ten: heritageSites[heritageSites.length - 1].nameVi, ghiChu: 'phần tử cuối danh sách' },
+  { slug: heritageSites[0].slug, ten: heritageSites[0].name_vi, ghiChu: 'phần tử đầu danh sách' },
+  {
+    slug: heritageSites[Math.floor(TONG_SO_DI_SAN / 2)].slug,
+    ten: heritageSites[Math.floor(TONG_SO_DI_SAN / 2)].name_vi,
+    ghiChu: 'phần tử giữa danh sách',
+  },
+  { slug: heritageSites[TONG_SO_DI_SAN - 1].slug, ten: heritageSites[TONG_SO_DI_SAN - 1].name_vi, ghiChu: 'phần tử cuối danh sách' },
 ];
 
 /** Đọc ảnh QR đang render trên trang rồi giải mã ra chuỗi mà nó mã hóa */
@@ -123,8 +137,8 @@ test.describe('Điều hướng di sản theo URL', () => {
     await the.click();
 
     await page.waitForURL(`**${DI_SAN}/*`);
-    const mongDoi = heritageSites.find((h) => h.nameVi === ten);
-    expect(mongDoi, `không tìm thấy di sản tên "${ten}" trong mockData`).toBeTruthy();
+    const mongDoi = heritageSites.find((h) => h.name_vi === ten);
+    expect(mongDoi, `không tìm thấy di sản tên "${ten}" trong danh sách API`).toBeTruthy();
     expect(new URL(page.url()).pathname).toBe(`${DI_SAN}/${mongDoi!.slug}`);
   });
 
@@ -156,7 +170,7 @@ test.describe('Điều hướng di sản theo URL', () => {
     await expect(page.locator('button.card-hover')).toHaveCount(TONG_SO_DI_SAN);
   });
 
-  test('mọi slug trong mockData đều duy nhất', async () => {
+  test('mọi slug trong danh sách API đều duy nhất', async () => {
     const slugs = heritageSites.map((h) => h.slug);
     expect(new Set(slugs).size, 'có slug bị trùng nên QR sẽ mở nhầm di sản').toBe(slugs.length);
   });

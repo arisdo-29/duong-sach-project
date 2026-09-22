@@ -1,11 +1,10 @@
 import { useState, type FormEvent } from 'react';
-import { Activity, ArrowLeft, BookOpen, Building2, CalendarDays, Check, ClipboardList, FileText, LayoutDashboard, LogOut, Menu, MessageSquare, Plus, QrCode, Send, ShieldCheck, Store } from 'lucide-react';
+import { Activity, ArrowLeft, BookOpen, Building2, CalendarDays, Check, ClipboardList, FileText, LayoutDashboard, LogOut, Menu, MessageSquare, Plus, Send, ShieldCheck, Store } from 'lucide-react';
 import { useApp } from '@/i18n/AppContext';
 import HeritageManager from '@/components/Admin/HeritageManager';
-import HeritageQR from '@/components/Admin/HeritageQR';
 import FeedbackTable from '@/components/Admin/FeedbackTable';
 
-type View = 'dashboard' | 'heritages' | 'events' | 'heritage-qr' | 'feedbacks' | 'content' | 'audit';
+type View = 'dashboard' | 'heritages' | 'events' | 'feedbacks' | 'content' | 'audit';
 type Status = 'pending' | 'approved' | 'published' | 'needs-info' | 'rejected';
 type Proposal = { id: number; date: string; title: string; organizer: string; schedule: string; location: string; equipment: string; status: Status; conflict?: string };
 const initial: Proposal[] = [
@@ -30,7 +29,6 @@ export function AdminPortal() {
   const nav = [
     { id: 'dashboard' as View, text: 'Tổng quan', Icon: LayoutDashboard },
     { id: 'heritages' as View, text: 'Quản lý Di sản (CRUD)', Icon: Building2 },
-    { id: 'heritage-qr' as View, text: 'Mã QR Di sản', Icon: QrCode },
     { id: 'feedbacks' as View, text: 'Quản lý Góp ý', Icon: MessageSquare },
     { id: 'events' as View, text: 'Phê duyệt sự kiện', Icon: CalendarDays },
     { id: 'content' as View, text: 'Quản lý nội dung', Icon: FileText },
@@ -40,12 +38,6 @@ export function AdminPortal() {
     {view==='dashboard'&&<Dashboard pending={pending} approved={approved} conflicts={conflicts} schedule={monthProposals} events={()=>setView('events')}/>}
     {view==='heritages'&&<HeritageManager />}
     {view==='events'&&<Review data={proposals} change={change}/>}
-    {view==='heritage-qr'&&(
-      <div className="space-y-6">
-        <div><h2 className="text-2xl font-bold">Mã QR Di sản</h2><p className="text-slate-500 mt-1">Tạo và tải mã QR check-in dẫn trực tiếp đến landing page di sản đô thị.</p></div>
-        <HeritageQR />
-      </div>
-    )}
     {view==='feedbacks'&&(
       <div className="space-y-6">
         <div><h2 className="text-2xl font-bold">Quản lý Góp ý</h2><p className="text-slate-500 mt-1">Theo dõi, duyệt và cập nhật trạng thái các ý kiến đóng góp từ du khách.</p></div>
