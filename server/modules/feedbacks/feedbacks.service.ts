@@ -1,45 +1,58 @@
-import type { Feedback, Heritage, Prisma } from '@prisma/client';
+import type { Feedback, Item, Prisma } from '@prisma/client';
 import { prisma } from '../../db.js';
-import { BadRequestError, NotFoundError } from '../../core/errors.js';
+import { NotFoundError } from '../../core/errors.js';
+import { getItemCategoryId } from '../../core/items.js';
 import type { CreateFeedbackInput, FeedbackStatus, ListFeedbackQuery } from './feedbacks.schema.js';
 
+/** Di sản = Item thuộc ItemCategory có Slug = 'di-san' */
+const DI_SAN_SLUG = 'di-san';
+
 /** Di sản rút gọn đính kèm mỗi góp ý */
-type HeritageBrief = Pick<Heritage, 'id' | 'slug' | 'name_vi' | 'name_en'>;
+type ItemBrief = Pick<Item, 'Id' | 'Slug' | 'Name' | 'NameEng'>;
+
+const itemBriefSelect = {
+  select: { Id: true, Slug: true, Name: true, NameEng: true },
+} as const;
+
+/** Chuyển giờ UTC lưu trong DB sang chuỗi "YYYY-MM-DD HH:mm" theo giờ Việt Nam (UTC+7) */
+function formatVNDateTime(date: Date): string {
+  const vn = new Date(date.getTime() + 7 * 60 * 60 * 1000);
+  return vn.toISOString().replace('T', ' ').slice(0, 16);
+}
 
 /**
- * Định dạng trả về cho FeedbackTable.tsx – giữ nguyên như bản cũ:
- * createdAt là chuỗi "YYYY-MM-DD HH:mm", scope là tên di sản, contact là chuỗi rỗng
- * khi du khách không để lại thông tin.
+ * Định dạng trả về cho FeedbackTable.tsx – giữ nguyên hợp đồng snake_case cũ:
+ * createdAt là chuỗi "YYYY-MM-DD HH:mm" theo giờ Việt Nam, scope là tên di sản hoặc
+ * "Toàn Đường Sách", contact là chuỗi rỗng khi du khách không để lại thông tin.
  */
-function format(feedback: Feedback & { heritage?: HeritageBrief | null }) {
+function format(feedback: Feedback & { Item?: ItemBrief | null }) {
   return {
-    id: feedback.id,
-    content: feedback.content,
-    rating: feedback.rating,
-    status: feedback.status,
-    createdAt: feedback.created_at.toISOString().replace('T', ' ').slice(0, 16),
-    scope: feedback.heritage?.name_vi || 'Toàn khu vực',
-    contact: feedback.user_contact || '',
-    heritage_id: feedback.heritage_id,
-    heritage: feedback.heritage ?? null,
+    id: feedback.Id,
+    content: feedback.Content,
+    rating: feedback.Rating,
+    status: feedback.Status,
+    createdAt: formatVNDateTime(feedback.DateCreated),
+    scope: feedback.Item?.Name || 'Toàn Đường Sách',
+    contact: feedback.UserContact || '',
+    heritage_id: feedback.ItemId,
+    heritage: feedback.Item
+      ? { id: feedback.Item.Id, slug: feedback.Item.Slug, name_vi: feedback.Item.Name, name_en: feedback.Item.NameEng }
+      : null,
   };
 }
 
-const heritageBriefSelect = {
-  select: { id: true, slug: true, name_vi: true, name_en: true },
-} as const;
-
 /**
  * Danh sách góp ý cho màn quản trị. Các điều kiện lọc được kết hợp theo AND.
+ * `heritageId` nhận UUID, slug hoặc `general` (góp ý chung, ItemId NULL).
  */
 export async function list(query: ListFeedbackQuery) {
   const where: Prisma.FeedbackWhereInput = {};
 
-  if (query.status) where.status = query.status;
-  if (query.rating !== undefined) where.rating = query.rating;
+  if (query.status) where.Status = query.status;
+  if (query.rating !== undefined) where.Rating = query.rating;
 
   if (query.minRating !== undefined || query.maxRating !== undefined) {
-    where.rating = {
+    where.Rating = {
       ...(query.rating !== undefined ? { equals: query.rating } : {}),
       ...(query.minRating !== undefined ? { gte: query.minRating } : {}),
       ...(query.maxRating !== undefined ? { lte: query.maxRating } : {}),
@@ -47,19 +60,21 @@ export async function list(query: ListFeedbackQuery) {
   }
 
   if (query.heritageId === 'general') {
-    where.heritage_id = null;
+    where.ItemId = null;
   } else if (query.heritageId) {
-    where.heritage = {
+    const categoryId = await getItemCategoryId(DI_SAN_SLUG);
+    where.Item = {
       is: {
-        OR: [{ id: query.heritageId }, { slug: query.heritageId }],
+        ItemCategoryId: categoryId,
+        OR: [{ Id: query.heritageId }, { Slug: query.heritageId }],
       },
     };
   }
 
   const feedbacks = await prisma.feedback.findMany({
     where,
-    include: { heritage: heritageBriefSelect },
-    orderBy: { created_at: 'desc' },
+    include: { Item: itemBriefSelect },
+    orderBy: { DateCreated: 'desc' },
   });
 
   return feedbacks.map(format);
@@ -67,14 +82,14 @@ export async function list(query: ListFeedbackQuery) {
 
 /** Cập nhật trạng thái xử lý: PENDING → REVIEWED → RESOLVED */
 export async function updateStatus(id: string, status: FeedbackStatus) {
-  const existing = await prisma.feedback.findUnique({ where: { id } });
+  const existing = await prisma.feedback.findUnique({ where: { Id: id } });
 
   if (!existing) throw new NotFoundError('Không tìm thấy phản hồi cần cập nhật');
 
   const updated = await prisma.feedback.update({
-    where: { id },
-    data: { status },
-    include: { heritage: heritageBriefSelect },
+    where: { Id: id },
+    data: { Status: status },
+    include: { Item: itemBriefSelect },
   });
 
   return {
@@ -85,61 +100,60 @@ export async function updateStatus(id: string, status: FeedbackStatus) {
 
 /** Xóa một góp ý */
 export async function remove(id: string) {
-  const existing = await prisma.feedback.findUnique({ where: { id } });
+  const existing = await prisma.feedback.findUnique({ where: { Id: id } });
   if (!existing) throw new NotFoundError('Không tìm thấy phản hồi cần xóa');
 
-  await prisma.feedback.delete({ where: { id } });
+  await prisma.feedback.delete({ where: { Id: id } });
   return { message: 'Xóa phản hồi thành công', id };
 }
 
 /**
  * Tạo góp ý mới (dùng cho API public POST /api/feedbacks).
- * Du khách chọn phạm vi bằng tên di sản (`scope`) nên phải dò ngược ra heritage_id.
+ * Du khách chọn phạm vi bằng heritage_id hoặc tên di sản (`scope`); không khớp di sản
+ * nào (chưa xóa mềm) thì lưu ItemId = NULL, tức góp ý "Toàn Đường Sách" – không còn
+ * gán vào di sản đầu tiên như hành vi cũ (issue #17 đã bỏ, docs/01 mục 6 lỗi #5).
  */
 export async function create(input: CreateFeedbackInput) {
-  let targetHeritageId = input.heritage_id;
+  const categoryId = await getItemCategoryId(DI_SAN_SLUG);
+  let itemId: string | null = null;
 
-  if (!targetHeritageId && input.scope) {
-    const found = await prisma.heritage.findFirst({
+  if (input.heritage_id) {
+    const found = await prisma.item.findFirst({
       where: {
+        ItemCategoryId: categoryId,
+        Deleted: false,
+        OR: [{ Id: input.heritage_id }, { Slug: input.heritage_id }],
+      },
+    });
+    itemId = found?.Id ?? null;
+  }
+
+  if (!itemId && input.scope) {
+    const found = await prisma.item.findFirst({
+      where: {
+        ItemCategoryId: categoryId,
+        Deleted: false,
         OR: [
-          { name_vi: { contains: input.scope } },
-          { name_en: { contains: input.scope } },
-          { slug: input.scope },
+          { Name: { contains: input.scope } },
+          { NameEng: { contains: input.scope } },
+          { Slug: input.scope },
         ],
       },
     });
-    if (found) targetHeritageId = found.id;
-  }
-
-  // TODO(#17): FR-10 sẽ để heritage_id = null cho góp ý "Toàn Đường Sách".
-  // Hiện giữ hành vi cũ: gán vào di sản đầu tiên (docs/01 mục 6, lỗi #4).
-  if (!targetHeritageId) {
-    const defaultHeritage = await prisma.heritage.findFirst({ orderBy: { created_at: 'asc' } });
-    targetHeritageId = defaultHeritage?.id;
-  }
-
-  if (!targetHeritageId) {
-    throw new BadRequestError('Cơ sở dữ liệu chưa có di sản để liên kết phản hồi');
+    itemId = found?.Id ?? null;
   }
 
   const created = await prisma.feedback.create({
     data: {
-      heritage_id: targetHeritageId,
-      content: input.content,
-      rating: input.rating,
-      status: 'PENDING',
+      ItemId: itemId,
+      Content: input.content,
+      Rating: input.rating,
+      Status: 'PENDING',
       // Privacy by design: không nhập liên hệ thì lưu null, không lưu chuỗi rỗng
-      user_contact: input.contact ? input.contact : null,
+      UserContact: input.contact ? input.contact : null,
     },
-    include: { heritage: heritageBriefSelect },
+    include: { Item: itemBriefSelect },
   });
 
-  // Giữ đúng shape cũ mà FeedbackForm.tsx đang nhận (không kèm object heritage)
-  const { heritage: _heritage, ...payload } = format(created);
-
-  return {
-    message: 'Gửi góp ý thành công',
-    feedback: { ...payload, scope: created.heritage?.name_vi || input.scope || 'Toàn khu vực' },
-  };
+  return { message: 'Gửi góp ý thành công', feedback: format(created) };
 }

@@ -1,6 +1,5 @@
-### FR-09 Quản lý góp ý – /api/admin/feedbacks (issue #16)
-### FR-10 API public gửi góp ý – /api/feedbacks (issue #17)
-# Chủ module: B.
+### FR-09 Quản lý góp ý – /api/admin/feedbacks + API public /api/feedbacks (issue #46)
+# Chủ module: B. Di sản = Item (ItemCategory.Slug = 'di-san'), góp ý chung = ItemId NULL.
 
 @host = http://localhost:5173
 
@@ -62,6 +61,16 @@ Content-Type: application/json
 {
   "content": "Thử rating sai",
   "rating": 9
+}
+
+### Góp ý chung "Toàn Đường Sách" – scope không khớp di sản nào → heritage_id trả về null
+POST {{host}}/api/feedbacks
+Content-Type: application/json
+
+{
+  "content": "Nên có thêm ghế ngồi nghỉ chân dọc Đường Sách.",
+  "rating": 5,
+  "scope": "Toàn khu vực Đường Sách"
 }
 
 ### Kiểm tra API admin KHÔNG còn lộ ở /api (phải trả 404)
