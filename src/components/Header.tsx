@@ -5,7 +5,7 @@ import { Logo } from './Logo';
 import { LangToggle } from './LangToggle';
 
 export function Header() {
-  const { t, screen, navigate, setSelectedHeritageId } = useApp();
+  const { t, screen, navigate, setSelectedHeritageSlug } = useApp();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
@@ -32,7 +32,7 @@ export function Header() {
     navigate(id);
     setMobileOpen(false);
     setSearchOpen(false);
-    if (id === 'heritage') setSelectedHeritageId(null);
+    if (id === 'heritage') setSelectedHeritageSlug(null);
   };
 
   return (
@@ -116,10 +116,10 @@ export function Header() {
               <button
                 onClick={() => handleNav('admin')}
                 className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg border border-forest-300/50 text-xs font-medium text-cream-100 hover:bg-forest-700/60 transition-all"
-                title="Cổng quản trị nội bộ"
+                title={t('adminLoginTitle')}
               >
                 <ShieldCheck size={16} strokeWidth={1.75} />
-                Đăng nhập quản trị
+                {t('adminLogin')}
               </button>
               <button
                 className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg text-cream-100 hover:bg-forest-700/60 active:bg-forest-700 transition-all focus:outline-none"
@@ -196,7 +196,7 @@ export function Header() {
                   }`}
                 >
                   <ShieldCheck size={18} strokeWidth={1.75} />
-                  Đăng nhập quản trị
+                  {t('adminLogin')}
                 </button>
               </div>
             </div>

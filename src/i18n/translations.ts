@@ -15,6 +15,9 @@ export const translations = {
     vi: 'Tìm gian hàng, sách hoặc sự kiện...',
     en: 'Search stalls, books or events...',
   },
+  adminLogin: { vi: 'Đăng nhập quản trị', en: 'Admin Portal' },
+  adminLoginTitle: { vi: 'Cổng quản trị nội bộ', en: 'Internal Admin Portal' },
+  footerAdminPortal: { vi: 'Cổng quản trị', en: 'Admin Portal' },
 
   // Hero
   heroHeadline: {
@@ -229,6 +232,55 @@ export const translations = {
   feedbackSameForm: {
     vi: 'Cùng form feedback chung',
     en: 'Uses the same shared feedback form',
+  },
+
+  // Heritage Landing (dynamic)
+  heritageBadge: { vi: 'BẢN ĐỒ DI SẢN SỐ', en: 'DIGITAL HERITAGE MAP' },
+  heritageHeroHeadingPrefix: { vi: 'Khám phá', en: 'Discover' },
+  heritageHeroHeadingSuffix: { vi: 'câu chuyện di sản', en: 'heritage stories' },
+  heritageHeroSubtext: {
+    vi: 'Mỗi điểm đến có landing page và mã QR riêng: câu chuyện, giá trị, thông tin tham quan và nguồn tư liệu.',
+    en: 'Each destination features its own landing page and QR code: stories, values, visitor info, and reference archives.',
+  },
+  heritageSearchPlaceholder: {
+    vi: 'Tìm tên di sản hoặc chủ đề...',
+    en: 'Search heritage sites or topics...',
+  },
+  heritageCollection: { vi: 'BỘ SƯU TẬP', en: 'COLLECTION' },
+  heritageSiteUnit: { vi: 'điểm di sản', en: 'heritage sites' },
+  heritageSelectInstruction: {
+    vi: 'Chọn một điểm để mở hồ sơ chi tiết.',
+    en: 'Select a site to view detailed profile.',
+  },
+  heritageViewProfile: { vi: 'Xem hồ sơ →', en: 'View profile →' },
+  heritageBackToList: { vi: 'Tất cả di sản', en: 'All heritage sites' },
+  heritageStoryHeading: { vi: 'CÂU CHUYỆN DI SẢN', en: 'HERITAGE STORY' },
+  heritageIntroHeading: { vi: 'Giới thiệu & bối cảnh', en: 'Introduction & background' },
+  heritageGalleryHeading: { vi: 'Góc nhìn di sản', en: 'Heritage gallery' },
+  heritageQrPrefix: { vi: 'Di sản số', en: 'Heritage #' },
+  heritageScanPrompt: {
+    vi: 'Quét mã để mở đúng landing page của',
+    en: 'Scan QR code to open the landing page for',
+  },
+  heritageLastUpdated: { vi: 'Cập nhật lần cuối', en: 'Last updated' },
+  heritageSourceLabel: { vi: 'Nguồn tư liệu: ', en: 'Reference source: ' },
+  heritageFeedbackButton: {
+    vi: 'Gửi góp ý về điểm di sản này',
+    en: 'Send feedback about this heritage site',
+  },
+  heritageNotFoundTitle: { vi: 'Không tìm thấy di sản', en: 'Heritage site not found' },
+  heritageNotFoundBack: { vi: 'Xem tất cả di sản', en: 'View all heritage sites' },
+  heritageErrorTitle: { vi: 'Không tải được danh sách di sản', en: 'Failed to load heritage sites' },
+  heritageErrorDesc: {
+    vi: 'Có thể máy chủ hoặc kết nối mạng đang gặp sự cố. Vui lòng thử lại.',
+    en: 'The server or network connection might be experiencing issues. Please try again.',
+  },
+  heritageErrorRetry: { vi: 'Thử lại', en: 'Retry' },
+  heritageLoadingText: { vi: 'Đang tải danh sách di sản…', en: 'Loading heritage sites…' },
+  heritageNoMatch: { vi: 'Không tìm thấy di sản phù hợp', en: 'No matching heritage sites found' },
+  heritageNoMatchHint: {
+    vi: 'Thử tìm kiếm với từ khóa khác',
+    en: 'Try searching with a different keyword',
   },
 
   // Feedback

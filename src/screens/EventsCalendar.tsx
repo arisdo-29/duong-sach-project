@@ -163,7 +163,7 @@ export function EventsCalendar() {
 
       {/* Event detail modal */}
       {selectedEvent && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-ink/50 backdrop-blur-sm animate-fadeIn" onClick={() => setSelectedEvent(null)}>
+        <div className="fixed inset-0 h-dvh z-[60] flex items-center justify-center p-4 bg-ink/50 backdrop-blur-sm animate-fadeIn" onClick={() => setSelectedEvent(null)}>
           <div className="bg-white rounded-xl shadow-lift max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="relative">
               <img src={selectedEvent.image} alt="" className="w-full h-48 object-cover rounded-t-xl" />

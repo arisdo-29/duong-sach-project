@@ -4,10 +4,9 @@ import { Send, CheckCircle2, AlertCircle, MessageSquare, RefreshCw } from 'lucid
 import { useApp } from '@/i18n/AppContext';
 import { QRCode } from '@/components/QRCode';
 import { StarRating } from '@/components/StarRating';
-import { heritageSites } from '@/data/mockData';
 
 export function FeedbackForm() {
-  const { t, lang } = useApp();
+  const { t, lang, heritages, heritagesLoading } = useApp();
   const [scope, setScope] = useState('all');
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState('');
@@ -21,8 +20,8 @@ export function FeedbackForm() {
     setSubmitting(true);
     setStatus('idle');
     try {
-      const selectedSite = heritageSites.find((s) => String(s.id) === scope);
-      const scopeName = selectedSite ? selectedSite.nameVi : 'Toàn khu vực Đường Sách';
+      const selectedSite = heritages.find((s) => s.id === scope);
+      const scopeName = selectedSite ? selectedSite.name_vi : 'Toàn khu vực Đường Sách';
       await axios.post('/api/feedbacks', {
         content: content.trim(),
         rating,
@@ -74,9 +73,10 @@ export function FeedbackForm() {
             </label>
             <select value={scope} onChange={(e) => setScope(e.target.value)} className="input-field">
               <option value="all">{t('feedbackScopeAll')}</option>
-              {heritageSites.map((site) => (
-                <option key={site.id} value={String(site.id)}>
-                  {lang === 'vi' ? site.nameVi : site.nameEn}
+              {heritagesLoading && <option disabled>Đang tải danh sách di sản…</option>}
+              {heritages.map((site) => (
+                <option key={site.id} value={site.id}>
+                  {lang === 'vi' ? site.name_vi : site.name_en}
                 </option>
               ))}
             </select>

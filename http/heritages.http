@@ -11,7 +11,7 @@ GET {{host}}/api/admin/heritages/nha-tho-duc-ba
 
 ### 3. Thêm di sản hợp lệ – slug tự sinh từ name_vi
 POST {{host}}/api/admin/heritages
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 
 {
   "name_vi": "Chợ Bến Thành Mẫu",
@@ -24,7 +24,7 @@ Content-Type: application/json
 
 ### 4. Ca lỗi 400 – thiếu name_vi
 POST {{host}}/api/admin/heritages
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 
 {
   "name_en": "Missing Vietnamese name",
@@ -33,7 +33,7 @@ Content-Type: application/json
 
 ### 5. Ca lỗi 400 – thiếu content_vi (bắt buộc theo FR-07)
 POST {{host}}/api/admin/heritages
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 
 {
   "name_vi": "Di sản thiếu nội dung",
@@ -42,7 +42,7 @@ Content-Type: application/json
 
 ### 6. Ca lỗi 400 – image_url không phải định dạng URL http/https hợp lệ
 POST {{host}}/api/admin/heritages
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 
 {
   "name_vi": "Di sản link ảnh lỗi",
@@ -52,7 +52,7 @@ Content-Type: application/json
 
 ### 7. Sửa nội dung thành công (giữ nguyên slug)
 PUT {{host}}/api/admin/heritages/nha-tho-duc-ba
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 
 {
   "source": "Hồ sơ Di tích Kiến trúc Nghệ thuật TP.HCM (cập nhật)"
@@ -60,7 +60,7 @@ Content-Type: application/json
 
 ### 8. Ca lỗi 400 – cố tình đổi slug khi PUT
 PUT {{host}}/api/admin/heritages/nha-tho-duc-ba
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 
 {
   "slug": "slug-moi-khong-cho-phep",
@@ -76,3 +76,12 @@ DELETE {{host}}/api/admin/heritages/cho-ben-thanh-mau
 
 ### 11. Kiểm tra lại sau khi xóa mềm → Phải trả về 404
 GET {{host}}/api/admin/heritages/cho-ben-thanh-mau
+
+### FR-10. API công khai – danh sách rút gọn (không có _count.feedbacks)
+GET {{host}}/api/heritages
+
+### FR-10. API công khai – chi tiết theo slug (không kèm feedbacks, không lộ dữ liệu quản trị)
+GET {{host}}/api/heritages/nha-tho-duc-ba
+
+### FR-10. Ca lỗi 404 – slug không tồn tại
+GET {{host}}/api/heritages/khong-co-that-12345

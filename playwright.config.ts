@@ -13,6 +13,8 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './e2e',
+  // Nạp danh sách di sản thật từ API (xem e2e/global-setup.ts) trước khi chạy test
+  globalSetup: './e2e/global-setup.ts',
   // Du khách quét QR chủ yếu bằng điện thoại nên lấy đó làm mặc định
   use: {
     baseURL: 'http://localhost:5173',

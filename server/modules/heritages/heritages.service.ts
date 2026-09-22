@@ -44,8 +44,19 @@ export async function list() {
   const categoryId = await getItemCategoryId(DI_SAN_SLUG);
   const items = await prisma.item.findMany({
     where: { ItemCategoryId: categoryId, Deleted: false },
-    orderBy: { DateCreated: 'desc' },
+    orderBy: { DisplayOrder: 'asc' },
     include: { ...itemDetailInclude, _count: { select: { Feedbacks: true } } },
+  });
+  return items.map(format);
+}
+
+/** Danh sách di sản cho API công khai (FR-10) – không kèm _count.feedbacks (chỉ dành cho quản trị) */
+export async function listPublic() {
+  const categoryId = await getItemCategoryId(DI_SAN_SLUG);
+  const items = await prisma.item.findMany({
+    where: { ItemCategoryId: categoryId, Deleted: false },
+    orderBy: { DisplayOrder: 'asc' },
+    include: itemDetailInclude,
   });
   return items.map(format);
 }

@@ -231,6 +231,7 @@ export default function HeritageManager() {
   });
 
   return (
+    <>
     <div className="space-y-6">
       {/* Toast Notification */}
       {notification && (
@@ -422,12 +423,19 @@ export default function HeritageManager() {
           </div>
         )}
       </div>
+    </div>
+    {/*
+      4 modal bên dưới CỐ Ý đặt ngoài div.space-y-6 ở trên: utility "space-y-6" của Tailwind
+      áp margin-top cho MỌI phần tử con không phải con đầu tiên (kể cả phần tử position:fixed),
+      khiến overlay fixed inset-0 bị đẩy lệch xuống 24px và hở phần trên màn hình. Đặt là anh em
+      của space-y-6 (trong cùng Fragment) để margin đó không áp lên overlay.
+    */}
 
       {/* ======================================================== */}
       {/* MODAL: THÊM MỚI DI SẢN (TỰ ĐỘNG SINH SLUG) */}
       {/* ======================================================== */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 h-dvh z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
               <div className="flex items-center gap-2.5">
@@ -565,7 +573,7 @@ export default function HeritageManager() {
       {/* MODAL: CHỈNH SỬA DI SẢN (KHÓA SLUG) */}
       {/* ======================================================== */}
       {editingHeritage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 h-dvh z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
               <div className="flex items-center gap-2.5">
@@ -702,7 +710,7 @@ export default function HeritageManager() {
       {/* MODAL: XÁC NHẬN XÓA DI SẢN */}
       {/* ======================================================== */}
       {deletingHeritage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 h-dvh z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
             <div className="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center">
               <Trash2 size={24} />
@@ -735,7 +743,7 @@ export default function HeritageManager() {
       {/* MODAL: XEM & TẢI MÃ QR IN ẤN */}
       {/* ======================================================== */}
       {qrModalHeritage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 h-dvh z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -815,6 +823,6 @@ export default function HeritageManager() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
