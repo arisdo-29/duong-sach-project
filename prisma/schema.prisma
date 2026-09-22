@@ -1,14 +1,12 @@
 // =====================================================================
-// SCHEMA MỤC TIÊU – Đường Sách (đủ 3 phần yêu cầu của mentor)
-// Database: PostgreSQL trên Neon (miễn phí). Đã kiểm tra hợp lệ với Prisma 6.4.
-// Trưởng nhóm copy nội dung file này vào prisma/schema.prisma ở task SETUP-01.
-// Sau đó CHỈ trưởng nhóm sửa schema (mọi người khác chỉ đọc).
+// SCHEMA – Đường Sách (đủ 3 phần yêu cầu của mentor)
+// Database: SQL Server (local / SSMS). Chỉ trưởng nhóm sửa file này.
 //
 // Ghi chú:
-//  - DATABASE_URL: chuỗi kết nối Prisma Client dùng khi chạy API (production dùng chuỗi pooled).
-//  - DIRECT_URL:   chuỗi kết nối trực tiếp, Prisma CLI dùng cho `prisma db push`.
+//  - DATABASE_URL: chuỗi kết nối sqlserver://... (xem .env.example và docs/05).
 //  - Trạng thái/mức độ để kiểu String (không dùng enum) → giá trị hợp lệ kiểm tra bằng zod.
-//  - String của PostgreSQL là text UTF-8 → tiếng Việt lưu đúng, không cần khai báo thêm.
+//  - Chuỗi dùng NVarChar (Unicode) → tiếng Việt lưu đúng dấu; nội dung dài dùng NVarChar(Max).
+//  - id/khóa ngoại là UUID chuỗi 36 ký tự → NVarChar(36).
 //  - Model Heritage/Feedback giữ tên field snake_case để khớp frontend đang có.
 //    Các model mới dùng camelCase (chuẩn TypeScript).
 // =====================================================================
@@ -18,9 +16,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
 }
 
 // ---------------------------------------------------------------------
@@ -29,10 +26,10 @@ datasource db {
 
 /// Cơ sở Đường Sách: HCM (Nguyễn Văn Bình, Q1) và THU_DUC. Dữ liệu seed, chỉ đọc.
 model Campus {
-  id        String   @id @default(uuid())
-  code      String   @unique @db.VarChar(20)
-  name      String   @db.VarChar(200)
-  address   String?  @db.VarChar(500)
+  id        String   @id @default(uuid()) @db.NVarChar(36)
+  code      String   @unique @db.NVarChar(20)
+  name      String   @db.NVarChar(200)
+  address   String?  @db.NVarChar(500)
   createdAt DateTime @default(now())
 
   booths Booth[]
@@ -47,14 +44,14 @@ model Campus {
 
 /// Gian hàng. Xóa mềm bằng deletedAt (yêu cầu mentor).
 model Booth {
-  id          String    @id @default(uuid())
-  name        String    @db.VarChar(200)
-  campusId    String
-  owner       String?   @db.VarChar(200) // đơn vị: NXB Trẻ, Nhã Nam...
-  location    String?   @db.VarChar(100) // mã/vị trí: "Gian 12"
-  description String?
+  id          String    @id @default(uuid()) @db.NVarChar(36)
+  name        String    @db.NVarChar(200)
+  campusId    String    @db.NVarChar(36)
+  owner       String?   @db.NVarChar(200) // đơn vị: NXB Trẻ, Nhã Nam...
+  location    String?   @db.NVarChar(100) // mã/vị trí: "Gian 12"
+  description String?   @db.NVarChar(Max)
   bookCount   Int?      // số đầu sách (chờ khách chốt đầu sách hay số bản)
-  imageUrl    String?   @db.VarChar(1000)
+  imageUrl    String?   @db.NVarChar(1000)
   deletedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -68,11 +65,11 @@ model Booth {
 
 /// Địa điểm tổ chức sự kiện (sân khấu, khu trưng bày...). Đang được dùng thì không cho xóa (409).
 model Venue {
-  id          String   @id @default(uuid())
-  name        String   @db.VarChar(200)
-  campusId    String
+  id          String   @id @default(uuid()) @db.NVarChar(36)
+  name        String   @db.NVarChar(200)
+  campusId    String   @db.NVarChar(36)
   capacity    Int
-  description String?  @db.VarChar(1000)
+  description String?  @db.NVarChar(1000)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -86,11 +83,11 @@ model Venue {
 
 /// Thiết bị (loa, bàn, ghế, máy chiếu...). Đang được hồ sơ tham chiếu thì không cho xóa (409).
 model Asset {
-  id            String   @id @default(uuid())
-  name          String   @db.VarChar(200)
+  id            String   @id @default(uuid()) @db.NVarChar(36)
+  name          String   @db.NVarChar(200)
   totalQuantity Int
-  unit          String?  @db.VarChar(50)
-  description   String?  @db.VarChar(1000)
+  unit          String?  @db.NVarChar(50)
+  description   String?  @db.NVarChar(1000)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -105,14 +102,14 @@ model Asset {
 
 /// Sự kiện đã công bố. importance: NORMAL (Thường) | PRIORITY (Ưu tiên) | KEY (Trọng điểm)
 model Event {
-  id          String   @id @default(uuid())
-  name        String   @db.VarChar(300)
+  id          String   @id @default(uuid()) @db.NVarChar(36)
+  name        String   @db.NVarChar(300)
   startTime   DateTime
   endTime     DateTime
-  venueId     String
-  description String?
-  importance  String   @default("NORMAL") @db.VarChar(20)
-  proposalId  String?  @unique // sự kiện sinh ra từ hồ sơ được duyệt (nếu có)
+  venueId     String   @db.NVarChar(36)
+  description String?  @db.NVarChar(Max)
+  importance  String   @default("NORMAL") @db.NVarChar(20)
+  proposalId  String?  @db.NVarChar(36) // sự kiện sinh ra từ hồ sơ được duyệt (nếu có); không @unique vì SQL Server coi các NULL là trùng
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -127,17 +124,17 @@ model Event {
 /// Hồ sơ đề xuất tổ chức hoạt động (đăng ký tổ chức, KHÔNG phải vé tham dự).
 /// status: PENDING (chờ duyệt) | NEEDS_SUPPLEMENT (trả bổ sung) | APPROVED | REJECTED
 model EventProposal {
-  id                String    @id @default(uuid())
-  title             String    @db.VarChar(300)
-  organizerName     String    @db.VarChar(200)
-  organizerContact  String    @db.VarChar(200)
-  description       String
+  id                String    @id @default(uuid()) @db.NVarChar(36)
+  title             String    @db.NVarChar(300)
+  organizerName     String    @db.NVarChar(200)
+  organizerContact  String    @db.NVarChar(200)
+  description       String    @db.NVarChar(Max)
   startTime         DateTime
   endTime           DateTime
-  venueId           String
+  venueId           String    @db.NVarChar(36)
   expectedAttendees Int?
-  status            String    @default("PENDING") @db.VarChar(20)
-  reviewNote        String?   @db.VarChar(1000)
+  status            String    @default("PENDING") @db.NVarChar(20)
+  reviewNote        String?   @db.NVarChar(1000)
   reviewedAt        DateTime?
   submittedAt       DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
@@ -145,7 +142,7 @@ model EventProposal {
   venue      Venue               @relation(fields: [venueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   assets     ProposalAsset[]
   reviewLogs ProposalReviewLog[]
-  event      Event?
+  events     Event[]
 
   @@index([status, submittedAt])
   @@index([startTime])
@@ -154,8 +151,8 @@ model EventProposal {
 
 /// Nhu cầu thiết bị của một hồ sơ.
 model ProposalAsset {
-  proposalId String
-  assetId    String
+  proposalId String @db.NVarChar(36)
+  assetId    String @db.NVarChar(36)
   quantity   Int
 
   proposal EventProposal @relation(fields: [proposalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -167,12 +164,12 @@ model ProposalAsset {
 
 /// Lịch sử duyệt (lưu vết ai làm gì, ghi chú gì). action: APPROVE | REQUEST_SUPPLEMENT | REJECT
 model ProposalReviewLog {
-  id         String   @id @default(uuid())
-  proposalId String
-  action     String   @db.VarChar(30)
-  fromStatus String   @db.VarChar(20)
-  toStatus   String   @db.VarChar(20)
-  note       String?  @db.VarChar(1000)
+  id         String   @id @default(uuid()) @db.NVarChar(36)
+  proposalId String   @db.NVarChar(36)
+  action     String   @db.NVarChar(30)
+  fromStatus String   @db.NVarChar(20)
+  toStatus   String   @db.NVarChar(20)
+  note       String?  @db.NVarChar(1000)
   createdAt  DateTime @default(now())
 
   proposal EventProposal @relation(fields: [proposalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -187,14 +184,14 @@ model ProposalReviewLog {
 
 /// Di sản. slug cố định (QR đã in). Xóa mềm bằng deleted_at.
 model Heritage {
-  id         String    @id @default(uuid())
-  slug       String    @unique @db.VarChar(200)
-  name_vi    String    @db.VarChar(300)
-  name_en    String    @default("") @db.VarChar(300)
-  content_vi String
-  content_en String    @default("")
-  image_url  String    @default("") @db.VarChar(1000)
-  source     String    @default("") @db.VarChar(500)
+  id         String    @id @default(uuid()) @db.NVarChar(36)
+  slug       String    @unique @db.NVarChar(200)
+  name_vi    String    @db.NVarChar(300)
+  name_en    String    @default("") @db.NVarChar(300)
+  content_vi String    @db.NVarChar(Max)
+  content_en String    @default("") @db.NVarChar(Max)
+  image_url  String    @default("") @db.NVarChar(1000)
+  source     String    @default("") @db.NVarChar(500)
   deleted_at DateTime?
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
@@ -206,12 +203,12 @@ model Heritage {
 
 /// Góp ý. heritage_id NULL = "Toàn Đường Sách". status: PENDING | REVIEWED | RESOLVED
 model Feedback {
-  id           String   @id @default(uuid())
-  heritage_id  String?
+  id           String   @id @default(uuid()) @db.NVarChar(36)
+  heritage_id  String?  @db.NVarChar(36)
   rating       Int
-  content      String   @db.VarChar(2000)
-  status       String   @default("PENDING") @db.VarChar(20)
-  user_contact String?  @db.VarChar(200)
+  content      String   @db.NVarChar(2000)
+  status       String   @default("PENDING") @db.NVarChar(20)
+  user_contact String?  @db.NVarChar(200)
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
