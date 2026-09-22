@@ -6,13 +6,42 @@ import { NotFoundError } from '../../core/errors.js';
  * dùng để đổ dropdown "cơ sở" ở màn gian hàng và địa điểm.
  */
 
-export async function list() {
+const GIAN_HANG_SLUG = 'gian-hang';
+
+type CampusWithCounts = Awaited<ReturnType<typeof findAll>>[number];
+
+async function findAll() {
   return prisma.campus.findMany({
-    orderBy: { code: 'asc' },
+    orderBy: { Code: 'asc' },
     include: {
-      _count: { select: { booths: true, venues: true } },
+      _count: {
+        select: {
+          Items: { where: { Deleted: false, ItemCategory: { Slug: GIAN_HANG_SLUG } } },
+          Venues: true,
+        },
+      },
     },
   });
+}
+
+/** Hợp đồng JSON giữ nguyên (docs/02): id, code, name, address, createdAt, _count.{booths,venues} */
+function toDto(campus: CampusWithCounts) {
+  return {
+    id: campus.Id,
+    code: campus.Code,
+    name: campus.Name,
+    address: campus.Address,
+    createdAt: campus.DateCreated,
+    _count: {
+      booths: campus._count.Items,
+      venues: campus._count.Venues,
+    },
+  };
+}
+
+export async function list() {
+  const campuses = await findAll();
+  return campuses.map(toDto);
 }
 
 /**
@@ -21,7 +50,7 @@ export async function list() {
  */
 export async function findByIdOrCode(idOrCode: string) {
   return prisma.campus.findFirst({
-    where: { OR: [{ id: idOrCode }, { code: idOrCode.toUpperCase() }] },
+    where: { OR: [{ Id: idOrCode }, { Code: idOrCode.toUpperCase() }] },
   });
 }
 

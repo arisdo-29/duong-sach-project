@@ -49,7 +49,7 @@ Một Express app dùng chung (`server/app.ts`) cho cả dev (plugin Vite), `npm
 
 ## 4. Mô hình dữ liệu
 
-Nguồn sự thật: `prisma/schema.prisma` (sau DB-02). Trước DB-02, bản nháp nằm ở [`docs/schema-muc-tieu.prisma`](schema-muc-tieu.prisma) (đã kiểm tra hợp lệ với Prisma 6.4 + sqlserver).
+Nguồn sự thật: [`prisma/schema.prisma`](../prisma/schema.prisma).
 
 ### 4.1 Nguyên tắc
 - Trường dùng để **lọc, sắp xếp hoặc kiểm tra ràng buộc** → **cột thật** (CampusId, Capacity, TotalQuantity, StartTime, Status…).
